@@ -1,0 +1,2 @@
+# SMAC
+Sourcemod Anti-Cheat
