@@ -1,0 +1,117 @@
+"Phrases"
+{
+	"SMAC_Banned"
+	{
+		"pt"		"Você foi banido por trapaça"
+	}
+	
+	"SMAC_GlobalBanned"
+	{
+		"pt"		"Você está na Lista de Bans Global do {1}. Veja {2} para mais informações"
+	}
+	
+	"SMAC_CommandSpamKick"
+	{
+		"pt"		"Você foi kickado por spam de comandos"
+	}
+	
+	"SMAC_IllegalDefuse"
+	{
+		"pt"		"Não pode desativar a bomba através de paredes."
+	}
+	
+	"SMAC_PleaseWait"
+	{
+		"pt"		"Por favor aguarde uns minutos antes de tentar reconectar"
+	}
+	
+	"SMAC_FailedToReply"
+	{
+		"pt"		"Seu cliente falhou em responder o pedido a tempo. Reconecte ou reinicie o jogo"
+	}
+	
+	"SMAC_FailedAuth"
+	{
+		"pt"		"Seu cliente falhou em autenticar-se a tempo. Reconecte ou reinicie o jogo"
+	}
+	
+	"SMAC_Muted"
+	{
+		"pt"		"{1} foi mutado por SourceMod Anti-Cheat."
+	}
+	
+	"SMAC_CvarViolation"
+	{
+		"pt"		"{1} retornou um valor errado de {2}."
+	}
+	
+	"SMAC_ShouldEqual"
+	{
+		"pt"		"Sua convar {1} deveria ser igual à {2} mas está como {3}. Arrume antes de reentrar"
+	}
+	
+	"SMAC_ShouldBeGreater"
+	{
+		"pt"		"Sua convar {1} deveria ser maior ou igual à {2} mas está como {3}. Arrume antes de reentrar"
+	}
+	
+	"SMAC_ShouldBeLess"
+	{
+		"pt"		"Sua convar {1} deveria ser menor ou igual à {2} mas está como {3}. Arrume antes de reentrar"
+	}
+	
+	"SMAC_ShouldBeBetween"
+	{
+		"pt"		"Sua convar {1} deveria ser entre {2} e {3} mas está como {4}. Arrumes antes de reentrar"
+	}
+	
+	"SMAC_ShouldBeOutside"
+	{
+		"pt"		"Sua convar {1} não deve situar-se entre {2} e {3} mas está como {4}. Arrumes antes de reentrar"
+	}
+	
+	"SMAC_ChangeName"
+	{
+		"pt"		"Mude seu nome"
+	}
+	
+	"SMAC_CmdBanned"
+	{
+		"pt"		"Você foi banido por usar um comando bloqueado"
+	}
+	
+	"SMAC_SayBlock"
+	{
+		"pt"		"Sua mensagem foi bloqueada devido à um caractere inválido."
+	}
+	
+	"SMAC_AimbotDetected"
+	{
+		"pt"		"{1} é suspeito de usar Aimbot. (Detecção #{2} | Desvio: {3}° | Arma: {4})"
+	}
+	
+	"SMAC_AutoTriggerDetected"
+	{
+		"pt"		"{1} é suspeito de usar auto-trigger cheat: {2}"
+	}
+	
+	"SMAC_SpinhackDetected"
+	{
+		"pt"		"{1} é suspeito de usar spinhack."
+	}
+	
+	"SMAC_SpeedhackDetected"
+	{
+		"pt"		"{1} é suspeito de usar speedhack."
+	}
+	
+	"SMAC_EyetestDetected"
+	{
+		"pt"		"{1} é suspeito de trapaçear com os angulos dos olhos."
+	}
+	
+	"SMAC_WelcomeMsg"
+	{
+		"pt"		"Este servidor é protegido por SourceMod Anti-Cheat."
+	}
+}

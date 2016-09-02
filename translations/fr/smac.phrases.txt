@@ -1,0 +1,117 @@
+"Phrases"
+{
+	"SMAC_Banned"
+	{
+		"fr"		"Vous avez été banni pour avoir triché."
+	}
+	
+	"SMAC_GlobalBanned"
+	{
+		"fr"		"Vous êtes listé sur la {1} Global Ban List. Allez sur {2} pour plus d'informations"
+	}
+	
+	"SMAC_CommandSpamKick"
+	{
+		"fr"		"Vous avez été expulsé pour spam de commandes."
+	}
+	
+	"SMAC_IllegalDefuse"
+	{
+		"fr"		"Vous ne pouvez pas désamorcer la bombe à travers murs."
+	}
+	
+	"SMAC_PleaseWait"
+	{
+		"fr"		"S'il vous plaît attendez une minute avant de tenter de se reconnecter"
+	}
+	
+	"SMAC_FailedToReply"
+	{
+		"fr"		"Votre client n'a pas répondu à la requête à temps. Merci de vous reconnecter ou de relancer le jeu."
+	}
+	
+	"SMAC_FailedAuth"
+	{
+		"fr"		"Votre client n'a pas été autorisé à temps. Merci de vous reconnecter ou de relancer le jeu."
+	}
+	
+	"SMAC_Muted"
+	{
+		"fr"		"{1} a été rendu silencieux par SourceMod Anti-Cheat."
+	}
+	
+	"SMAC_CvarViolation"
+	{
+		"fr"		"{1} a retourné une mauvaise valeur de {2}."
+	}
+	
+	"SMAC_ShouldEqual"
+	{
+		"fr"		"Votre convar {1} devrait être égale à {2} mais elle est réglée sur {3}. Merci de corriger ça avant de vous reconnecter"
+	}
+	
+	"SMAC_ShouldBeGreater"
+	{
+		"fr"		"Votre convar {1} devrait être supérieure ou égale à {2} mais elle est réglée {3}. Merci de corriger ça avant de vous reconnecter"
+	}
+	
+	"SMAC_ShouldBeLess"
+	{
+		"fr"		"Votre convar {1} devrait être inférieure ou égale à {2} mais elle est réglée sur {3}. Merci de corriger ça avant de vous reconnecter"
+	}
+	
+	"SMAC_ShouldBeBetween"
+	{
+		"fr"		"Votre convar {1} devrait être comprise entre {2} et {3} mais était réglée sur {4}. Merci de corriger ça avant de vous reconnecter"
+	}
+	
+	"SMAC_ShouldBeOutside"
+	{
+		"fr"		"Votre convar {1} ne doit pas être comprise entre {2} et {3} mais était réglée sur {4}. Merci de corriger ça avant de vous reconnecter"
+	}
+	
+	"SMAC_ChangeName"
+	{
+		"fr"		"Merci de changer votre pseudo"
+	}
+	
+	"SMAC_CmdBanned"
+	{
+		"fr"		"Vous avez été banni pour avoir utilisé une commande interdite"
+	}
+	
+	"SMAC_SayBlock"
+	{
+		"fr"		"Ce que vous vouliez dire a été bloqué à cause de caractères non valides."
+	}
+	
+	"SMAC_AimbotDetected"
+	{
+		"fr"		"{1} est suspectée d'utiliser un aimbot. (Détection #{2} | Déviation: {3}° | Arme: {4})"
+	}
+	
+	"SMAC_AutoTriggerDetected"
+	{
+		"fr"		"{1} est suspectée d'utiliser un auto-trigger cheat: {2}"
+	}
+	
+	"SMAC_SpinhackDetected"
+	{
+		"fr"		"{1} est suspectée d'utiliser un spinhack."
+	}
+	
+	"SMAC_SpeedhackDetected"
+	{
+		"fr"		"{1} est suspectée d'utiliser un speedhack."
+	}
+	
+	"SMAC_EyetestDetected"
+	{
+		"fr"		"{1} est suspectée de tricher avec son champ de vision."
+	}
+	
+	"SMAC_WelcomeMsg"
+	{
+		"fr"		"Ce serveur est protégé par SourceMod Anti-Cheat."
+	}
+}
