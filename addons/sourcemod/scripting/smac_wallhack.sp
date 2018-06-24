@@ -1010,7 +1010,7 @@ FarESP_Enable()
     if ((g_iPlayerManager = GetPlayerResourceEntity()) == -1)
         return;
 
-    g_iPlayerSpotted = FindSendPropOffs("CCSPlayerResource", "m_bPlayerSpotted");
+    g_iPlayerSpotted = FindSendPropInfo("CCSPlayerResource", "m_bPlayerSpotted"); //FindSendPropOffs("CCSPlayerResource", "m_bPlayerSpotted");
     SDKHook(g_iPlayerManager, SDKHook_ThinkPost, PlayerManager_ThinkPost);
 
     g_msgUpdateRadar = GetUserMessageId("UpdateRadar");

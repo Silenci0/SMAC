@@ -116,7 +116,7 @@ stock bool:GetClientAbsVelocity(client, Float:velocity[3])
 {
     static offset = -1;
 
-    if (offset == -1 && (offset = FindDataMapOffs(client, "m_vecAbsVelocity")) == -1)
+    if (offset == -1 && (offset = FindDataMapInfo(client, "m_vecAbsVelocity")) == -1) // FindDataMapOffs(client, "m_vecAbsVelocity")) == -1)
     {
         ZeroVector(velocity);
         return false;
@@ -135,7 +135,7 @@ stock GetClientObserverMode(client)
 {
     static offset = -1;
 
-    if (offset == -1 && (offset = FindSendPropOffs("CBasePlayer", "m_iObserverMode")) == -1)
+    if (offset == -1 && (offset = FindSendPropInfo("CBasePlayer", "m_iObserverMode")) == -1) //FindSendPropOffs("CBasePlayer", "m_iObserverMode")) == -1)
     {
         return OBS_MODE_NONE;
     }
@@ -147,7 +147,7 @@ stock GetClientObserverTarget(client)
 {
     static offset = -1;
 
-    if (offset == -1 && (offset = FindSendPropOffs("CBasePlayer", "m_hObserverTarget")) == -1)
+    if (offset == -1 && (offset = FindSendPropInfo("CBasePlayer", "m_hObserverTarget")) == -1)
     {
         return -1;
     }

@@ -7,6 +7,11 @@ Because of how complex SMAC is, I am also including the wiki from the wayback ma
 
 I may do something about this later and add an actual webpage someplace so it can be updated. But below are some of the changes I made to SMAC for ZPS specifically.
 
+0.8.6.2 Update (6-11-2018)
+-----------------
+- Compiled/Updated codebase for SM 1.8
+- Updated SMAC stocks and wallhack code to use FindDataMapInfo and FindSendPropInfo instead of FindDataMapOffs and FindSendPropOffs.
+- Updated smac_rcon module to have logging for attempts to use rcon_password on the server from a non-whitelisted IP. This functionality REQUIRES the SM Rcon extension found here: https://forums.alliedmods.net/showthread.php?t=168403. Please note that some games might not work with this extension!
 
 0.8.6.1 Initial Commit (9-1-2016)
 -----------------

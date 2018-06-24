@@ -22,7 +22,7 @@
 #include <sourcemod>
 #include <smac>
 #undef REQUIRE_EXTENSIONS
-#tryinclude <smrcon>
+#tryinclude <smrcon> 
 
 /* Plugin Info */
 public Plugin:myinfo =
@@ -164,6 +164,7 @@ public Action:SMRCon_OnAuth(rconId, const String:address[], const String:passwor
     if (!GetTrieSize(g_hWhitelist) || GetTrieValue(g_hWhitelist, address, dummy))
         return Plugin_Continue;
     
+    SMAC_Log("Unauthorized RCON Login Detected! Failed auth from address: \"%s\", attempted password: \"%s\"", address, password);
     allow = false;
     return Plugin_Changed;
 }
@@ -176,6 +177,7 @@ public Action:SMRCon_OnCommand(rconId, const String:address[], const String:comm
     if (!GetTrieSize(g_hWhitelist) || GetTrieValue(g_hWhitelist, address, dummy))
         return Plugin_Continue;
     
+    SMAC_Log("Unauthorized RCON command use detected! Failed auth from address: \"%s\", attempted command: \"%s\"", address, command);
     allow = false;
     return Plugin_Changed;
 }
