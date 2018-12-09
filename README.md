@@ -3,9 +3,12 @@ Sourcemod Anti-Cheat
 
 For a lot of people, SMAC has been one of those more elusive plugins due to some of the issues surrounding it involving copyrights and headers. In 0.8.6.0, the original authors added the headers to it and left it at that. During that time, I was working on my own fork of it specifically for ZPS. So not only does the code have all the appropriate headers, but included is a license with those headers as well, so it should be okay to distribute, post, branch, and fork once again as needed provided everyone adheres to the license.
 
-Because of how complex SMAC is, I am also including the wiki from the wayback machine. You can find it here: http://web.archive.org/web/20150521190758/http://smac.sx/wiki/doku.php
+For information about the plugin and its modules, please use the wiki here: https://github.com/Silenci0/SMAC/wiki
 
-I may do something about this later and add an actual webpage someplace so it can be updated. But below are some of the changes I made to SMAC for ZPS specifically.
+# Changelog
+0.8.6.2 Update (12-09-2018)
+-----------------
+- Only updated the change log with wiki information. No plugins or scripts were updated yet.
 
 0.8.6.2 Update (6-11-2018)
 -----------------
