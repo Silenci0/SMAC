@@ -17,20 +17,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-//------------------------  NOTICE: README  --------------------------------------//
-// All sections regarding achievements have been commented out for now. 
-//
-// The reason for this is that there is a possiblity of false positive for ZPS
-// that could potentially occur (it has achievements, but they do not exist) which 
-// could cause an issue for players at this time.
-//
-// As a result, to be on the safe side, it was commented out. If you wish to enable
-// these lines of code/use this set of plugins on other games, uncomment the code
-// and recompile this into its own .smx plugin file. 
-// 
-// In the future, should ZPS ever get updated, the code will be uncommented.
-//--------------------------------------------------------------------------------//
-
 #pragma semicolon 1
 
 /* SM Includes */
@@ -56,7 +42,7 @@ new Handle:g_hCvarValidateAuth = INVALID_HANDLE;
 new Handle:g_hClientConnections = INVALID_HANDLE;
 new Float:g_fTeamJoinTime[MAXPLAYERS+1][6];
 new g_iNameChanges[MAXPLAYERS+1];
-//new g_iAchievements[MAXPLAYERS+1];
+new g_iAchievements[MAXPLAYERS+1];
 new bool:g_bMapStarted = false;
 new bool:g_bConnectExt = false;
 
@@ -84,7 +70,7 @@ public OnPluginStart()
     
     HookEventEx("player_team", Event_PlayerTeam, EventHookMode_Pre);
     HookEvent("player_changename", Event_PlayerChangeName, EventHookMode_Post);
-    //HookEventEx("achievement_earned", Event_AchievementEarned, EventHookMode_Pre);
+    HookEventEx("achievement_earned", Event_AchievementEarned, EventHookMode_Pre);
     CreateTimer(10.0, Timer_DecreaseCount, _, TIMER_REPEAT);
     
     // Check all clients.
@@ -178,7 +164,7 @@ public OnClientPutInServer(client)
     if (IsClientNew(client))
     {
         g_iNameChanges[client] = 0;
-        //g_iAchievements[client] = 0;
+        g_iAchievements[client] = 0;
     }
     
     // Give the client 10s to fully authenticate.
@@ -287,18 +273,18 @@ public Event_PlayerChangeName(Handle:event, const String:name[], bool:dontBroadc
         g_iNameChanges[client] = 0;
     }
 }
-// ZPS does not have achievements at all and its the least of our troubles atm.
-//public Action:Event_AchievementEarned(Handle:event, const String:name[], bool:dontBroadcast)
-//{
-//	new client = GetEventInt(event, "player");
-//	
-//	if (IS_CLIENT(client) && ++g_iAchievements[client] >= 5)
-//	{
-//		return Plugin_Stop;
-//	}
-//	
-//	return Plugin_Continue;
-//}
+
+public Action:Event_AchievementEarned(Handle:event, const String:name[], bool:dontBroadcast)
+{
+	new client = GetEventInt(event, "player");
+	
+	if (IS_CLIENT(client) && ++g_iAchievements[client] >= 5)
+	{
+		return Plugin_Stop;
+	}
+	
+	return Plugin_Continue;
+}
 
 public Action:Timer_DecreaseCount(Handle:timer)
 {
@@ -309,10 +295,10 @@ public Action:Timer_DecreaseCount(Handle:timer)
             g_iNameChanges[i]--;
         }
         
-        //if (g_iAchievements[i])
-        //{
-        //	g_iAchievements[i]--;
-        //}
+        if (g_iAchievements[i])
+        {
+        	g_iAchievements[i]--;
+        }
     }
     
     return Plugin_Continue;

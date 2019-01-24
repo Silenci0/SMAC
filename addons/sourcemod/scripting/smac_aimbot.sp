@@ -101,6 +101,17 @@ public OnPluginStart()
             SetTrieValue(g_IgnoreWeapons, "tf_weapon_stickbomb", 1);
             SetTrieValue(g_IgnoreWeapons, "tf_weapon_katana", 1);
             SetTrieValue(g_IgnoreWeapons, "tf_weapon_flamethrower", 1);
+            SetTrieValue(g_IgnoreWeapons, "tf_weapon_slap", 1);
+            SetTrieValue(g_IgnoreWeapons, "tf_weapon_buff_item", 1);
+            SetTrieValue(g_IgnoreWeapons, "tf_weapon_parachute", 1); 
+            SetTrieValue(g_IgnoreWeapons, "tf_weapon_breakable_sign", 1);
+            SetTrieValue(g_IgnoreWeapons, "tf_wearable_demoshield", 1); 
+            SetTrieValue(g_IgnoreWeapons, "tf_wearable_razorback", 1); 
+            SetTrieValue(g_IgnoreWeapons, "tf_wearable", 1); 
+            SetTrieValue(g_IgnoreWeapons, "tf_weapon_rocketpack", 1); 
+            SetTrieValue(g_IgnoreWeapons, "tf_weapon_lunchbox_drink", 1);
+            SetTrieValue(g_IgnoreWeapons, "tf_weapon_lunchbox", 1); 
+            SetTrieValue(g_IgnoreWeapons, "saxxy", 1); 
         }
         case Game_HL2DM:
         {
@@ -118,8 +129,10 @@ public OnPluginStart()
             SetTrieValue(g_IgnoreWeapons, "weapon_racket", 1);
             SetTrieValue(g_IgnoreWeapons, "weapon_pot", 1);
             SetTrieValue(g_IgnoreWeapons, "weapon_plank", 1);
+            SetTrieValue(g_IgnoreWeapons, "weapon_pipewrench", 1);   
             SetTrieValue(g_IgnoreWeapons, "weapon_pipe", 1);
             SetTrieValue(g_IgnoreWeapons, "weapon_phone", 1);
+            SetTrieValue(g_IgnoreWeapons, "weapon_meatcleaver", 1);
             SetTrieValue(g_IgnoreWeapons, "weapon_machete", 1);
             SetTrieValue(g_IgnoreWeapons, "weapon_keyboard", 1);
             SetTrieValue(g_IgnoreWeapons, "weapon_ied", 1);
@@ -131,9 +144,11 @@ public OnPluginStart()
             SetTrieValue(g_IgnoreWeapons, "weapon_bat_wood", 1);
             SetTrieValue(g_IgnoreWeapons, "weapon_bat_aluminum", 1);
             SetTrieValue(g_IgnoreWeapons, "weapon_chair", 1);
+            SetTrieValue(g_IgnoreWeapons, "weapon_baguette", 1);
             SetTrieValue(g_IgnoreWeapons, "weapon_barricade", 1);
             SetTrieValue(g_IgnoreWeapons, "weapon_axe", 1);
             SetTrieValue(g_IgnoreWeapons, "weapon_arms", 1);
+            SetTrieValue(g_IgnoreWeapons, "weapon_wrench", 1);
         }
     }
     

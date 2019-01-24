@@ -349,10 +349,10 @@ bool:RemCvar(String:sCvar[])
     }
     
     // Disable replication
-    decl CvarComp:CCompType;
-    GetTrieValue(hDataTrie, Cvar_CompType, CCompType);
+    decl CvarComp:SCCompType;
+    GetTrieValue(hDataTrie, Cvar_CompType, SCCompType);
     
-    if (CCompType == Comp_Replicated)
+    if (SCCompType == Comp_Replicated)
     {
         UnhookConVarChange(FindConVar(sCvar), OnConVarChanged);
     }
@@ -442,8 +442,8 @@ public OnConVarQueryFinished(QueryCookie:cookie, client, ConVarQueryResult:resul
     SetTimer(g_hTimer[client], CreateTimer(0.1, Timer_QueryNextCvar, client, TIMER_REPEAT));
     
     // Initialize data
-    decl CvarComp:CCompType, String:sValue[MAX_CVAR_VALUE_LEN], String:sValue2[MAX_CVAR_VALUE_LEN], String:sKickMessage[255];
-    GetTrieValue(hDataTrie, Cvar_CompType, CCompType);
+    decl CvarComp:SCCompType, String:sValue[MAX_CVAR_VALUE_LEN], String:sValue2[MAX_CVAR_VALUE_LEN], String:sKickMessage[255];
+    GetTrieValue(hDataTrie, Cvar_CompType, SCCompType);
     GetTrieString(hDataTrie, Cvar_Value, sValue, sizeof(sValue));
     GetTrieString(hDataTrie, Cvar_Value2, sValue2, sizeof(sValue2));
     
@@ -453,7 +453,7 @@ public OnConVarQueryFinished(QueryCookie:cookie, client, ConVarQueryResult:resul
         if (IsReplicating(hDataTrie))
             return;
         
-        switch (CCompType)
+        switch (SCCompType)
         {
             case Comp_Equal:
             {
@@ -503,7 +503,7 @@ public OnConVarQueryFinished(QueryCookie:cookie, client, ConVarQueryResult:resul
             }
         }
     }
-    else if (CCompType == Comp_NonExist)
+    else if (SCCompType == Comp_NonExist)
     {
         if (result == ConVarQuery_NotFound)
             return;
@@ -518,7 +518,7 @@ public OnConVarQueryFinished(QueryCookie:cookie, client, ConVarQueryResult:resul
     new Handle:info = CreateKeyValues("");
     
     KvSetString(info, "cvar", sCvar);
-    KvSetNum(info, "comptype", _:CCompType);
+    KvSetNum(info, "comptype", _:SCCompType);
     KvSetNum(info, "actiontype", _:CAction);
     KvSetString(info, "cvarvalue", cvarValue);
     KvSetString(info, "value", sValue);
@@ -531,7 +531,7 @@ public OnConVarQueryFinished(QueryCookie:cookie, client, ConVarQueryResult:resul
         
         decl String:sResult[16], String:sCompType[16];
         GetQueryResultString(result, sResult, sizeof(sResult));
-        GetCompTypeString(CCompType, sCompType, sizeof(sCompType));
+        GetCompTypeString(SCCompType, sCompType, sizeof(sCompType));
         
         switch (CAction)
         {
