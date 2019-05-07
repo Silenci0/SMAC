@@ -8,6 +8,16 @@ Although progress is a bit slow, I do hope to add more features and update detec
 For information about the plugin and its modules, please use the wiki here: https://github.com/Silenci0/SMAC/wiki
 
 # Changelog
+0.8.6.4 Update (05-07-2019)
+-----------------
+- Fixed a couple of issues related to tickcount with the smac_eyetest module that was causing false positives to occur in TF2 and CS:GO (someone might want to confirm for CS:GO):
+    * Alt-tabbing no longer causes users to trigger the tickcount cheat detection each time it occurs. This was reported in the SMAC thread: https://forums.alliedmods.net/showthread.php?t=307188
+    * A rare issue (caused by the same tickcount detections) in TF2 when a player would be running a taunt (such as conga) and attempting to open the contracts menu. More info here: https://github.com/Silenci0/SMAC/issues/1
+    * Please be sure to leave compatibility mode on and set bans to off. While this issue is possibly resolved, that does not mean it might not break in the future.
+- Fixed a minor issue with the smac_speedhack module not checking for the player being in-game (https://github.com/Silenci0/SMAC/issues/7)
+
+Be sure to test these and if you have any feedback or comments, feel free to post in the SMAC forums (https://forums.alliedmods.net/forumdisplay.php?f=133) or create an issue on github. Thanks!
+
 0.8.6.3 Update (01-23-2019)
 -----------------
 - Re-added achievement-related checks back to smac_client. Originally, this was removed some time ago due to an issue with ZPS 2.4, but has been re-added as ZPS 3.0+ has achievements.

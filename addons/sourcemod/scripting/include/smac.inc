@@ -25,7 +25,7 @@
 #include <smac_stocks>
 
 /* Globals */
-#define SMAC_VERSION	"0.8.6.3"
+#define SMAC_VERSION	"0.8.6.4"
 #define SMAC_URL		"https://github.com/Silenci0/SMAC"
 #define SMAC_AUTHOR		"SMAC Development Team (original), Mr. Silence (updated)"
 #define SMAC_MOD_ERROR	"This module will not work for this mod and should be removed."

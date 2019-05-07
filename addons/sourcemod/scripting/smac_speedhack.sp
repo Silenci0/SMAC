@@ -116,7 +116,10 @@ public Action:Timer_AddTicks(Handle:timer)
 }
 
 public Action:OnPlayerRunCmd(client, &buttons, &impulse, Float:vel[3], Float:angles[3], &weapon)
-{
+{   
+    if (!IsClientInGame(client))
+        return Plugin_Handled;
+    
     if (!g_iTicksLeft[client])
         return Plugin_Handled;
     

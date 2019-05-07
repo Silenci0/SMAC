@@ -167,7 +167,7 @@ public Action:OnPlayerRunCmd(client, &buttons, &impulse, Float:vel[3], Float:ang
     // Block old cmds after a client resets their tickcount.
     if (tickcount <= 0)
         g_TickStatus[client] = State_Resetting;
-
+   
     // Fixes issues caused by client timeouts.
     new bool:bAlive = IsPlayerAlive(client);
     if (!bAlive || !g_bPrevAlive[client] || GetGameTime() <= g_fDetectedTime[client])
@@ -244,7 +244,7 @@ public Action:OnPlayerRunCmd(client, &buttons, &impulse, Float:vel[3], Float:ang
 
         // The tickcount should be incremented.
         // No longer true in CS:GO (https://forums.alliedmods.net/showthread.php?t=267559)
-        if (g_iPrevTickCount[client] != tickcount && g_iPrevTickCount[client]+1 != tickcount)
+        if (g_iPrevTickCount[client] != tickcount && g_iPrevTickCount[client]+1 != tickcount && tickcount != GetGameTickCount())
         {
             g_fDetectedTime[client] = GetGameTime() + 30.0;
 
