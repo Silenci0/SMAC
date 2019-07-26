@@ -1,13 +1,21 @@
 # SMAC
 Sourcemod Anti-Cheat
 
-For a lot of people, SMAC has been one of those more elusive plugins due to some of the issues surrounding it involving copyrights and headers. In 0.8.6.0, the original authors added the headers to it and left it at that. During that time, I was working on my own fork of it specifically for ZPS. So not only does the code have all the appropriate headers, but included is a license with those headers as well, so it should be okay to distribute, post, branch, and fork once again as needed provided everyone adheres to the license.
+For a lot of people, SMAC has been one of those more elusive plugins due to some of the issues surrounding it involving copyrights and headers. In 0.8.6.0, the original authors added the headers to it and left it at that. During that time, I was working on my own fork of it specifically for ZPS which evolved from there into the current fork that is seen today. So not only does the code have all the appropriate headers, but included is a license with those headers as well, so it should be okay to distribute, post, branch, and fork once again as needed provided everyone adheres to the license.
 
-Although progress is a bit slow, I do hope to add more features and update detections for various aimbots/hacks over the next few iterations. My hope is to return SMAC to active development as a free, open source project for multiple source-based games. Not sure how well that will go, but I'll give it a shot.
+Although progress is a bit slow, I do hope to add more features and update detections for various aimbots/hacks over the next few iterations. My hope is to return SMAC to active development as a free, open source project for multiple source-based games. Not sure how well that will go, but I'll give it a shot. Also, if you want to help contribute to the plugin, please feel free to issue pull requests and contribute if you'd like.
 
 For information about the plugin and its modules, please use the wiki here: https://github.com/Silenci0/SMAC/wiki
 
 # Changelog
+0.8.6.5 Update (07-26-2019)
+-----------------
+- Updated the smac_commands.smx module:
+    * Added the command snd_setsoundparam to the CS:GO ignore commands list in the code. While this command was removed from CS:GO on 05/29/2019, it seems that it has been getting randomly spammed and causing users to be kicked. This issue was brought up in https://github.com/Silenci0/SMAC/issues/8
+    * Please note that you can add commands to block or ignore via plugin commands from smac_commands.smx independently. Please see this wiki page for details: https://github.com/Silenci0/SMAC/wiki/Command-Monitor
+    * Added new convar smac_anticmdspam_kick. This toggles the ability to kick users for command spam (which is set as the default response) or to simply notify when someone is spamming.
+    * Updated smac.cfg with new cvars and recompiled all smac plugins to reflect updated version.
+
 0.8.6.4 Update (05-07-2019)
 -----------------
 - Fixed a couple of issues related to tickcount with the smac_eyetest module that was causing false positives to occur in TF2 and CS:GO (someone might want to confirm for CS:GO):

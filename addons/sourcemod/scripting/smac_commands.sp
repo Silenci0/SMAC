@@ -46,6 +46,7 @@ new Handle:g_hIgnoredCmds = INVALID_HANDLE;
 new g_iCmdSpamLimit = 30;
 new g_iCmdCount[MAXPLAYERS+1] = {0, ...};
 new Handle:g_hCvarCmdSpam = INVALID_HANDLE;
+new Handle:g_hCvarCmdSpmKick = INVALID_HANDLE;
 
 /* Plugin Functions */
 public OnPluginStart()
@@ -54,6 +55,7 @@ public OnPluginStart()
     
     // Convars.
     g_hCvarCmdSpam = SMAC_CreateConVar("smac_antispam_cmds", "20", "Amount of commands allowed per second. (0 = Disabled)", 0, true, 0.0);
+    g_hCvarCmdSpmKick = SMAC_CreateConVar("smac_anticmdspam_kick", "1", "Choose to kick or simply notify that commands are being spammed. (0 = Notify  1 = Kick)", 0, true, 0.0, true, 1.0);
     OnSettingsChanged(g_hCvarCmdSpam, "", "");
     HookConVarChange(g_hCvarCmdSpam, OnSettingsChanged);
 
@@ -159,6 +161,10 @@ public OnPluginStart()
         {
             SetTrieValue(g_hIgnoredCmds, "bitcmd", true);
             SetTrieValue(g_hIgnoredCmds, "sg", true);
+        }
+        case Game_CSGO:
+        {
+            SetTrieValue(g_hIgnoredCmds, "snd_setsoundparam", true);
         }
     }
 
@@ -324,16 +330,22 @@ public Action:Command_Say(client, const String:command[], args)
 public Action:Command_BlockEntExploit(client, const String:command[], args)
 {
     if (!IS_CLIENT(client))
+    {
         return Plugin_Continue;
+    }
     
     if (!IsClientInGame(client))
+    {
         return Plugin_Stop;
+    }
     
     decl String:sArgString[512];
     
     if (GetCmdArgString(sArgString, sizeof(sArgString)) > 500)
+    {
         return Plugin_Stop;
-    
+    }
+
     if (StrContains(sArgString, "admin") != -1 || 
         StrContains(sArgString, "alias", false) != -1 || 
         StrContains(sArgString, "logic_auto") != -1 || 
@@ -370,11 +382,15 @@ public Action:Command_BlockEntExploit(client, const String:command[], args)
 public Action:Command_CommandListener(client, const String:command[], argc)
 {
     if (!IS_CLIENT(client) || (IsClientConnected(client) && IsFakeClient(client)))
+    {
         return Plugin_Continue;
-        
+    }
+    
     if (!IsClientInGame(client))
+    {
         return Plugin_Stop;
-
+    }
+    
     // NOTE: InternalDispatch automatically lower cases "command".
     new ActionType:cAction = Action_Block;
     
@@ -404,6 +420,10 @@ public Action:Command_CommandListener(client, const String:command[], argc)
                     SMAC_LogAction(client, "was kicked for command: %s %s", command, sArgString);
                     KickClient(client, "Command %s violation", command);
                 }
+                else
+                {
+                    // Do Nothing
+                }
             }
             
             CloseHandle(info);
@@ -423,13 +443,25 @@ public Action:Command_CommandListener(client, const String:command[], argc)
         
         if (SMAC_CheatDetected(client, Detection_CommandSpamming, info) == Plugin_Continue)
         {
-            SMAC_PrintAdminNotice("%N was kicked for spamming: %s %s", client, command, sArgString);
-            SMAC_LogAction(client, "was kicked for spamming: %s %s", command, sArgString);
-            KickClient(client, "%t", "SMAC_CommandSpamKick");
+            if (GetConVarInt(g_hCvarCmdSpmKick) == 1)
+            {
+                SMAC_PrintAdminNotice("%N was kicked for spamming: %s %s", client, command, sArgString);
+                SMAC_LogAction(client, "was kicked for spamming: %s %s", command, sArgString);
+                KickClient(client, "%t", "SMAC_CommandSpamKick");
+            }
+            else if (GetConVarInt(g_hCvarCmdSpmKick) == 0)
+            {
+                SMAC_PrintAdminNotice("%N looks to be spamming commands: %s %s", client, command, sArgString);
+                SMAC_LogAction(client, "looks to be spamming commands: %s %s", command, sArgString);
+            }
+            else
+            {   
+                // Do Nothing
+            }
         }
-        
+
         CloseHandle(info);
-        
+
         return Plugin_Stop;
     }
 
