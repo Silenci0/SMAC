@@ -1,0 +1,135 @@
+"Phrases"
+{
+	"SMAC_Tag"
+	{
+		"chi"		"[SMAC] "
+	}
+	
+	"SMAC_Banned"
+	{
+		"chi"		"你因为作弊而被封禁了"
+	}
+	
+	"SMAC_GlobalBanned"
+	{
+		"#format"	"{1:s},{2:s}"
+		"chi"		"你处在 {1} 的全球封禁列表中. 浏览 {2} 以获得更多信息"
+	}
+	
+	"SMAC_CommandSpamKick"
+	{
+		"chi"		"你因为发送指令次数过于频繁而被封禁了"
+	}
+	
+	"SMAC_IllegalDefuse"
+	{
+		"chi"		"你不能穿墙拆包."
+	}
+	
+	"SMAC_PleaseWait"
+	{
+		"chi"		"请等待一分钟直到允许重连"
+	}
+	
+	"SMAC_FailedToReply"
+	{
+		"chi"		"你的客户端没有在指定时间应答查询，请尝试重连或者重启游戏"
+	}
+	
+	"SMAC_FailedAuth"
+	{
+		"chi"		"你的客户端在指定时间内验证失败，请尝试重连或者重启游戏"
+	}
+	
+	"SMAC_Muted"
+	{
+		"#format"	"{1:N}"
+		"chi"		"{1} 被 SourceMod Anti-Cheat 禁言."
+	}
+	
+	"SMAC_CvarViolation"
+	{
+		"#format"	"{1:N},{2:s}"
+		"chi"		"{1} 在 {2} 上返回了错误的值."
+	}
+	
+	"SMAC_ShouldEqual"
+	{
+		"#format"	"{1:s},{2:s},{3:s}"
+		"chi"		"你的 convar {1} 的值应该是 {2} 但是它被设置为了 {3}. 请在重连之前设置正确"
+	}
+	
+	"SMAC_ShouldBeGreater"
+	{
+		"#format"	"{1:s},{2:s},{3:s}"
+		"chi"		"你的 convar {1} 的值应该高于或者与 {2} 相同，但是它被设置为了 {3}. 请在重连之前设置正确"
+	}
+	
+	"SMAC_ShouldBeLess"
+	{
+		"#format"	"{1:s},{2:s},{3:s}"
+		"chi"		"你的 convar {1} 的值应该低于或者与 {2} 相同，但是它被设置为了 {3}. 请在重连之前设置正确"
+	}
+	
+	"SMAC_ShouldBeBetwechi"
+	{
+		"#format"	"{1:s},{2:s},{3:s},{4:s}"
+		"chi"		"你的 convar {1} 的值应该在 {2} 和 {3} 之间，但是它被设置为了 {4}. 请在重连之前设置正确"
+	}
+	
+	"SMAC_ShouldBeOutside"
+	{
+		"#format"	"{1:s},{2:s},{3:s},{4:s}"
+		"chi"		"你的 convar {1} 的值应该在 {2} 和 {3} 之外，但是它被设置为了 {4}. 请在重连之前设置正确"
+	}
+	
+	"SMAC_Changchiame"
+	{
+		"chi"		"请改变您的昵称"
+	}
+	
+	"SMAC_CmdBanned"
+	{
+		"chi"		"你因为违反指令使用方式而被封禁"
+	}
+	
+	"SMAC_SayBlock"
+	{
+		"chi"		"你发送的消息因为有无效字符而被阻止."
+	}
+	
+	"SMAC_AimbotDetected"
+	{
+		"#format"	"{1:N},{2:i},{3:.0f},{4:s}"
+		"chi"		"{1} 涉嫌使用自瞄. (检测 #{2} 次| 偏离: {3}° | 武器: {4})"
+	}
+	
+	"SMAC_AutoTriggerDetected"
+	{
+		"#format"	"{1:N},{2:s}"
+		"chi"		"{1} 涉嫌使用自动扳机: {2}"
+	}
+	
+	"SMAC_SpinhackDetected"
+	{
+		"#format"	"{1:N}"
+		"chi"		"{1} 涉嫌使用陀螺."
+	}
+	
+	"SMAC_SpeedhackDetected"
+	{
+		"#format"	"{1:N}"
+		"chi"		"{1} 涉嫌使用改速挂."
+	}
+	
+	"SMAC_EyetestDetected"
+	{
+		"#format"	"{1:N}"
+		"chi"		"{1} 涉嫌改变视角."
+	}
+	
+	"SMAC_WelcomeMsg"
+	{
+		"chi"		"这个服务器被smac保护."
+	}
+}
