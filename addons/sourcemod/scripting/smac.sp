@@ -35,7 +35,8 @@ public Plugin:myinfo =
 };
 
 /* Globals */
-#define SOURCEBANS_AVAILABLE()	(GetFeatureStatus(FeatureType_Native, "SBBanPlayer") == FeatureStatus_Available)
+#define SOURCEBANS_AVAILABLE()	(GetFeatureStatus(FeatureType_Native, "SBBanPlayer") == FeatureStatus_Available) //Old SourceBans
+#define SOURCEBANSPP_AVAILABLE()	(GetFeatureStatus(FeatureType_Native, "SBPP_BanPlayer") == FeatureStatus_Available) //Support old version and new version of sourcebans++ by Dr.Mohammad
 #define SOURCEIRC_AVAILABLE()	(GetFeatureStatus(FeatureType_Native, "IRC_MsgFlaggedChannels") == FeatureStatus_Available)
 #define IRCRELAY_AVAILABLE()	(GetFeatureStatus(FeatureType_Native, "IRC_Broadcast") == FeatureStatus_Available)
 
@@ -46,7 +47,8 @@ enum IrcChannel
     IrcChannel_Both    = 3
 }
 
-native SBBanPlayer(client, target, time, String:reason[]);
+native SBBanPlayer(client, target, time, String:reason[]); //Old SourceBans
+native SBPP_BanPlayer(client, target, time, String:reason[]); //Support old version and new version of sourcebans++ by Dr.Mohammad
 native IRC_MsgFlaggedChannels(const String:flag[], const String:format[], any:...);
 native IRC_Broadcast(IrcChannel:type, const String:format[], any:...);
 
@@ -98,7 +100,8 @@ public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
     BuildPath(Path_SM, g_sLogPath, sizeof(g_sLogPath), "logs/SMAC.log");
     
     // Optional dependencies.
-    MarkNativeAsOptional("SBBanPlayer");
+    MarkNativeAsOptional("SBBanPlayer"); //Old SourceBans
+    MarkNativeAsOptional("SBPP_BanPlayer"); //Support old version and new version of sourcebans++ by Dr.Mohammad
     MarkNativeAsOptional("IRC_MsgFlaggedChannels");
     MarkNativeAsOptional("IRC_Broadcast");
     
@@ -324,6 +327,7 @@ public Native_LogAction(Handle:plugin, numParams)
 }
 
 // native SMAC_Ban(client, const String:reason[], any:...);
+//Support old version and new version of sourcebans++ by Dr.Mohammad
 public Native_Ban(Handle:plugin, numParams)
 {
     decl String:sVersion[16], String:sReason[256];
@@ -337,6 +341,10 @@ public Native_Ban(Handle:plugin, numParams)
     if (SOURCEBANS_AVAILABLE())
     {
         SBBanPlayer(0, client, duration, sReason);
+    }
+    else if (SOURCEBANSPP_AVAILABLE())
+    {
+        SBPP_BanPlayer(0, client, duration, sReason);
     }
     else
     {
