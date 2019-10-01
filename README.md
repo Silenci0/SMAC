@@ -3,18 +3,31 @@ Sourcemod Anti-Cheat
 
 For a lot of people, SMAC has been one of those more elusive plugins due to some of the issues surrounding it involving copyrights and headers. In 0.8.6.0, the original authors added the headers to it and left it at that. During that time, I was working on my own fork of it specifically for ZPS which evolved from there into the current fork that is seen today. So not only does the code have all the appropriate headers, but included is a license with those headers as well, so it should be okay to distribute, post, branch, and fork once again as needed provided everyone adheres to the license.
 
-Although progress is a bit slow, I do hope to add more features and update detections for various aimbots/hacks over the next few iterations. My hope is to return SMAC to active development as a free, open source project for multiple source-based games. Not sure how well that will go, but I'll give it a shot. Also, if you want to help contribute to the plugin, please feel free to issue pull requests and contribute if you'd like.
+Although progress is a bit slow, I do hope to add more features and update detections for various aimbots/hacks over the next few iterations. My hope is to return SMAC to active development as a free, open source project for multiple source-based games. Not sure how well that will go, but I'll give it a shot. 
+
+Also, if you want to help contribute to the plugin, please feel free to issue pull requests if you have changes/updates that you think would be good. Keep in mind that the code will be reviewed to determine if it will be accepted or not. 
 
 For information about the plugin and its modules, please use the wiki here: https://github.com/Silenci0/SMAC/wiki
 
 # Changelog
+0.8.6.6 Update (09-30-2019)
+-----------------
+- Updated support for Sourcebans++ to use latest natives instead of the depreciated native.
+    * SMAC will attempt to use the sourcebans++ native first, then the depreciated native next. This is for backwards compatibility.
+    * This was brought up by Drmohammad11 in this issue here: https://github.com/Silenci0/SMAC/issues/13
+- Added Chinese translation to SMAC via pull request from LemonPAKA: https://github.com/Silenci0/SMAC/pull/10
+- Depreciated support for the EAC module. The code will still be available, but the plugin will no longer be compiled. With changes to the Easy Anti-Cheat website, it is no longer possible (as far as I am aware) to use this module or modify it to work as it once did. It will be unable to grab the information needed to check if a player was banned by Easy Anti-Cheat. Sorry!
+- Known Issue: The ESEA module currently does not work very well due to the ESEA website/Cloudflare denying the request. This is still being worked on: https://github.com/Silenci0/SMAC/issues/11
+- Known Issue: Bhop detection from the autotrigger module is not catching some people using scripts. Issue is being worked on and was discussed here: https://forums.alliedmods.net/showthread.php?t=318420
+ 
+
 0.8.6.5 Update (07-26-2019)
 -----------------
 - Updated the smac_commands.smx module:
     * Added the command snd_setsoundparam to the CS:GO ignore commands list in the code. While this command was removed from CS:GO on 05/29/2019, it seems that it has been getting randomly spammed and causing users to be kicked. This issue was brought up in https://github.com/Silenci0/SMAC/issues/8
     * Please note that you can add commands to block or ignore via plugin commands from smac_commands.smx independently. Please see this wiki page for details: https://github.com/Silenci0/SMAC/wiki/Command-Monitor
     * Added new convar smac_anticmdspam_kick. This toggles the ability to kick users for command spam (which is set as the default response) or to simply notify when someone is spamming.
-    * Updated smac.cfg with new cvars and recompiled all smac plugins to reflect updated version.
+- Updated smac.cfg with new cvars and recompiled all smac plugins to reflect updated version.
 
 0.8.6.4 Update (05-07-2019)
 -----------------

@@ -35,7 +35,8 @@ public Plugin:myinfo =
 };
 
 /* Globals */
-#define SOURCEBANS_AVAILABLE()	(GetFeatureStatus(FeatureType_Native, "SBBanPlayer") == FeatureStatus_Available)
+#define SOURCEBANS_AVAILABLE()	(GetFeatureStatus(FeatureType_Native, "SBBanPlayer") == FeatureStatus_Available) // Depreciated in SB++, leaving in for legacy/compatibility!
+#define SBPP_AVAILABLE()	(GetFeatureStatus(FeatureType_Native, "SBPP_BanPlayer") == FeatureStatus_Available)
 #define SOURCEIRC_AVAILABLE()	(GetFeatureStatus(FeatureType_Native, "IRC_MsgFlaggedChannels") == FeatureStatus_Available)
 #define IRCRELAY_AVAILABLE()	(GetFeatureStatus(FeatureType_Native, "IRC_Broadcast") == FeatureStatus_Available)
 
@@ -46,7 +47,8 @@ enum IrcChannel
     IrcChannel_Both    = 3
 }
 
-native SBBanPlayer(client, target, time, String:reason[]);
+native SBBanPlayer(client, target, time, String:reason[]); // Depreciated in SB++, leaving in for legacy/compatibility!
+native SBPP_BanPlayer(client, target, time, String:reason[]);
 native IRC_MsgFlaggedChannels(const String:flag[], const String:format[], any:...);
 native IRC_Broadcast(IrcChannel:type, const String:format[], any:...);
 
@@ -99,6 +101,7 @@ public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
     
     // Optional dependencies.
     MarkNativeAsOptional("SBBanPlayer");
+    MarkNativeAsOptional("SBPP_BanPlayer");
     MarkNativeAsOptional("IRC_MsgFlaggedChannels");
     MarkNativeAsOptional("IRC_Broadcast");
     
@@ -334,7 +337,11 @@ public Native_Ban(Handle:plugin, numParams)
     FormatNativeString(0, 2, 3, sizeof(sReason), _, sReason);
     Format(sReason, sizeof(sReason), "SMAC %s: %s", sVersion, sReason);
     
-    if (SOURCEBANS_AVAILABLE())
+    if (SBPP_AVAILABLE())
+    {
+        SBPP_BanPlayer(0, client, duration, sReason);
+    }
+    else if (SOURCEBANS_AVAILABLE())
     {
         SBBanPlayer(0, client, duration, sReason);
     }
