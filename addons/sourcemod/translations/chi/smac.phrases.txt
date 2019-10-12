@@ -7,18 +7,18 @@
 	
 	"SMAC_Banned"
 	{
-		"chi"		"你因为作弊而被封禁了"
+		"chi"		"你因为作弊行为而被服务器封禁"
 	}
 	
 	"SMAC_GlobalBanned"
 	{
 		"#format"	"{1:s},{2:s}"
-		"chi"		"你处在 {1} 的全球封禁列表中. 浏览 {2} 以获得更多信息"
+		"chi"		"你处在 {1} 的全局封禁列表中. 请访问 {2} 以获得详细信息"
 	}
 	
 	"SMAC_CommandSpamKick"
 	{
-		"chi"		"你因为发送指令次数过于频繁而被封禁了"
+		"chi"		"你因为过于频繁的发送指令而被服务器踢出"
 	}
 	
 	"SMAC_IllegalDefuse"
@@ -28,17 +28,17 @@
 	
 	"SMAC_PleaseWait"
 	{
-		"chi"		"请等待一分钟直到允许重连"
+		"chi"		"请等一会再重新连接服务器"
 	}
 	
 	"SMAC_FailedToReply"
 	{
-		"chi"		"你的客户端没有在指定时间应答查询，请尝试重连或者重启游戏"
+		"chi"		"你的客户端未能及时响应查询请求,请尝试重连或者重启游戏"
 	}
 	
 	"SMAC_FailedAuth"
 	{
-		"chi"		"你的客户端在指定时间内验证失败，请尝试重连或者重启游戏"
+		"chi"		"你的客户端未能及时通过验证,请尝试重连或者重启游戏"
 	}
 	
 	"SMAC_Muted"
@@ -50,47 +50,47 @@
 	"SMAC_CvarViolation"
 	{
 		"#format"	"{1:N},{2:s}"
-		"chi"		"{1} 在 {2} 上返回了错误的值."
+		"chi"		"{1} 返回了 {2} 的错误的值."
 	}
 	
 	"SMAC_ShouldEqual"
 	{
 		"#format"	"{1:s},{2:s},{3:s}"
-		"chi"		"你的 convar {1} 的值应该是 {2} 但是它被设置为了 {3}. 请在重连之前设置正确"
+		"chi"		"你的 convar {1} 的值应该为 {2} 但是它被设置为 {3} 了. 请在重连之前设置正确"
 	}
 	
 	"SMAC_ShouldBeGreater"
 	{
 		"#format"	"{1:s},{2:s},{3:s}"
-		"chi"		"你的 convar {1} 的值应该高于或者与 {2} 相同，但是它被设置为了 {3}. 请在重连之前设置正确"
+		"chi"		"你的 convar {1} 的值应该大于或与 {2} 相同 但是它被设置为 {3} 了. 请修改完 {1} 的值后重新连接服务器"
 	}
 	
 	"SMAC_ShouldBeLess"
 	{
 		"#format"	"{1:s},{2:s},{3:s}"
-		"chi"		"你的 convar {1} 的值应该低于或者与 {2} 相同，但是它被设置为了 {3}. 请在重连之前设置正确"
+		"chi"		"你的 convar {1} 的值应该小于或与 {2} 相同 但是它被设置为 {3} 了. 请修改完 {1} 的值后重新连接服务器"
 	}
 	
 	"SMAC_ShouldBeBetwechi"
 	{
 		"#format"	"{1:s},{2:s},{3:s},{4:s}"
-		"chi"		"你的 convar {1} 的值应该在 {2} 和 {3} 之间，但是它被设置为了 {4}. 请在重连之前设置正确"
+		"chi"		"你的 convar {1} 的值应该在 {2} 和 {3} 之间 但是它被设置为 {4} 了. 请修改完 {1} 的值后重新连接服务器"
 	}
 	
 	"SMAC_ShouldBeOutside"
 	{
 		"#format"	"{1:s},{2:s},{3:s},{4:s}"
-		"chi"		"你的 convar {1} 的值应该在 {2} 和 {3} 之外，但是它被设置为了 {4}. 请在重连之前设置正确"
+		"chi"		"你的 convar {1} 的值不应该在 {2} 和 {3} 之间 但是它被设置为 {4} 了. 请修改完 {1} 的值后重新连接服务器"
 	}
 	
-	"SMAC_Changchiame"
+	"SMAC_ChangeName"
 	{
-		"chi"		"请改变您的昵称"
+		"chi"		"请修改您的昵称"
 	}
 	
 	"SMAC_CmdBanned"
 	{
-		"chi"		"你因为违反指令使用方式而被封禁"
+		"chi"		"你因为违规使用指令而被服务器封禁"
 	}
 	
 	"SMAC_SayBlock"
@@ -107,29 +107,29 @@
 	"SMAC_AutoTriggerDetected"
 	{
 		"#format"	"{1:N},{2:s}"
-		"chi"		"{1} 涉嫌使用自动扳机: {2}"
+		"chi"		"{1} 涉嫌自动触发式作弊: {2}"
 	}
 	
 	"SMAC_SpinhackDetected"
 	{
 		"#format"	"{1:N}"
-		"chi"		"{1} 涉嫌使用陀螺."
+		"chi"		"{1} 涉嫌使用陀螺(Spinhack/Antiaim)."
 	}
 	
 	"SMAC_SpeedhackDetected"
 	{
 		"#format"	"{1:N}"
-		"chi"		"{1} 涉嫌使用改速挂."
+		"chi"		"{1} 涉嫌使用加速挂(Speedhack)."
 	}
 	
 	"SMAC_EyetestDetected"
 	{
 		"#format"	"{1:N}"
-		"chi"		"{1} 涉嫌改变视角."
+		"chi"		"{1} 涉嫌非法修改视角."
 	}
 	
 	"SMAC_WelcomeMsg"
 	{
-		"chi"		"这个服务器被smac保护."
+		"chi"		"此服务器受 SourceMod Anti-Cheat 保护."
 	}
 }
