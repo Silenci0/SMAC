@@ -71,7 +71,7 @@
 		"chi"		"你的 convar {1} 的值应该小于或与 {2} 相同 但是它被设置为 {3} 了. 请修改完 {1} 的值后重新连接服务器"
 	}
 	
-	"SMAC_ShouldBeBetwechi"
+	"SMAC_ShouldBeBetween"
 	{
 		"#format"	"{1:s},{2:s},{3:s},{4:s}"
 		"chi"		"你的 convar {1} 的值应该在 {2} 和 {3} 之间 但是它被设置为 {4} 了. 请修改完 {1} 的值后重新连接服务器"

@@ -10,6 +10,13 @@ Also, if you want to help contribute to the plugin, please feel free to issue pu
 For information about the plugin and its modules, please use the wiki here: https://github.com/Silenci0/SMAC/wiki
 
 # Changelog
+0.8.6.7 Update (10-12-2019)
+-----------------
+- Merged changes by Frisasky to the main SMAC module for Fistful of Frags (https://github.com/Silenci0/SMAC/pull/16)
+- Merged changes by Loyisa for the Chinese translations (https://github.com/Silenci0/SMAC/pull/17)
+- Fixed "SMAC_ShouldBeBetwechi" in Chinese translations which should be "SMAC_ShouldBeBetween"
+- Recompiled plugins to implement changes.
+
 0.8.6.6 Update (09-30-2019)
 -----------------
 - Updated support for Sourcebans++ to use latest natives instead of the depreciated native.
