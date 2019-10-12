@@ -81,7 +81,7 @@ public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
         g_Game = Game_L4D2;
     else if (StrEqual(sGame, "hl2mp"))
         g_Game = Game_HL2DM;
-    else if (StrEqual(sGame, "fistful_of_frags"))
+    else if (StrEqual(sGame, "fof"))
         g_Game = Game_FOF;
     else if (StrEqual(sGame, "garrysmod"))
         g_Game = Game_GMOD;
