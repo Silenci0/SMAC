@@ -17,6 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #pragma semicolon 1
+#pragma newdecls required
 
 /* SM Includes */
 #include <sourcemod>
@@ -25,7 +26,7 @@
 #tryinclude <smrcon> 
 
 /* Plugin Info */
-public Plugin:myinfo =
+public Plugin myinfo =
 {
     name = "SMAC Rcon Locker",
     author = SMAC_AUTHOR,
@@ -35,15 +36,15 @@ public Plugin:myinfo =
 };
 
 /* Globals */
-new Handle:g_hCvarRconPass = INVALID_HANDLE;
-new String:g_sRconRealPass[128];
-new bool:g_bRconLocked = false;
+ConVar g_hCvarRconPass;
+char g_sRconRealPass[128];
+bool g_bRconLocked = false;
 
-new Handle:g_hWhitelist = INVALID_HANDLE;
-new bool:g_bSMrconLoaded = false;
+Handle g_hWhitelist = INVALID_HANDLE;
+bool g_bSMrconLoaded = false;
 
 /* Plugin Functions */
-public OnPluginStart()
+public void OnPluginStart()
 {
     // Convars.
     g_hCvarRconPass = FindConVar("rcon_password");
@@ -57,7 +58,7 @@ public OnPluginStart()
     RegAdminCmd("smac_rcon_removeip", Command_RemoveIP, ADMFLAG_ROOT, "Removes an IP address from the rcon whitelist.");
 }
 
-public OnLibraryAdded(const String:name[])
+public void OnLibraryAdded(const char[] name)
 {
     if (StrEqual(name, "smrcon"))
     {
@@ -65,7 +66,7 @@ public OnLibraryAdded(const String:name[])
     }
 }
 
-public OnLibraryRemoved(const String:name[])
+public void OnLibraryRemoved(const char[] name)
 {
     if (StrEqual(name, "smrcon"))
     {
@@ -74,7 +75,7 @@ public OnLibraryRemoved(const String:name[])
     }
 }
 
-public OnConfigsExecuted()
+public void OnConfigsExecuted()
 {
     if (!g_bRconLocked)
     {
@@ -83,7 +84,7 @@ public OnConfigsExecuted()
     }
 }
 
-public OnRconPassChanged(Handle:convar, const String:oldValue[], const String:newValue[])
+public void OnRconPassChanged(ConVar convar, char[] oldValue, char[] newValue)
 {
     if (g_bRconLocked && !StrEqual(newValue, g_sRconRealPass))
     {
@@ -92,7 +93,7 @@ public OnRconPassChanged(Handle:convar, const String:oldValue[], const String:ne
     }
 }
 
-public Action:Command_AddIP(client, args)
+public Action Command_AddIP(int client,int args)
 {
     if (!g_bSMrconLoaded)
     {
@@ -106,7 +107,7 @@ public Action:Command_AddIP(client, args)
         return Plugin_Handled;
     }
 
-    decl String:sIP[32];
+    char sIP[32];
     GetCmdArg(1, sIP, sizeof(sIP));
 
     if (SetTrieValue(g_hWhitelist, sIP, 1, false))
@@ -124,7 +125,7 @@ public Action:Command_AddIP(client, args)
     return Plugin_Handled;
 }
 
-public Action:Command_RemoveIP(client, args)
+public Action Command_RemoveIP(int client,int args)
 {
     if (!g_bSMrconLoaded)
     {
@@ -138,7 +139,7 @@ public Action:Command_RemoveIP(client, args)
         return Plugin_Handled;
     }
 
-    decl String:sIP[32];
+    char sIP[32];
     GetCmdArg(1, sIP, sizeof(sIP));
 
     if (RemoveFromTrie(g_hWhitelist, sIP))
@@ -156,10 +157,10 @@ public Action:Command_RemoveIP(client, args)
     return Plugin_Handled;
 }
 
-public Action:SMRCon_OnAuth(rconId, const String:address[], const String:password[], &bool:allow)
+public Action SMRCon_OnAuth(int rconId, const char[] address, const char[] password, bool& allow)
 {
     // Check against whitelist before continuing.
-    decl dummy;
+    int dummy;
     
     if (!GetTrieSize(g_hWhitelist) || GetTrieValue(g_hWhitelist, address, dummy))
         return Plugin_Continue;
@@ -169,10 +170,10 @@ public Action:SMRCon_OnAuth(rconId, const String:address[], const String:passwor
     return Plugin_Changed;
 }
 
-public Action:SMRCon_OnCommand(rconId, const String:address[], const String:command[], &bool:allow)
+public Action SMRCon_OnCommand(int rconId, const char[] address, const char[] command, bool& allow)
 {
     // Check against whitelist before continuing.
-    decl dummy;
+    int dummy;
     
     if (!GetTrieSize(g_hWhitelist) || GetTrieValue(g_hWhitelist, address, dummy))
         return Plugin_Continue;

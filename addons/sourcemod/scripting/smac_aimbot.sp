@@ -17,6 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #pragma semicolon 1
+#pragma newdecls required
 
 /* SM Includes */
 #include <sourcemod>
@@ -24,7 +25,7 @@
 #include <smac>
 
 /* Plugin Info */
-public Plugin:myinfo =
+public Plugin myinfo =
 {
     name = "SMAC Aimbot Detector",
     author = SMAC_AUTHOR,
@@ -38,18 +39,18 @@ public Plugin:myinfo =
 #define AIM_BAN_MIN			4		// Minimum number of detections before an auto-ban is allowed
 #define AIM_MIN_DISTANCE	200.0	// Minimum distance acceptable for a detection.
 
-new Handle:g_hCvarAimbotBan = INVALID_HANDLE;
-new Handle:g_IgnoreWeapons = INVALID_HANDLE;
+ConVar g_hCvarAimbotBan;
+Handle g_IgnoreWeapons = INVALID_HANDLE;
 
-new Float:g_fEyeAngles[MAXPLAYERS+1][64][3];
-new g_iEyeIndex[MAXPLAYERS+1];
+float g_fEyeAngles[MAXPLAYERS+1][64][3];
+int g_iEyeIndex[MAXPLAYERS+1];
 
-new g_iAimDetections[MAXPLAYERS+1];
-new g_iAimbotBan = 0;
-new g_iMaxAngleHistory;
+int g_iAimDetections[MAXPLAYERS+1];
+int g_iAimbotBan = 0;
+int g_iMaxAngleHistory;
 
 /* Plugin Functions */
-public OnPluginStart()
+public void OnPluginStart()
 {
     LoadTranslations("smac.phrases");
     
@@ -166,7 +167,7 @@ public OnPluginStart()
     }
 }
 
-public OnClientPutInServer(client)
+public void OnClientPutInServer(int client)
 {
     if (IsClientNew(client))
     {
@@ -175,9 +176,9 @@ public OnClientPutInServer(client)
     }
 }
 
-public OnSettingsChanged(Handle:convar, const String:oldValue[], const String:newValue[])
+public void OnSettingsChanged(ConVar convar, char[] oldValue, char[] newValue)
 {
-    new iNewValue = GetConVarInt(convar);
+    int iNewValue = convar.IntValue;
     
     if (iNewValue > 0 && iNewValue < AIM_BAN_MIN)
     {
@@ -188,7 +189,7 @@ public OnSettingsChanged(Handle:convar, const String:oldValue[], const String:ne
     g_iAimbotBan = iNewValue;
 }
 
-public Teleport_OnEndTouch(const String:output[], caller, activator, Float:delay)
+public void Teleport_OnEndTouch(const char[] output, int caller, int activator, float delay)
 {
     /* A client is being teleported in the map. */
     if (IS_CLIENT(activator) && IsClientConnected(activator))
@@ -198,10 +199,10 @@ public Teleport_OnEndTouch(const String:output[], caller, activator, Float:delay
     }
 }
 
-public Event_PlayerSpawn(Handle:event, const String:name[], bool:dontBroadcast)
+public Action Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 {
-    new userid = GetEventInt(event, "userid");
-    new client = GetClientOfUserId(userid);
+    int userid = GetEventInt(event, "userid");
+    int client = GetClientOfUserId(userid);
     
     if (IS_CLIENT(client))
     {
@@ -210,20 +211,20 @@ public Event_PlayerSpawn(Handle:event, const String:name[], bool:dontBroadcast)
     }
 }
 
-public Event_PlayerDeath(Handle:event, const String:name[], bool:dontBroadcast)
+public Action Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
-    decl String:sWeapon[32], dummy;
+    char sWeapon[32], dummy;
     GetEventString(event, "weapon", sWeapon, sizeof(sWeapon));
     
     if (GetTrieValue(g_IgnoreWeapons, sWeapon, dummy))
         return;
         
-    new victim = GetClientOfUserId(GetEventInt(event, "userid"));
-    new attacker = GetClientOfUserId(GetEventInt(event, "attacker"));
+    int victim = GetClientOfUserId(GetEventInt(event, "userid"));
+    int attacker = GetClientOfUserId(GetEventInt(event, "attacker"));
     
     if (IS_CLIENT(victim) && IS_CLIENT(attacker) && victim != attacker && IsClientInGame(victim) && IsClientInGame(attacker))
     {
-        decl Float:vVictim[3], Float:vAttacker[3];
+        float vVictim[3], vAttacker[3];
         GetClientAbsOrigin(victim, vVictim);
         GetClientAbsOrigin(attacker, vAttacker);
         
@@ -234,22 +235,22 @@ public Event_PlayerDeath(Handle:event, const String:name[], bool:dontBroadcast)
     }
 }
 
-public Event_EntityKilled(Handle:event, const String:name[], bool:dontBroadcast)
+public Action Event_EntityKilled(Event event, const char[] name, bool dontBroadcast)
 {
     /* (OB Only) Inflictor support lets us ignore non-bullet weapons. */
-    new victim = GetEventInt(event, "entindex_killed");
-    new attacker = GetEventInt(event, "entindex_attacker");
-    new inflictor = GetEventInt(event, "entindex_inflictor");
+    int victim = GetEventInt(event, "entindex_killed");
+    int attacker = GetEventInt(event, "entindex_attacker");
+    int inflictor = GetEventInt(event, "entindex_inflictor");
     
     if (IS_CLIENT(victim) && IS_CLIENT(attacker) && victim != attacker && attacker == inflictor && IsClientInGame(victim) && IsClientInGame(attacker))
     {
-        decl String:sWeapon[32], dummy;
+        char sWeapon[32], dummy;
         GetClientWeapon(attacker, sWeapon, sizeof(sWeapon));
         
         if (GetTrieValue(g_IgnoreWeapons, sWeapon, dummy))
             return;
         
-        decl Float:vVictim[3], Float:vAttacker[3];
+        float vVictim[3], vAttacker[3];
         GetClientAbsOrigin(victim, vVictim);
         GetClientAbsOrigin(attacker, vAttacker);
         
@@ -260,36 +261,36 @@ public Event_EntityKilled(Handle:event, const String:name[], bool:dontBroadcast)
     }
 }
 
-public TF2_Event_PlayerDeath(Handle:event, const String:name[], bool:dontBroadcast)
+public Action TF2_Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
-    /* TF2 custom death event */
-    new victim = GetClientOfUserId(GetEventInt(event, "userid"));
-    new attacker = GetClientOfUserId(GetEventInt(event, "attacker"));
-    new inflictor = GetEventInt(event, "inflictor_entindex");
-    
-    if (IS_CLIENT(victim) && IS_CLIENT(attacker) && victim != attacker && attacker == inflictor && IsClientInGame(victim) && IsClientInGame(attacker))
-    {
-        decl String:sWeapon[32], dummy;
-        GetClientWeapon(attacker, sWeapon, sizeof(sWeapon));
-        
-        if (GetTrieValue(g_IgnoreWeapons, sWeapon, dummy))
-            return;
-        
-        decl Float:vVictim[3], Float:vAttacker[3];
-        GetClientAbsOrigin(victim, vVictim);
-        GetClientAbsOrigin(attacker, vAttacker);
-        
-        if (GetVectorDistance(vVictim, vAttacker) >= AIM_MIN_DISTANCE)
-        {
-            Aimbot_AnalyzeAngles(attacker);
-        }
-    }
+	/* TF2 custom death event */
+	int victim = GetClientOfUserId(GetEventInt(event, "userid"));
+	int attacker = GetClientOfUserId(GetEventInt(event, "attacker"));
+	int inflictor = GetEventInt(event, "inflictor_entindex");
+
+	if (IS_CLIENT(victim) && IS_CLIENT(attacker) && victim != attacker && attacker == inflictor && IsClientInGame(victim) && IsClientInGame(attacker))
+	{
+		char sWeapon[32], dummy;
+		GetClientWeapon(attacker, sWeapon, sizeof(sWeapon));
+
+		if (GetTrieValue(g_IgnoreWeapons, sWeapon, dummy))
+			return;
+
+		float vVictim[3], vAttacker[3];
+		GetClientAbsOrigin(victim, vVictim);
+		GetClientAbsOrigin(attacker, vAttacker);
+
+		if (GetVectorDistance(vVictim, vAttacker) >= AIM_MIN_DISTANCE)
+		{
+			Aimbot_AnalyzeAngles(attacker);
+		}
+	}
 }
 
-public Action:Timer_ClearAngles(Handle:timer, any:userid)
+public Action Timer_ClearAngles(Handle timer, any userid)
 {
     /* Delayed because the client's angles can sometimes "spin" after being teleported. */
-    new client = GetClientOfUserId(userid);
+    int client = GetClientOfUserId(userid);
     
     if (IS_CLIENT(client))
     {
@@ -299,10 +300,10 @@ public Action:Timer_ClearAngles(Handle:timer, any:userid)
     return Plugin_Stop;
 }
 
-public Action:Timer_DecreaseCount(Handle:timer, any:userid)
+public Action Timer_DecreaseCount(Handle timer, any userid)
 {
     /* Decrease the detection count by 1. */
-    new client = GetClientOfUserId(userid);
+    int client = GetClientOfUserId(userid);
     
     if (IS_CLIENT(client) && g_iAimDetections[client])
     {
@@ -312,7 +313,7 @@ public Action:Timer_DecreaseCount(Handle:timer, any:userid)
     return Plugin_Stop;
 }
 
-public Action:OnPlayerRunCmd(client, &buttons, &impulse, Float:vel[3], Float:angles[3], &weapon)
+public Action OnPlayerRunCmd(int client, int& buttons, int& impulse, float vel[3], float angles[3], int& weapon, int& subtype, int& cmdnum, int& tickcount, int& seed, int mouse[2])
 {
     g_fEyeAngles[client][g_iEyeIndex[client]] = angles;
 
@@ -324,13 +325,13 @@ public Action:OnPlayerRunCmd(client, &buttons, &impulse, Float:vel[3], Float:ang
     return Plugin_Continue;
 }
 
-Aimbot_AnalyzeAngles(client)
+void Aimbot_AnalyzeAngles(int client)
 {
     /* Analyze the client to see if their angles snapped. */
-    decl Float:vLastAngles[3], Float:vAngles[3], Float:fAngleDiff;
-    new idx = g_iEyeIndex[client];
+    float vLastAngles[3], vAngles[3], fAngleDiff;
+    int idx = g_iEyeIndex[client];
     
-    for (new i = 0; i < g_iMaxAngleHistory; i++)
+    for (int i = 0; i < g_iMaxAngleHistory; i++)
     {
         if (idx == g_iMaxAngleHistory)
         {
@@ -370,7 +371,7 @@ Aimbot_AnalyzeAngles(client)
     }
 }
 
-Aimbot_Detected(client, const Float:deviation)
+void Aimbot_Detected(int client, const float deviation)
 {
     // Extra checks must be done here because of data coming from two events.
     if (IsFakeClient(client) || !IsPlayerAlive(client))
@@ -395,10 +396,10 @@ Aimbot_Detected(client, const Float:deviation)
         }
     }
     
-    decl String:sWeapon[32];
+    char sWeapon[32];
     GetClientWeapon(client, sWeapon, sizeof(sWeapon));
     
-    new Handle:info = CreateKeyValues("");
+    Handle info = CreateKeyValues("");
     KvSetNum(info, "detection", g_iAimDetections[client]);
     KvSetFloat(info, "deviation", deviation);
     KvSetString(info, "weapon", sWeapon);
@@ -425,12 +426,12 @@ Aimbot_Detected(client, const Float:deviation)
     CloseHandle(info);
 }
 
-Aimbot_ClearAngles(client)
+void Aimbot_ClearAngles(int client)
 {
     /* Clear angle history and reset the index. */
     g_iEyeIndex[client] = 0;
     
-    for (new i = 0; i < g_iMaxAngleHistory; i++)
+    for (int i = 0; i < g_iMaxAngleHistory; i++)
     {
         ZeroVector(g_fEyeAngles[client][i]);
     }

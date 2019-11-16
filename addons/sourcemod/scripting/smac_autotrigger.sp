@@ -17,6 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #pragma semicolon 1
+#pragma newdecls required
 
 /* SM Includes */
 #include <sourcemod>
@@ -24,7 +25,7 @@
 #include <smac>
 
 /* Plugin Info */
-public Plugin:myinfo =
+public Plugin myinfo =
 {
     name = "SMAC AutoTrigger Detector",
     author = SMAC_AUTHOR,
@@ -42,12 +43,12 @@ public Plugin:myinfo =
 #define METHOD_AUTOFIRE		1
 #define METHOD_MAX			2
 
-new Handle:g_hCvarBan = INVALID_HANDLE;
-new g_iDetections[METHOD_MAX][MAXPLAYERS+1];
-new g_iAttackMax = 66;
+ConVar g_hCvarBan;
+int g_iDetections[METHOD_MAX][MAXPLAYERS+1];
+int g_iAttackMax = 66;
 
 /* Plugin Functions */
-public OnPluginStart()
+public void OnPluginStart()
 {
     LoadTranslations("smac.phrases");
 
@@ -59,19 +60,19 @@ public OnPluginStart()
     CreateTimer(4.0, Timer_DecreaseCount, _, TIMER_REPEAT);
 }
 
-public OnClientDisconnect_Post(client)
+public void OnClientDisconnect_Post(int client)
 {
-    for (new i = 0; i < METHOD_MAX; i++)
+    for (int i = 0; i < METHOD_MAX; i++)
     {
         g_iDetections[i][client] = 0;
     }
 }
 
-public Action:Timer_DecreaseCount(Handle:timer)
+public Action Timer_DecreaseCount(Handle timer)
 {
-    for (new i = 0; i < METHOD_MAX; i++)
+    for (int i = 0; i < METHOD_MAX; i++)
     {
-        for (new j = 1; j <= MaxClients; j++)
+        for (int j = 1; j <= MaxClients; j++)
         {
             if (g_iDetections[i][j])
             {
@@ -83,12 +84,12 @@ public Action:Timer_DecreaseCount(Handle:timer)
     return Plugin_Continue;
 }
 
-public Action:OnPlayerRunCmd(client, &buttons, &impulse, Float:vel[3], Float:angles[3], &weapon)
+public Action OnPlayerRunCmd(int client, int& buttons, int& impulse, float vel[3], float angles[3], int& weapon, int& subtype, int& cmdnum, int& tickcount, int& seed, int mouse[2])
 {
-    static iPrevButtons[MAXPLAYERS+1];
+    static int iPrevButtons[MAXPLAYERS+1];
     
     /* BunnyHop */
-    static Float:fCheckTime[MAXPLAYERS+1];
+    static float fCheckTime[MAXPLAYERS+1];
 
     // Player didn't jump immediately after the last jump.
     if (!(buttons & IN_JUMP) && (GetEntityFlags(client) & FL_ONGROUND) && fCheckTime[client] > 0.0)
@@ -102,7 +103,7 @@ public Action:OnPlayerRunCmd(client, &buttons, &impulse, Float:vel[3], Float:ang
         // Player is on the ground and about to trigger a jump.
         if (GetEntityFlags(client) & FL_ONGROUND)
         {
-            new Float:fGameTime = GetGameTime();
+            float fGameTime = GetGameTime();
 			
             // Player jumped on the exact frame that allowed it.
             if (fCheckTime[client] > 0.0 && fGameTime > fCheckTime[client])
@@ -121,8 +122,8 @@ public Action:OnPlayerRunCmd(client, &buttons, &impulse, Float:vel[3], Float:ang
     }
 	
     /* Auto-Fire */
-    static iAttackAmt[MAXPLAYERS+1];
-    static bool:bResetNext[MAXPLAYERS+1];
+    static int iAttackAmt[MAXPLAYERS+1];
+    static bool bResetNext[MAXPLAYERS+1];
 
     if (((buttons & IN_ATTACK) && !(iPrevButtons[client] & IN_ATTACK)) || 
         (!(buttons & IN_ATTACK) && (iPrevButtons[client] & IN_ATTACK)))
@@ -150,11 +151,11 @@ public Action:OnPlayerRunCmd(client, &buttons, &impulse, Float:vel[3], Float:ang
     return Plugin_Continue;
 }
 
-AutoTrigger_Detected(client, method)
+void AutoTrigger_Detected(int client,int method)
 {
     if (!IsFakeClient(client) && IsPlayerAlive(client) && ++g_iDetections[method][client] >= TRIGGER_DETECTIONS)
     {
-        decl String:sMethod[32];
+        char sMethod[32];
 
         switch (method)
         {
@@ -168,7 +169,7 @@ AutoTrigger_Detected(client, method)
             }
         }
 		
-        new Handle:info = CreateKeyValues("");
+        Handle info = CreateKeyValues("");
         KvSetString(info, "method", sMethod);
 		
         if (SMAC_CheatDetected(client, Detection_AutoTrigger, info) == Plugin_Continue)

@@ -90,19 +90,19 @@ enum DetectionType {
 };
 
 /* Natives */
-native GameType:SMAC_GetGameType();
-native SMAC_Log(const String:format[], any:...);
-native SMAC_LogAction(client, const String:format[], any:...);
-native SMAC_Ban(client, const String:reason[], any:...);
-native SMAC_PrintAdminNotice(const String:format[], any:...);
-native Handle:SMAC_CreateConVar(const String:name[], const String:defaultValue[], const String:description[]="", flags=0, bool:hasMin=false, Float:min=0.0, bool:hasMax=false, Float:max=0.0);
-native Action:SMAC_CheatDetected(client, DetectionType:type = Detection_Unknown, Handle:info = INVALID_HANDLE);
+native GameType SMAC_GetGameType();
+native void SMAC_Log(const char[] format, any ...);
+native void SMAC_LogAction(int client, const char[] format, any ...);
+native void SMAC_Ban(int client, const char[] reason, any ...);
+native void SMAC_PrintAdminNotice(const char[] format, any ...);
+native ConVar SMAC_CreateConVar(const char[] name, const char[] defaultValue, const char[] description="",int flags = 0, bool hasMin = false, float min = 0.0, bool hasMax = false, float max = 0.0);
+native Action SMAC_CheatDetected(int client, DetectionType type = Detection_Unknown, Handle info = INVALID_HANDLE);
 
 /* Forwards */
-forward Action:SMAC_OnCheatDetected(client, const String:module[], DetectionType:type, Handle:info);
+forward Action SMAC_OnCheatDetected(int client, const char[] module, DetectionType type, Handle info);
 
 
-public SharedPlugin:__pl_smac = 
+public SharedPlugin __pl_smac =
 {
     name = "smac",
     file = "smac.smx",

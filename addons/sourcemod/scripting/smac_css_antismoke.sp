@@ -17,6 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #pragma semicolon 1
+#pragma newdecls required
 
 /* SM Includes */
 #include <sourcemod>
@@ -24,7 +25,7 @@
 #include <smac>
 
 /* Plugin Info */
-public Plugin:myinfo =
+public Plugin myinfo =
 {
     name = "SMAC CS:S Anti-Smoke",
     author = SMAC_AUTHOR,
@@ -38,13 +39,13 @@ public Plugin:myinfo =
 #define SMOKE_FADETIME	15.0	// Seconds until a smoke begins to fade away
 #define SMOKE_RADIUS	2025	// (45^2) Radius to check for a player inside a smoke cloud
 
-new Handle:g_hSmokeLoop = INVALID_HANDLE;
-new Handle:g_hSmokes = INVALID_HANDLE;
-new bool:g_bIsInSmoke[MAXPLAYERS+1];
-new g_iRoundCount;
+Handle g_hSmokeLoop = INVALID_HANDLE;
+Handle g_hSmokes = INVALID_HANDLE;
+bool g_bIsInSmoke[MAXPLAYERS+1];
+int g_iRoundCount;
 
 /* Plugin Functions */
-public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
     if (GetEngineVersion() != Engine_CSS)
     {
@@ -55,7 +56,7 @@ public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
     return APLRes_Success;
 }
 
-public OnPluginStart()
+public void OnPluginStart()
 {
     g_hSmokes = CreateArray(3);
 
@@ -64,13 +65,13 @@ public OnPluginStart()
     HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
 }
 
-public OnMapEnd()
+public void OnMapEnd()
 {
     AntiSmoke_UnhookAll();
     g_iRoundCount = 0;
 }
 
-public OnClientPutInServer(client)
+public void OnClientPutInServer(int client)
 {
     if (g_hSmokeLoop != INVALID_HANDLE)
     {
@@ -78,15 +79,15 @@ public OnClientPutInServer(client)
     }
 }
 
-public OnClientDisconnect(client)
+public void OnClientDisconnect(int client)
 {
     g_bIsInSmoke[client] = false;
 }
 
-public Event_SmokeDetonate(Handle:event, const String:name[], bool:dontBroadcast)
+public Action Event_SmokeDetonate(Event event, const char[] name, bool dontBroadcast)
 {
     /* Delay immersion tests until smoke is fully deployed. */
-    new Handle:hPack;
+    Handle hPack;
     CreateDataTimer(SMOKE_DELAYTIME, Timer_SmokeDeployed, hPack, TIMER_FLAG_NO_MAPCHANGE);
     WritePackCell(hPack, g_iRoundCount);
     WritePackFloat(hPack, GetEventFloat(event, "x"));
@@ -96,21 +97,21 @@ public Event_SmokeDetonate(Handle:event, const String:name[], bool:dontBroadcast
     CreateTimer(SMOKE_FADETIME, Timer_SmokeEnded, g_iRoundCount, TIMER_FLAG_NO_MAPCHANGE);
 }
 
-public Event_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
+public Action Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
     /* Smokes disappear on round start. */
     AntiSmoke_UnhookAll();
     g_iRoundCount++;
 }
 
-public Action:Timer_SmokeDeployed(Handle:timer, Handle:hPack)
+public Action Timer_SmokeDeployed(Handle timer, Handle hPack)
 {
     ResetPack(hPack);
 	
     /* Make sure the smoke still exists. */
     if (g_iRoundCount == ReadPackCell(hPack))
     {
-        decl Float:vSmoke[3];
+        float vSmoke[3];
         vSmoke[0] = ReadPackFloat(hPack);
         vSmoke[1] = ReadPackFloat(hPack);
         vSmoke[2] = ReadPackFloat(hPack);
@@ -123,7 +124,7 @@ public Action:Timer_SmokeDeployed(Handle:timer, Handle:hPack)
     return Plugin_Stop;
 }
 
-public Action:Timer_SmokeEnded(Handle:timer, any:iRoundCount)
+public Action Timer_SmokeEnded(Handle timer, any iRoundCount)
 {
     /* Make sure we're tampering with the right smokes. */
     if (g_iRoundCount == iRoundCount)
@@ -143,19 +144,19 @@ public Action:Timer_SmokeEnded(Handle:timer, any:iRoundCount)
     return Plugin_Stop;
 }
 
-public Action:Timer_SmokeCheck(Handle:timer)
+public Action Timer_SmokeCheck(Handle timer)
 {
     /* Check if a player is immersed in a smoke. */
-    decl Float:vClient[3], Float:vSmoke[3];
+    float vClient[3], vSmoke[3];
 
-    for (new i = 1; i <= MaxClients; i++)
+    for (int i = 1; i <= MaxClients; i++)
     {
         if (IsClientInGame(i) && !IsFakeClient(i))
         {
             GetClientAbsOrigin(i, vClient);
             g_bIsInSmoke[i] = false;
 
-            for (new idx = 0; idx < GetArraySize(g_hSmokes); idx++)
+            for (int idx = 0; idx < GetArraySize(g_hSmokes); idx++)
             {
                 GetArrayArray(g_hSmokes, idx, vSmoke);
 
@@ -171,7 +172,7 @@ public Action:Timer_SmokeCheck(Handle:timer)
     return Plugin_Continue;
 }
 
-public Action:Hook_SetTransmit(entity, client)
+public Action Hook_SetTransmit(int entity, int client)
 {
     /* Don't send client data to players that are immersed in smoke. */
     if (entity != client && g_bIsInSmoke[client])
@@ -180,14 +181,14 @@ public Action:Hook_SetTransmit(entity, client)
     return Plugin_Continue;
 }
 
-AntiSmoke_HookAll()
+void AntiSmoke_HookAll()
 {
     if (g_hSmokeLoop != INVALID_HANDLE)
         return;
 
     g_hSmokeLoop = CreateTimer(0.1, Timer_SmokeCheck, _, TIMER_REPEAT);
 
-    for (new i = 1; i <= MaxClients; i++)
+    for (int i = 1; i <= MaxClients; i++)
     {
         if (IsClientInGame(i))
         {
@@ -196,7 +197,7 @@ AntiSmoke_HookAll()
     }
 }
 
-AntiSmoke_UnhookAll()
+void AntiSmoke_UnhookAll()
 {
     if (g_hSmokeLoop == INVALID_HANDLE)
         return;
@@ -204,7 +205,7 @@ AntiSmoke_UnhookAll()
     KillTimer(g_hSmokeLoop);
     g_hSmokeLoop = INVALID_HANDLE;
 
-    for (new i = 1; i <= MaxClients; i++)
+    for (int i = 1; i <= MaxClients; i++)
     {
         if (IsClientInGame(i))
         {
