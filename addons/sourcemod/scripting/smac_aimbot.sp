@@ -52,119 +52,119 @@ int g_iMaxAngleHistory;
 /* Plugin Functions */
 public void OnPluginStart()
 {
-    LoadTranslations("smac.phrases");
-    
-    // Convars.
-    g_hCvarAimbotBan = SMAC_CreateConVar("smac_aimbot_ban", "0", "Number of aimbot detections before a player is banned. Minimum allowed is 4. (0 = Never ban)", 0, true, 0.0);
-    OnSettingsChanged(g_hCvarAimbotBan, "", "");
-    HookConVarChange(g_hCvarAimbotBan, OnSettingsChanged);
-    
-    // Store no more than 500ms worth of angle history.
-    if ((g_iMaxAngleHistory = TIME_TO_TICK(0.5)) > sizeof(g_fEyeAngles[]))
-    {
-        g_iMaxAngleHistory = sizeof(g_fEyeAngles[]);
-    }
-    
-    // Weapons to ignore when analyzing.
-    g_IgnoreWeapons = CreateTrie();
-    
-    switch (SMAC_GetGameType())
-    {
-        case Game_CSS:
-        {
-            SetTrieValue(g_IgnoreWeapons, "weapon_knife", 1);
-        }
-        case Game_CSGO:
-        {
-            SetTrieValue(g_IgnoreWeapons, "weapon_knife", 1);
-            SetTrieValue(g_IgnoreWeapons, "weapon_taser", 1);
-        }
-        case Game_DODS:
-        {
-            SetTrieValue(g_IgnoreWeapons, "weapon_spade", 1);
-            SetTrieValue(g_IgnoreWeapons, "weapon_amerknife", 1);
-        }
-        case Game_TF2:
-        {
-            SetTrieValue(g_IgnoreWeapons, "tf_weapon_bottle", 1);
-            SetTrieValue(g_IgnoreWeapons, "tf_weapon_sword", 1);
-            SetTrieValue(g_IgnoreWeapons, "tf_weapon_wrench", 1);
-            SetTrieValue(g_IgnoreWeapons, "tf_weapon_robot_arm", 1);
-            SetTrieValue(g_IgnoreWeapons, "tf_weapon_fists", 1);
-            SetTrieValue(g_IgnoreWeapons, "tf_weapon_bonesaw", 1);
-            SetTrieValue(g_IgnoreWeapons, "tf_weapon_fireaxe", 1);
-            SetTrieValue(g_IgnoreWeapons, "tf_weapon_bat", 1);
-            SetTrieValue(g_IgnoreWeapons, "tf_weapon_bat_wood", 1);
-            SetTrieValue(g_IgnoreWeapons, "tf_weapon_bat_fish", 1);
-            SetTrieValue(g_IgnoreWeapons, "tf_weapon_club", 1);
-            SetTrieValue(g_IgnoreWeapons, "tf_weapon_shovel", 1);
-            SetTrieValue(g_IgnoreWeapons, "tf_weapon_knife", 1);
-            SetTrieValue(g_IgnoreWeapons, "tf_weapon_stickbomb", 1);
-            SetTrieValue(g_IgnoreWeapons, "tf_weapon_katana", 1);
-            SetTrieValue(g_IgnoreWeapons, "tf_weapon_flamethrower", 1);
-            SetTrieValue(g_IgnoreWeapons, "tf_weapon_slap", 1);
-            SetTrieValue(g_IgnoreWeapons, "tf_weapon_buff_item", 1);
-            SetTrieValue(g_IgnoreWeapons, "tf_weapon_parachute", 1); 
-            SetTrieValue(g_IgnoreWeapons, "tf_weapon_breakable_sign", 1);
-            SetTrieValue(g_IgnoreWeapons, "tf_wearable_demoshield", 1); 
-            SetTrieValue(g_IgnoreWeapons, "tf_wearable_razorback", 1); 
-            SetTrieValue(g_IgnoreWeapons, "tf_wearable", 1); 
-            SetTrieValue(g_IgnoreWeapons, "tf_weapon_rocketpack", 1); 
-            SetTrieValue(g_IgnoreWeapons, "tf_weapon_lunchbox_drink", 1);
-            SetTrieValue(g_IgnoreWeapons, "tf_weapon_lunchbox", 1); 
-            SetTrieValue(g_IgnoreWeapons, "saxxy", 1); 
-        }
-        case Game_HL2DM:
-        {
-            SetTrieValue(g_IgnoreWeapons, "weapon_crowbar", 1);
-            SetTrieValue(g_IgnoreWeapons, "weapon_stunstick", 1);
-        }
-        case Game_ZPS:
-        {
-            SetTrieValue(g_IgnoreWeapons, "weapon_torque", 1);
-            SetTrieValue(g_IgnoreWeapons, "weapon_tireiron", 1);
-            SetTrieValue(g_IgnoreWeapons, "weapon_crowbar", 1);
-            SetTrieValue(g_IgnoreWeapons, "weapon_spanner", 1);
-            SetTrieValue(g_IgnoreWeapons, "weapon_sledgehammer", 1);
-            SetTrieValue(g_IgnoreWeapons, "weapon_shovel", 1);
-            SetTrieValue(g_IgnoreWeapons, "weapon_racket", 1);
-            SetTrieValue(g_IgnoreWeapons, "weapon_pot", 1);
-            SetTrieValue(g_IgnoreWeapons, "weapon_plank", 1);
-            SetTrieValue(g_IgnoreWeapons, "weapon_pipewrench", 1);   
-            SetTrieValue(g_IgnoreWeapons, "weapon_pipe", 1);
-            SetTrieValue(g_IgnoreWeapons, "weapon_phone", 1);
-            SetTrieValue(g_IgnoreWeapons, "weapon_meatcleaver", 1);
-            SetTrieValue(g_IgnoreWeapons, "weapon_machete", 1);
-            SetTrieValue(g_IgnoreWeapons, "weapon_keyboard", 1);
-            SetTrieValue(g_IgnoreWeapons, "weapon_ied", 1);
-            SetTrieValue(g_IgnoreWeapons, "weapon_golf", 1);
-            SetTrieValue(g_IgnoreWeapons, "weapon_fryingpan", 1);
-            SetTrieValue(g_IgnoreWeapons, "weapon_emptyhand", 1);
-            SetTrieValue(g_IgnoreWeapons, "weapon_carrierarms", 1);
-            SetTrieValue(g_IgnoreWeapons, "weapon_broom", 1);
-            SetTrieValue(g_IgnoreWeapons, "weapon_bat_wood", 1);
-            SetTrieValue(g_IgnoreWeapons, "weapon_bat_aluminum", 1);
-            SetTrieValue(g_IgnoreWeapons, "weapon_chair", 1);
-            SetTrieValue(g_IgnoreWeapons, "weapon_baguette", 1);
-            SetTrieValue(g_IgnoreWeapons, "weapon_barricade", 1);
-            SetTrieValue(g_IgnoreWeapons, "weapon_axe", 1);
-            SetTrieValue(g_IgnoreWeapons, "weapon_arms", 1);
-            SetTrieValue(g_IgnoreWeapons, "weapon_wrench", 1);
-        }
-    }
-    
-    // Hooks.
-    HookEntityOutput("trigger_teleport", "OnEndTouch", Teleport_OnEndTouch);
-    HookEvent("player_spawn", Event_PlayerSpawn, EventHookMode_Post);
-    
-    if (SMAC_GetGameType() == Game_TF2)
-    {
-        HookEvent("player_death", TF2_Event_PlayerDeath, EventHookMode_Post);
-    }
-    else if (!HookEventEx("entity_killed", Event_EntityKilled, EventHookMode_Post))
-    {
-        HookEvent("player_death", Event_PlayerDeath, EventHookMode_Post);
-    }
+	LoadTranslations("smac.phrases");
+
+	// Convars.
+	g_hCvarAimbotBan = SMAC_CreateConVar("smac_aimbot_ban", "0", "Number of aimbot detections before a player is banned. Minimum allowed is 4. (0 = Never ban)", 0, true, 0.0);
+	OnSettingsChanged(g_hCvarAimbotBan, "", "");
+	g_hCvarAimbotBan.AddChangeHook(OnSettingsChanged);
+
+	// Store no more than 500ms worth of angle history.
+	if ((g_iMaxAngleHistory = TIME_TO_TICK(0.5)) > sizeof(g_fEyeAngles[]))
+	{
+		g_iMaxAngleHistory = sizeof(g_fEyeAngles[]);
+	}
+
+	// Weapons to ignore when analyzing.
+	g_IgnoreWeapons = CreateTrie();
+
+	switch (SMAC_GetGameType())
+	{
+		case Game_CSS:
+		{
+			SetTrieValue(g_IgnoreWeapons, "weapon_knife", 1);
+		}
+		case Game_CSGO:
+		{
+			SetTrieValue(g_IgnoreWeapons, "weapon_knife", 1);
+			SetTrieValue(g_IgnoreWeapons, "weapon_taser", 1);
+		}
+		case Game_DODS:
+		{
+			SetTrieValue(g_IgnoreWeapons, "weapon_spade", 1);
+			SetTrieValue(g_IgnoreWeapons, "weapon_amerknife", 1);
+		}
+		case Game_TF2:
+		{
+			SetTrieValue(g_IgnoreWeapons, "tf_weapon_bottle", 1);
+			SetTrieValue(g_IgnoreWeapons, "tf_weapon_sword", 1);
+			SetTrieValue(g_IgnoreWeapons, "tf_weapon_wrench", 1);
+			SetTrieValue(g_IgnoreWeapons, "tf_weapon_robot_arm", 1);
+			SetTrieValue(g_IgnoreWeapons, "tf_weapon_fists", 1);
+			SetTrieValue(g_IgnoreWeapons, "tf_weapon_bonesaw", 1);
+			SetTrieValue(g_IgnoreWeapons, "tf_weapon_fireaxe", 1);
+			SetTrieValue(g_IgnoreWeapons, "tf_weapon_bat", 1);
+			SetTrieValue(g_IgnoreWeapons, "tf_weapon_bat_wood", 1);
+			SetTrieValue(g_IgnoreWeapons, "tf_weapon_bat_fish", 1);
+			SetTrieValue(g_IgnoreWeapons, "tf_weapon_club", 1);
+			SetTrieValue(g_IgnoreWeapons, "tf_weapon_shovel", 1);
+			SetTrieValue(g_IgnoreWeapons, "tf_weapon_knife", 1);
+			SetTrieValue(g_IgnoreWeapons, "tf_weapon_stickbomb", 1);
+			SetTrieValue(g_IgnoreWeapons, "tf_weapon_katana", 1);
+			SetTrieValue(g_IgnoreWeapons, "tf_weapon_flamethrower", 1);
+			SetTrieValue(g_IgnoreWeapons, "tf_weapon_slap", 1);
+			SetTrieValue(g_IgnoreWeapons, "tf_weapon_buff_item", 1);
+			SetTrieValue(g_IgnoreWeapons, "tf_weapon_parachute", 1); 
+			SetTrieValue(g_IgnoreWeapons, "tf_weapon_breakable_sign", 1);
+			SetTrieValue(g_IgnoreWeapons, "tf_wearable_demoshield", 1); 
+			SetTrieValue(g_IgnoreWeapons, "tf_wearable_razorback", 1); 
+			SetTrieValue(g_IgnoreWeapons, "tf_wearable", 1); 
+			SetTrieValue(g_IgnoreWeapons, "tf_weapon_rocketpack", 1); 
+			SetTrieValue(g_IgnoreWeapons, "tf_weapon_lunchbox_drink", 1);
+			SetTrieValue(g_IgnoreWeapons, "tf_weapon_lunchbox", 1); 
+			SetTrieValue(g_IgnoreWeapons, "saxxy", 1); 
+		}
+		case Game_HL2DM:
+		{
+			SetTrieValue(g_IgnoreWeapons, "weapon_crowbar", 1);
+			SetTrieValue(g_IgnoreWeapons, "weapon_stunstick", 1);
+		}
+		case Game_ZPS:
+		{
+			SetTrieValue(g_IgnoreWeapons, "weapon_torque", 1);
+			SetTrieValue(g_IgnoreWeapons, "weapon_tireiron", 1);
+			SetTrieValue(g_IgnoreWeapons, "weapon_crowbar", 1);
+			SetTrieValue(g_IgnoreWeapons, "weapon_spanner", 1);
+			SetTrieValue(g_IgnoreWeapons, "weapon_sledgehammer", 1);
+			SetTrieValue(g_IgnoreWeapons, "weapon_shovel", 1);
+			SetTrieValue(g_IgnoreWeapons, "weapon_racket", 1);
+			SetTrieValue(g_IgnoreWeapons, "weapon_pot", 1);
+			SetTrieValue(g_IgnoreWeapons, "weapon_plank", 1);
+			SetTrieValue(g_IgnoreWeapons, "weapon_pipewrench", 1);   
+			SetTrieValue(g_IgnoreWeapons, "weapon_pipe", 1);
+			SetTrieValue(g_IgnoreWeapons, "weapon_phone", 1);
+			SetTrieValue(g_IgnoreWeapons, "weapon_meatcleaver", 1);
+			SetTrieValue(g_IgnoreWeapons, "weapon_machete", 1);
+			SetTrieValue(g_IgnoreWeapons, "weapon_keyboard", 1);
+			SetTrieValue(g_IgnoreWeapons, "weapon_ied", 1);
+			SetTrieValue(g_IgnoreWeapons, "weapon_golf", 1);
+			SetTrieValue(g_IgnoreWeapons, "weapon_fryingpan", 1);
+			SetTrieValue(g_IgnoreWeapons, "weapon_emptyhand", 1);
+			SetTrieValue(g_IgnoreWeapons, "weapon_carrierarms", 1);
+			SetTrieValue(g_IgnoreWeapons, "weapon_broom", 1);
+			SetTrieValue(g_IgnoreWeapons, "weapon_bat_wood", 1);
+			SetTrieValue(g_IgnoreWeapons, "weapon_bat_aluminum", 1);
+			SetTrieValue(g_IgnoreWeapons, "weapon_chair", 1);
+			SetTrieValue(g_IgnoreWeapons, "weapon_baguette", 1);
+			SetTrieValue(g_IgnoreWeapons, "weapon_barricade", 1);
+			SetTrieValue(g_IgnoreWeapons, "weapon_axe", 1);
+			SetTrieValue(g_IgnoreWeapons, "weapon_arms", 1);
+			SetTrieValue(g_IgnoreWeapons, "weapon_wrench", 1);
+		}
+	}
+
+	// Hooks.
+	HookEntityOutput("trigger_teleport", "OnEndTouch", Teleport_OnEndTouch);
+	HookEvent("player_spawn", Event_PlayerSpawn, EventHookMode_Post);
+
+	if (SMAC_GetGameType() == Game_TF2)
+	{
+		HookEvent("player_death", TF2_Event_PlayerDeath, EventHookMode_Post);
+	}
+	else if (!HookEventEx("entity_killed", Event_EntityKilled, EventHookMode_Post))
+	{
+		HookEvent("player_death", Event_PlayerDeath, EventHookMode_Post);
+	}
 }
 
 public void OnClientPutInServer(int client)
@@ -182,7 +182,7 @@ public void OnSettingsChanged(ConVar convar, char[] oldValue, char[] newValue)
     
     if (iNewValue > 0 && iNewValue < AIM_BAN_MIN)
     {
-        SetConVarInt(convar, AIM_BAN_MIN);
+        convar.IntValue = AIM_BAN_MIN;
         return;
     }
 
@@ -201,7 +201,7 @@ public void Teleport_OnEndTouch(const char[] output, int caller, int activator, 
 
 public Action Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 {
-    int userid = GetEventInt(event, "userid");
+    int userid = event.GetInt("userid");
     int client = GetClientOfUserId(userid);
     
     if (IS_CLIENT(client))
@@ -213,34 +213,35 @@ public Action Event_PlayerSpawn(Event event, const char[] name, bool dontBroadca
 
 public Action Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
-    char sWeapon[32], dummy;
-    GetEventString(event, "weapon", sWeapon, sizeof(sWeapon));
-    
-    if (GetTrieValue(g_IgnoreWeapons, sWeapon, dummy))
-        return;
-        
-    int victim = GetClientOfUserId(GetEventInt(event, "userid"));
-    int attacker = GetClientOfUserId(GetEventInt(event, "attacker"));
-    
-    if (IS_CLIENT(victim) && IS_CLIENT(attacker) && victim != attacker && IsClientInGame(victim) && IsClientInGame(attacker))
-    {
-        float vVictim[3], vAttacker[3];
-        GetClientAbsOrigin(victim, vVictim);
-        GetClientAbsOrigin(attacker, vAttacker);
-        
-        if (GetVectorDistance(vVictim, vAttacker) >= AIM_MIN_DISTANCE)
-        {
-            Aimbot_AnalyzeAngles(attacker);
-        }
-    }
+	char sWeapon[32], dummy;
+	//GetEventString(event, "weapon", sWeapon, sizeof(sWeapon));
+	event.GetString("weapon", sWeapon, sizeof(sWeapon));
+
+	if (GetTrieValue(g_IgnoreWeapons, sWeapon, dummy))
+		return;
+		
+	int victim = GetClientOfUserId(event.GetInt("userid"));
+	int attacker = GetClientOfUserId(event.GetInt("attacker"));
+
+	if (IS_CLIENT(victim) && IS_CLIENT(attacker) && victim != attacker && IsClientInGame(victim) && IsClientInGame(attacker))
+	{
+		float vVictim[3], vAttacker[3];
+		GetClientAbsOrigin(victim, vVictim);
+		GetClientAbsOrigin(attacker, vAttacker);
+		
+		if (GetVectorDistance(vVictim, vAttacker) >= AIM_MIN_DISTANCE)
+		{
+			Aimbot_AnalyzeAngles(attacker);
+		}
+	}
 }
 
 public Action Event_EntityKilled(Event event, const char[] name, bool dontBroadcast)
 {
     /* (OB Only) Inflictor support lets us ignore non-bullet weapons. */
-    int victim = GetEventInt(event, "entindex_killed");
-    int attacker = GetEventInt(event, "entindex_attacker");
-    int inflictor = GetEventInt(event, "entindex_inflictor");
+    int victim = event.GetInt("entindex_killed");
+    int attacker = event.GetInt("entindex_attacker");
+    int inflictor = event.GetInt("entindex_inflictor");
     
     if (IS_CLIENT(victim) && IS_CLIENT(attacker) && victim != attacker && attacker == inflictor && IsClientInGame(victim) && IsClientInGame(attacker))
     {

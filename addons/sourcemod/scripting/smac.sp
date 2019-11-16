@@ -114,47 +114,48 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnPluginStart()
 {
-    LoadTranslations("smac.phrases");
+	LoadTranslations("smac.phrases");
 
-    // Convars.
-    g_hCvarVersion = CreateConVar("smac_version", SMAC_VERSION, "SourceMod Anti-Cheat", FCVAR_NOTIFY|FCVAR_DONTRECORD);
-    OnVersionChanged(g_hCvarVersion, "", "");
-    HookConVarChange(g_hCvarVersion, OnVersionChanged);
+	// Convars.
+	g_hCvarVersion = CreateConVar("smac_version", SMAC_VERSION, "SourceMod Anti-Cheat", FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	OnVersionChanged(g_hCvarVersion, "", "");
+	//HookConVarChange(g_hCvarVersion, OnVersionChanged);
+	g_hCvarVersion.AddChangeHook(OnVersionChanged);
 
-    g_hCvarWelcomeMsg = CreateConVar("smac_welcomemsg", "0", "Display a message saying that your server is protected.", 0, true, 0.0, true, 1.0);
-    g_hCvarBanDuration = CreateConVar("smac_ban_duration", "0", "The duration in minutes used for automatic bans. (0 = Permanent)", 0, true, 0.0);
-    g_hCvarLogVerbose = CreateConVar("smac_log_verbose", "0", "Include extra information about a client being logged.", 0, true, 0.0, true, 1.0);
-    g_hCvarIrcMode = CreateConVar("smac_irc_mode", "1", "Which messages should be sent to IRC plugins. (1 = Admin notices, 2 = Mimic log)", 0, true, 1.0, true, 2.0);
+	g_hCvarWelcomeMsg = CreateConVar("smac_welcomemsg", "0", "Display a message saying that your server is protected.", 0, true, 0.0, true, 1.0);
+	g_hCvarBanDuration = CreateConVar("smac_ban_duration", "0", "The duration in minutes used for automatic bans. (0 = Permanent)", 0, true, 0.0);
+	g_hCvarLogVerbose = CreateConVar("smac_log_verbose", "0", "Include extra information about a client being logged.", 0, true, 0.0, true, 1.0);
+	g_hCvarIrcMode = CreateConVar("smac_irc_mode", "1", "Which messages should be sent to IRC plugins. (1 = Admin notices, 2 = Mimic log)", 0, true, 1.0, true, 2.0);
 
-    // Commands.
-    RegAdminCmd("smac_status", Command_Status, ADMFLAG_GENERIC, "View the server's player status.");
+	// Commands.
+	RegAdminCmd("smac_status", Command_Status, ADMFLAG_GENERIC, "View the server's player status.");
 }
 
 public void OnAllPluginsLoaded()
 {
-    // Don't clutter the config if they aren't using IRC anyway.
-    if (!SOURCEIRC_AVAILABLE() && !IRCRELAY_AVAILABLE())
-    {
-        SetConVarFlags(g_hCvarIrcMode, GetConVarFlags(g_hCvarIrcMode) | FCVAR_DONTRECORD);
-    }
+	// Don't clutter the config if they aren't using IRC anyway.
+	if (!SOURCEIRC_AVAILABLE() && !IRCRELAY_AVAILABLE())
+	{
+		g_hCvarVersion.Flags |= FCVAR_DONTRECORD;
+	}
 
-    // Wait for other modules to create their convars.
-    AutoExecConfig(true, "smac");
+	// Wait for other modules to create their convars.
+	AutoExecConfig(true, "smac");
 
-    PrintToServer("SourceMod Anti-Cheat %s has been successfully loaded.", SMAC_VERSION);
+	PrintToServer("SourceMod Anti-Cheat %s has been successfully loaded.", SMAC_VERSION);
 }
 
 public void OnVersionChanged(ConVar convar, char[] oldValue, char[] newValue)
 {
     if (!StrEqual(newValue, SMAC_VERSION))
     {
-        SetConVarString(g_hCvarVersion, SMAC_VERSION);
+		convar.SetString(SMAC_VERSION, false, false);
     }
 }
 
 public void OnClientPutInServer(int client)
 {
-    if (GetConVarBool(g_hCvarWelcomeMsg))
+    if (g_hCvarWelcomeMsg.BoolValue)
     {
         CreateTimer(10.0, Timer_WelcomeMsg, GetClientSerial(client), TIMER_FLAG_NO_MAPCHANGE);
     }
