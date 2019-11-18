@@ -72,11 +72,11 @@ enum {
 /**
  * General
  */
-stock GetPluginBasename(Handle:plugin, String:buffer[], maxlength)
+stock void GetPluginBasename(Handle plugin, char[] buffer,int maxlength)
 {
     GetPluginFilename(plugin, buffer, maxlength);
 
-    new check = -1;
+    int check = -1;
     if ((check = FindCharInString(buffer, '/', true)) != -1 ||
         (check = FindCharInString(buffer, '\\', true)) != -1)
     {
@@ -84,20 +84,20 @@ stock GetPluginBasename(Handle:plugin, String:buffer[], maxlength)
     }
 }
 
-stock bool:IsConVarDefault(Handle:convar)
+stock bool IsConVarDefault(ConVar convar)
 {
-    decl String:sDefaultVal[16], String:sCurrentVal[16];
+    char sDefaultVal[16], sCurrentVal[16];
     GetConVarDefault(convar, sDefaultVal, sizeof(sDefaultVal));
     GetConVarString(convar, sCurrentVal, sizeof(sCurrentVal));
 
     return StrEqual(sDefaultVal, sCurrentVal);
 }
 
-stock StringToLower(String:input[])
+stock void StringToLower(char[] input)
 {
-    new length = strlen(input);
+    int length = strlen(input);
 
-    for (new i = 0; i < length; i++)
+    for (int i = 0; i < length; i++)
     {
         input[i] = CharToLower(input[i]);
     }
@@ -106,15 +106,15 @@ stock StringToLower(String:input[])
 /**
  * Clients
  */
-stock bool:IsClientNew(client)
+stock bool IsClientNew(int client)
 {
     // Client must be ingame.
     return IsFakeClient(client) || GetGameTime() > GetClientTime(client);
 }
 
-stock bool:GetClientAbsVelocity(client, Float:velocity[3])
+stock bool GetClientAbsVelocity(int client, float velocity[3])
 {
-    static offset = -1;
+    static int offset = -1;
 
     if (offset == -1 && (offset = FindDataMapInfo(client, "m_vecAbsVelocity")) == -1) // FindDataMapOffs(client, "m_vecAbsVelocity")) == -1)
     {
@@ -126,14 +126,14 @@ stock bool:GetClientAbsVelocity(client, Float:velocity[3])
     return true;
 }
 
-stock GetClientHudFlags(client)
+stock int GetClientHudFlags(int client)
 {
     return GetEntProp(client, Prop_Send, "m_iHideHUD");
 }
 
-stock GetClientObserverMode(client)
+stock int GetClientObserverMode(int client)
 {
-    static offset = -1;
+    static int offset = -1;
 
     if (offset == -1 && (offset = FindSendPropInfo("CBasePlayer", "m_iObserverMode")) == -1) //FindSendPropOffs("CBasePlayer", "m_iObserverMode")) == -1)
     {
@@ -143,9 +143,9 @@ stock GetClientObserverMode(client)
     return GetEntData(client, offset);
 }
 
-stock GetClientObserverTarget(client)
+stock int GetClientObserverTarget(int client)
 {
-    static offset = -1;
+    static int offset = -1;
 
     if (offset == -1 && (offset = FindSendPropInfo("CBasePlayer", "m_hObserverTarget")) == -1)
     {
@@ -158,20 +158,20 @@ stock GetClientObserverTarget(client)
 /**
  * Game Specific
  */
-stock bool:DODS_IsPlayerProne(client)
+stock bool DODS_IsPlayerProne(int client)
 {
-    return bool:GetEntProp(client, Prop_Send, "m_bProne") || 
+    return view_as<bool>(GetEntProp(client, Prop_Send, "m_bProne") || 
         GetEntPropFloat(client, Prop_Send, "m_flGoProneTime") > 0.0 || 
-        GetEntPropFloat(client, Prop_Send, "m_flUnProneTime") > 0.0;
+        GetEntPropFloat(client, Prop_Send, "m_flUnProneTime") > 0.0);
 }
 
-stock bool:L4D_IsPlayerGhost(client)
+stock bool L4D_IsPlayerGhost(int client)
 {
-    return bool:GetEntProp(client, Prop_Send, "m_isGhost", 1);
+    return view_as<bool>(GetEntProp(client, Prop_Send, "m_isGhost", 1));
 }
 
 // "Busy" implies that the client is not in their typical first-person state.
-stock bool:L4D_IsSurvivorBusy(client)
+stock bool L4D_IsSurvivorBusy(int client)
 {
     return GetEntityFlags(client) & FL_FROZEN || 
         GetClientHudFlags(client) & ~HIDEHUD_BONUS_PROGRESS || 
@@ -182,14 +182,14 @@ stock bool:L4D_IsSurvivorBusy(client)
         GetEntPropEnt(client, Prop_Send, "m_tongueOwner") > 0;
 }
 
-stock bool:L4D_IsInfectedBusy(client)
+stock bool L4D_IsInfectedBusy(int client)
 {
     return GetEntPropFloat(client, Prop_Send, "m_vomitFadeStart") > GetGameTime() || 
         GetEntPropEnt(client, Prop_Send, "m_pounceVictim") > 0 || 
         GetEntPropEnt(client, Prop_Send, "m_tongueVictim") > 0;
 }
 
-stock bool:L4D2_IsSurvivorBusy(client)
+stock bool L4D2_IsSurvivorBusy(int client)
 {
     return GetEntityFlags(client) & FL_FROZEN || 
         GetClientHudFlags(client) & ~HIDEHUD_BONUS_PROGRESS || 
@@ -203,7 +203,7 @@ stock bool:L4D2_IsSurvivorBusy(client)
         GetEntPropEnt(client, Prop_Send, "m_tongueOwner") > 0;
 }
 
-stock bool:L4D2_IsInfectedBusy(client)
+stock bool L4D2_IsInfectedBusy(int client)
 {
     return GetEntProp(client, Prop_Send, "m_iGlowType") == 3 || 
         GetEntPropFloat(client, Prop_Send, "m_vomitFadeStart") > GetGameTime() || 
@@ -214,7 +214,7 @@ stock bool:L4D2_IsInfectedBusy(client)
         GetEntPropEnt(client, Prop_Send, "m_tongueVictim") > 0;
 }
 
-stock bool:ND_IsPlayerCommander(client)
+stock bool ND_IsPlayerCommander(int client)
 {
     return GameRules_GetPropEnt("m_hCommanders", 0) == client || GameRules_GetPropEnt("m_hCommanders", 1) == client;
 }
@@ -222,51 +222,51 @@ stock bool:ND_IsPlayerCommander(client)
 /**
  * Math
  */
-stock ZeroVector(Float:vec[3])
+stock void ZeroVector(float vec[3])
 {
     vec[0] = vec[1] = vec[2] = 0.0;
 }
 
-stock bool:IsVectorZero(const Float:vec[3])
+stock bool IsVectorZero(const float vec[3])
 {
     return vec[0] == 0.0 && vec[1] == 0.0 && vec[2] == 0.0;
 }
 
-stock bool:IsVectorAlmostZero(const Float:vec[3], const Float:tolerance=0.1)
+stock bool IsVectorAlmostZero(const float vec[3], const float tolerance=0.1)
 {
-    return FloatAbs(vec[0]) <= tolerance && 
+    return view_as<bool>(FloatAbs(vec[0]) <= tolerance && 
         FloatAbs(vec[1]) <= tolerance && 
-        FloatAbs(vec[2]) <= tolerance;
+        FloatAbs(vec[2]) <= tolerance);
 }
 
-stock bool:AreVectorsEqual(const Float:vec1[3], const Float:vec2[3])
+stock bool AreVectorsEqual(const float vec1[3], const float vec2[3])
 {
     return vec1[0] == vec2[0] && vec1[1] == vec2[1] && vec1[2] == vec2[2];
 }
 
-stock bool:AreVectorsAlmostEqual(const Float:vec1[3], const Float:vec2[3], const Float:tolerance=0.1)
+stock bool AreVectorsAlmostEqual(const float vec1[3], const float vec2[3], const float tolerance=0.1)
 {
-    return FloatAbs(vec1[0] - vec2[0]) <= tolerance && 
+    return view_as<bool>(FloatAbs(vec1[0] - vec2[0]) <= tolerance && 
         FloatAbs(vec1[1] - vec2[1]) <= tolerance && 
-        FloatAbs(vec1[2] - vec2[2]) <= tolerance;
+        FloatAbs(vec1[2] - vec2[2]) <= tolerance);
 }
 
-stock AbsValue(value)
+stock int AbsValue(int value)
 {
     return (value >= 0) ? value : -value;
 }
 
-stock any:MinValue(any:value, any:min)
+stock any MinValue(any value, any min)
 {
     return (value < min) ? min : value;
 }
 
-stock any:MaxValue(any:value, any:max)
+stock any MaxValue(any value, any max)
 {
     return (value > max) ? max : value;
 }
 
-stock any:ClampValue(any:value, any:min, any:max)
+stock any ClampValue(any value, any min, any max)
 {
     value = MinValue(value, min);
     value = MaxValue(value, max);
@@ -274,9 +274,9 @@ stock any:ClampValue(any:value, any:min, any:max)
     return value;
 }
 
-stock IPToLong(const String:ip[])
+stock int IPToLong(const char[] ip)
 {
-    decl String:pieces[4][4];
+    char pieces[4][4];
 
     if (ExplodeString(ip, ".", pieces, sizeof(pieces), sizeof(pieces[])) != 4)
         return 0;
@@ -287,32 +287,32 @@ stock IPToLong(const String:ip[])
         StringToInt(pieces[3]);
 }
 
-stock LongToIP(ip, String:buffer[], size)
+stock void LongToIP(int ip, char[] buffer,int size)
 {
     FormatEx(buffer, size, "%d.%d.%d.%d", (ip >> 24) & 0xFF, (ip >> 16) & 0xFF, (ip >> 8) & 0xFF, ip & 0xFF);
 }
 
-stock MT_GetRandomInt(min, max)
+stock int MT_GetRandomInt(int min,int max)
 {
     return RoundToNearest(GetURandomFloat() * float(max - min) + float(min));
 }
 
-stock Float:MT_GetRandomFloat(Float:min, Float:max)
+stock float MT_GetRandomFloat(float min, float max)
 {
     return GetURandomFloat() * (max - min) + min;
 }
 
-stock BfWriteSBitLong(Handle:bf, data, numBits)
+stock void BfWriteSBitLong(Handle bf,int data,int numBits)
 {
-    for (new i = 0; i < numBits; i++)
+    for (int i = 0; i < numBits; i++)
     {
         BfWriteBool(bf, !!(data & (1 << i)));
     }
 }
 
-stock BfReadSBitLong(Handle:bf, numBits)
+stock void BfReadSBitLong(Handle bf,int numBits)
 {
-    decl bits[numBits], ret, i;
+    int bits[numBits], ret, i;
 
     for (i = 0; i < numBits; i++)
     {

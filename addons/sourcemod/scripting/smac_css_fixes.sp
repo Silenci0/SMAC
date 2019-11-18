@@ -17,6 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #pragma semicolon 1
+#pragma newdecls required
 
 /* SM Includes */
 #include <sourcemod>
@@ -24,7 +25,7 @@
 #include <smac>
 
 /* Plugin Info */
-public Plugin:myinfo =
+public Plugin myinfo =
 {
     name = "SMAC CS:S Exploit Fixes",
     author = SMAC_AUTHOR,
@@ -34,7 +35,7 @@ public Plugin:myinfo =
 };
 
 /* Plugin Functions */
-public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
     if (GetEngineVersion() != Engine_CSS)
     {
@@ -45,11 +46,11 @@ public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
     return APLRes_Success;
 }
 
-public OnPluginStart()
+public void OnPluginStart()
 {
     LoadTranslations("smac.phrases");
 
-    new Handle:hCvar = INVALID_HANDLE;
+    ConVar hCvar;
 
     hCvar = SMAC_CreateConVar("smac_css_defusefix", "1", "Block illegal defuses.", 0, true, 0.0, true, 1.0);
     OnDefuseFixChanged(hCvar, "", "");
@@ -60,12 +61,12 @@ public OnPluginStart()
     HookConVarChange(hCvar, OnRespawnFixChanged);
 }
 
-public OnMapStart()
+public void OnMapStart()
 {
     ClearDefuseData();
 }
 
-public OnMapEnd()
+public void OnMapEnd()
 {
     ClearSpawnData();
 }
@@ -73,16 +74,16 @@ public OnMapEnd()
 /**
  * Defuse Fix
  */
-new bool:g_bDefuseFixEnabled;
-new Float:g_fNextCheck[MAXPLAYERS+1];
-new bool:g_bAllowDefuse[MAXPLAYERS+1];
+bool g_bDefuseFixEnabled;
+float g_fNextCheck[MAXPLAYERS+1];
+bool g_bAllowDefuse[MAXPLAYERS+1];
 
-new g_iDefuserEnt = -1;
-new Float:g_vBombPos[3];
+int g_iDefuserEnt = -1;
+float g_vBombPos[3];
 
-public OnDefuseFixChanged(Handle:convar, const String:oldValue[], const String:newValue[])
+public void OnDefuseFixChanged(ConVar convar, char[] oldValue, char[] newValue)
 {
-    new bool:bNewValue = GetConVarBool(convar);
+    bool bNewValue = convar.BoolValue;
     if (bNewValue && !g_bDefuseFixEnabled)
     {
         HookEvent("bomb_planted", Event_BombPlanted, EventHookMode_PostNoCopy);
@@ -106,16 +107,16 @@ public OnDefuseFixChanged(Handle:convar, const String:oldValue[], const String:n
     g_bDefuseFixEnabled = bNewValue;
 }
 
-ClearDefuseData()
+void ClearDefuseData()
 {
-    for (new i = 1; i <= MaxClients; i++)
+    for (int i = 1; i <= MaxClients; i++)
     {
         g_fNextCheck[i] = 0.0;
     }
     g_iDefuserEnt = -1;
 }
 
-public Action:OnPlayerRunCmd(client, &buttons, &impulse, Float:vel[3], Float:angles[3], &weapon)
+public Action OnPlayerRunCmd(int client, int& buttons, int& impulse, float vel[3], float angles[3], int& weapon, int& subtype, int& cmdnum, int& tickcount, int& seed, int mouse[2])
 {
     if (g_bDefuseFixEnabled && (buttons & IN_USE))
     {
@@ -128,7 +129,7 @@ public Action:OnPlayerRunCmd(client, &buttons, &impulse, Float:vel[3], Float:ang
         }
         else if (g_iDefuserEnt == client)
         {
-            decl Float:vEyePos[3];
+            float vEyePos[3];
             GetClientEyePosition(client, vEyePos);
 
             TR_TraceRayFilter(vEyePos, g_vBombPos, MASK_VISIBLE, RayType_EndPoint, Filter_WorldOnly);
@@ -146,19 +147,19 @@ public Action:OnPlayerRunCmd(client, &buttons, &impulse, Float:vel[3], Float:ang
     return Plugin_Continue;
 }
 
-public bool:Filter_WorldOnly(entity, mask)
+public bool Filter_WorldOnly(int entity, int contentsMask)
 {
     return false;
 }
 
-public Event_BombPlanted(Handle:event, const String:name[], bool:dontBroadcast)
+public Action Event_BombPlanted(Event event, const char[] name, bool dontBroadcast)
 {
     BombPlanted();
 }
 
-BombPlanted()
+void BombPlanted()
 {
-    new iBombEnt = FindEntityByClassname(-1, "planted_c4");
+    int iBombEnt = FindEntityByClassname(-1, "planted_c4");
     if (iBombEnt != -1)
     {
         GetEntPropVector(iBombEnt, Prop_Send, "m_vecOrigin", g_vBombPos);
@@ -166,12 +167,12 @@ BombPlanted()
     }
 }
 
-public Event_BombBeginDefuse(Handle:event, const String:name[], bool:dontBroadcast)
+public Action Event_BombBeginDefuse(Event event, const char[] name, bool dontBroadcast)
 {
     g_iDefuserEnt = GetClientOfUserId(GetEventInt(event, "userid"));
 }
 
-public Event_ResetDefuser(Handle:event, const String:name[], bool:dontBroadcast)
+public Action Event_ResetDefuser(Event event, const char[] name, bool dontBroadcast)
 {
     g_iDefuserEnt = -1;
 }
@@ -179,21 +180,21 @@ public Event_ResetDefuser(Handle:event, const String:name[], bool:dontBroadcast)
 /**
  * Respawn Fix
  */
-new bool:g_bRespawnFixEnabled;
+bool g_bRespawnFixEnabled;
 
-new Handle:g_hFreezeTime = INVALID_HANDLE;
-new Handle:g_hRespawnElapsed = INVALID_HANDLE;
-new Handle:g_hClientSpawned = INVALID_HANDLE;
-new g_iClientClass[MAXPLAYERS+1] = {-1, ...};
+Handle g_hFreezeTime = INVALID_HANDLE;
+Handle g_hRespawnElapsed = INVALID_HANDLE;
+Handle g_hClientSpawned = INVALID_HANDLE;
+int g_iClientClass[MAXPLAYERS+1] = {-1, ...};
 
-public OnRespawnFixChanged(Handle:convar, const String:oldValue[], const String:newValue[])
+public void OnRespawnFixChanged(ConVar convar, char[] oldValue, char[] newValue)
 {
     if (g_hClientSpawned == INVALID_HANDLE)
     {
         g_hClientSpawned = CreateTrie();
     }
 
-    new bool:bNewValue = GetConVarBool(convar);
+    bool bNewValue = convar.BoolValue;
     if (bNewValue && !g_bRespawnFixEnabled)
     {
         if (g_hFreezeTime == INVALID_HANDLE)
@@ -218,26 +219,26 @@ public OnRespawnFixChanged(Handle:convar, const String:oldValue[], const String:
     g_bRespawnFixEnabled = bNewValue;
 }
 
-public OnClientDisconnect(client)
+public void OnClientDisconnect(int client)
 {
     g_iClientClass[client] = -1;
 }
 
-public Action:Command_JoinClass(client, const String:command[], args)
+public Action Command_JoinClass(int client, const char[] command, int argc)
 {
     if (!IS_CLIENT(client) || !IsClientInGame(client) || IsFakeClient(client))
         return Plugin_Continue;
 
     // Allow users to join empty teams unhindered.
-    new iTeam = GetClientTeam(client);
+    int iTeam = GetClientTeam(client);
 
     if (iTeam > 1 && GetTeamClientCount(iTeam) > 1)
     {
-        decl String:sAuthID[MAX_AUTHID_LENGTH], dummy;
+        char sAuthID[MAX_AUTHID_LENGTH], dummy;
 
         if (GetClientAuthId(client, AuthId_Steam2, sAuthID, sizeof(sAuthID), false) && GetTrieValue(g_hClientSpawned, sAuthID, dummy))
         {
-            decl String:sBuffer[64];
+            char sBuffer[64];
             GetCmdArgString(sBuffer, sizeof(sBuffer));
 
             if ((g_iClientClass[client] = StringToInt(sBuffer)) < 0)
@@ -253,10 +254,10 @@ public Action:Command_JoinClass(client, const String:command[], args)
     return Plugin_Continue;
 }
 
-public Event_PlayerSpawn(Handle:event, const String:name[], bool:dontBroadcast)
+public Action Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 {
-    new userid = GetEventInt(event, "userid");
-    new client = GetClientOfUserId(userid);
+    int userid = GetEventInt(event, "userid");
+    int client = GetClientOfUserId(userid);
 
     if (IS_CLIENT(client))
     {
@@ -268,13 +269,13 @@ public Event_PlayerSpawn(Handle:event, const String:name[], bool:dontBroadcast)
     }
 }
 
-public Action:Timer_PlayerSpawned(Handle:timer, any:userid)
+public Action Timer_PlayerSpawned(Handle timer, any userid)
 {
-    new client = GetClientOfUserId(userid);
+    int client = GetClientOfUserId(userid);
 
     if (IS_CLIENT(client) && IsClientInGame(client) && !IsFakeClient(client) && GetClientTeam(client) > 1)
     {
-        decl String:sAuthID[MAX_AUTHID_LENGTH];
+        char sAuthID[MAX_AUTHID_LENGTH];
         if (GetClientAuthId(client, AuthId_Steam2, sAuthID, sizeof(sAuthID), false))
         {
             SetTrieValue(g_hClientSpawned, sAuthID, true);
@@ -284,24 +285,24 @@ public Action:Timer_PlayerSpawned(Handle:timer, any:userid)
     return Plugin_Stop;
 }
 
-public Event_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
+public Action Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
     ClearSpawnData();
     g_hRespawnElapsed = CreateTimer(GetConVarFloat(g_hFreezeTime) + 21.0, Timer_RespawnElapsed);
 }
 
-public Action:Timer_RespawnElapsed(Handle:timer)
+public Action Timer_RespawnElapsed(Handle timer)
 {
     g_hRespawnElapsed = INVALID_HANDLE;
     ClearSpawnData();
     return Plugin_Stop;
 }
 
-ClearSpawnData()
+void ClearSpawnData()
 {
     ClearTrie(g_hClientSpawned);
 
-    for (new i = 1; i <= MaxClients; i++)
+    for (int i = 1; i <= MaxClients; i++)
     {
         if (g_iClientClass[i] != -1)
         {
@@ -316,7 +317,7 @@ ClearSpawnData()
 
     if (g_hRespawnElapsed != INVALID_HANDLE)
     {
-        new Handle:hTemp = g_hRespawnElapsed;
+        Handle hTemp = g_hRespawnElapsed;
         g_hRespawnElapsed = INVALID_HANDLE;
 
         CloseHandle(hTemp);

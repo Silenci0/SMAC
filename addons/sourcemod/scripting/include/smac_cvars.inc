@@ -35,7 +35,8 @@
 
 enum CvarOrder {
     Order_First = 0,
-    Order_Last
+    Order_Last,
+	Order_MAX
 }
 
 enum CvarComp {
@@ -58,14 +59,14 @@ enum CvarAction {
     Action_Ban
 }
 
-stock bool:IsValidConVarName(const String:name[])
+stock bool IsValidConVarName(const char[] name)
 {
     if (name[0] == '\0')
         return false;
 
-    new length = strlen(name);
+    int length = strlen(name);
 
-    for (new i = 0; i < length; i++)
+    for (int i = 0; i < length; i++)
     {
         if (!IsValidConVarChar(name[i]))
         {
@@ -77,9 +78,9 @@ stock bool:IsValidConVarName(const String:name[])
 }
 
 // Useful for older engines (original, Dark Messiah, and Episode 1, etc) which do not automatically replicate.
-stock ReplicateToAll(Handle:convar, const String:value[])
+stock void ReplicateToAll(Handle convar, const char[] value)
 {
-    for (new i = 1; i <= MaxClients; i++)
+    for (int i = 1; i <= MaxClients; i++)
     {
         if (IsClientInGame(i) && !IsFakeClient(i))
         {
@@ -88,9 +89,9 @@ stock ReplicateToAll(Handle:convar, const String:value[])
     }
 }
 
-stock SetTimer(&Handle:hTimer, Handle:hNewTimer=INVALID_HANDLE)
+stock void SetTimer(Handle &hTimer, Handle hNewTimer = INVALID_HANDLE)
 {
-    new Handle:hTemp = hTimer;
+    Handle hTemp = hTimer;
     hTimer = hNewTimer;
 
     if (hTemp != INVALID_HANDLE)
@@ -99,7 +100,7 @@ stock SetTimer(&Handle:hTimer, Handle:hNewTimer=INVALID_HANDLE)
     }
 }
 
-stock GetQueryResultString(ConVarQueryResult:CResult, String:sResult[], iSize)
+stock void GetQueryResultString(ConVarQueryResult CResult, char[] sResult, int iSize)
 {
     switch (CResult)
     {
@@ -126,7 +127,7 @@ stock GetQueryResultString(ConVarQueryResult:CResult, String:sResult[], iSize)
     }
 }
 
-stock CvarComp:GetCompTypeInt(const String:sCompType[])
+stock CvarComp GetCompTypeInt(const char[] sCompType)
 {
     if (StrEqual(sCompType, "equal"))
         return Comp_Equal;
@@ -155,7 +156,7 @@ stock CvarComp:GetCompTypeInt(const String:sCompType[])
     return Comp_Invalid;
 }
 
-stock GetCompTypeString(CvarComp:CCompType, String:sCompType[], iSize)
+stock void GetCompTypeString(CvarComp CCompType, char[] sCompType,int iSize)
 {
     switch (CCompType)
     {
@@ -198,7 +199,7 @@ stock GetCompTypeString(CvarComp:CCompType, String:sCompType[], iSize)
     }
 }
 
-stock CvarAction:GetCActionInt(const String:sAction[])
+stock CvarAction GetCActionInt(const char[] sAction)
 {
     if (StrEqual(sAction, "warn"))
         return Action_Warn;
@@ -215,7 +216,7 @@ stock CvarAction:GetCActionInt(const String:sAction[])
     return Action_Invalid;
 }
 
-stock GetCActionString(CvarAction:CAction, String:sAction[], iSize)
+stock void GetCActionString(CvarAction CAction, char[] sAction,int iSize)
 {
     switch (CCompType)
     {

@@ -17,6 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #pragma semicolon 1
+#pragma newdecls required
 
 /* SM Includes */
 #include <sourcemod>
@@ -24,7 +25,7 @@
 #include <smac>
 
 /* Plugin Info */
-public Plugin:myinfo =
+public Plugin myinfo =
 {
     name = "SMAC CS:S Anti-Flash",
     author = SMAC_AUTHOR,
@@ -34,11 +35,11 @@ public Plugin:myinfo =
 };
 
 /* Globals */
-new Float:g_fFlashedUntil[MAXPLAYERS+1];
-new bool:g_bFlashHooked = false;
+float g_fFlashedUntil[MAXPLAYERS+1];
+bool g_bFlashHooked = false;
 
 /* Plugin Functions */
-public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
     if (GetEngineVersion() != Engine_CSS)
     {
@@ -49,13 +50,13 @@ public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
     return APLRes_Success;
 }
 
-public OnPluginStart()
+public void OnPluginStart()
 {
     // Hooks.
     HookEvent("player_blind", Event_PlayerBlind, EventHookMode_Post);
 }
 
-public OnClientPutInServer(client)
+public void OnClientPutInServer(int client)
 {
     if (g_bFlashHooked)
     {
@@ -63,18 +64,18 @@ public OnClientPutInServer(client)
     }
 }
 
-public OnClientDisconnect(client)
+public void OnClientDisconnect(int client)
 {
     g_fFlashedUntil[client] = 0.0;
 }
 
-public Event_PlayerBlind(Handle:event, const String:name[], bool:dontBroadcast)
+public Action Event_PlayerBlind(Event event, const char[] name, bool dontBroadcast)
 {
-    new client = GetClientOfUserId(GetEventInt(event, "userid"));
+    int client = GetClientOfUserId(GetEventInt(event, "userid"));
 	
     if (IS_CLIENT(client) && !IsFakeClient(client))
     {
-        new Float:alpha = GetEntPropFloat(client, Prop_Send, "m_flFlashMaxAlpha");
+        float alpha = GetEntPropFloat(client, Prop_Send, "m_flFlashMaxAlpha");
 
         if (alpha < 255.0)
         {
@@ -83,7 +84,7 @@ public Event_PlayerBlind(Handle:event, const String:name[], bool:dontBroadcast)
             return;
         }
 
-        new Float:duration = GetEntPropFloat(client, Prop_Send, "m_flFlashDuration");
+        float duration = GetEntPropFloat(client, Prop_Send, "m_flFlashDuration");
 
         if (duration > 2.9)
         {
@@ -106,10 +107,10 @@ public Event_PlayerBlind(Handle:event, const String:name[], bool:dontBroadcast)
     }
 }
 
-public Action:Timer_FlashEnded(Handle:timer)
+public Action Timer_FlashEnded(Handle timer)
 {
     /* Check if there are any other flashes being processed. Otherwise, we can unhook. */
-    for (new i = 1; i <= MaxClients; i++)
+    for (int i = 1; i <= MaxClients; i++)
     {
         if (g_fFlashedUntil[i])
         {
@@ -125,7 +126,7 @@ public Action:Timer_FlashEnded(Handle:timer)
     return Plugin_Stop;
 }
 
-public Action:Hook_SetTransmit(entity, client)
+public Action Hook_SetTransmit(int entity, int client)
 {
     /* Don't send client data to players that are fully blind. */
     if (g_fFlashedUntil[client])
@@ -141,11 +142,11 @@ public Action:Hook_SetTransmit(entity, client)
     return Plugin_Continue;
 }
 
-AntiFlash_HookAll()
+void AntiFlash_HookAll()
 {
     g_bFlashHooked = true;
 
-    for (new i = 1; i <= MaxClients; i++)
+    for (int i = 1; i <= MaxClients; i++)
     {
         if (IsClientInGame(i))
         {
@@ -154,11 +155,11 @@ AntiFlash_HookAll()
     }
 }
 
-AntiFlash_UnhookAll()
+void AntiFlash_UnhookAll()
 {
     g_bFlashHooked = false;
 
-    for (new i = 1; i <= MaxClients; i++)
+    for (int i = 1; i <= MaxClients; i++)
     {
         if (IsClientInGame(i))
         {
@@ -167,17 +168,17 @@ AntiFlash_UnhookAll()
     }
 }
 
-SendMsgFadeUser(client, duration)
+void SendMsgFadeUser(int client,int duration)
 {
-    static UserMsg:msgFadeUser = INVALID_MESSAGE_ID;
+    static UserMsg msgFadeUser = INVALID_MESSAGE_ID;
 
     if (msgFadeUser == INVALID_MESSAGE_ID)
         msgFadeUser = GetUserMessageId("Fade");
 
-    decl players[1];
+    int players[1];
     players[0] = client;
 
-    new Handle:bf = StartMessageEx(msgFadeUser, players, 1);
+    Handle bf = StartMessageEx(msgFadeUser, players, 1);
     BfWriteShort(bf, (duration > 0) ? duration : 50); // duration
     BfWriteShort(bf, (duration > 0) ? 1000 : 0); // hold time
     BfWriteShort(bf, FFADE_IN|FFADE_PURGE);

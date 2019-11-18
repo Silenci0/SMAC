@@ -17,6 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #pragma semicolon 1
+#pragma newdecls required
 
 /* SM Includes */
 #include <sourcemod>
@@ -25,7 +26,7 @@
 #include <smac>
 
 /* Plugin Info */
-public Plugin:myinfo =
+public Plugin myinfo =
 {
     name = "SMAC HL2:DM Exploit Fixes",
     author = SMAC_AUTHOR,
@@ -35,11 +36,11 @@ public Plugin:myinfo =
 };
 
 /* Globals */
-new Float:g_fBlockTime[MAXPLAYERS+1];
-new bool:g_bHasCrossbow[MAXPLAYERS+1];
+float g_fBlockTime[MAXPLAYERS+1];
+bool g_bHasCrossbow[MAXPLAYERS+1];
 
 /* Plugin Functions */
-public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
     if (GetEngineVersion() != Engine_HL2DM)
     {
@@ -50,14 +51,14 @@ public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
     return APLRes_Success;
 }
 
-public OnPluginStart()
+public void OnPluginStart()
 {
     // Hooks.
     AddTempEntHook("Shotgun Shot", Hook_FireBullets);
     HookEvent("player_team", Event_PlayerTeam, EventHookMode_Pre);
 }
 
-public OnClientPutInServer(client)
+public void OnClientPutInServer(int client)
 {
     g_fBlockTime[client] = 0.0;
     g_bHasCrossbow[client] = false;
@@ -66,9 +67,9 @@ public OnClientPutInServer(client)
     SDKHook(client, SDKHook_WeaponSwitchPost, Hook_WeaponSwitchPost);
 }
 
-public Action:Hook_WeaponCanSwitchTo(client, weapon)
+public Action Hook_WeaponCanSwitchTo(int client, int weapon)
 {
-    decl String:sWeapon[32];
+    char sWeapon[32];
 
     if (!IsValidEdict(weapon) || !GetEdictClassname(weapon, sWeapon, sizeof(sWeapon)))
         return Plugin_Continue;
@@ -80,19 +81,19 @@ public Action:Hook_WeaponCanSwitchTo(client, weapon)
     return Plugin_Continue;
 }
 
-public Hook_WeaponSwitchPost(client, weapon)
+public Action Hook_WeaponSwitchPost(int client, int weapon)
 {
     // Monitor the crossbow for shots. OnEntityCreated/OnSpawn is too early.
-    decl String:sWeapon[32];
+    char sWeapon[32];
 
     g_bHasCrossbow[client] = IsValidEdict(weapon) && 
             GetEdictClassname(weapon, sWeapon, sizeof(sWeapon)) && 
             StrEqual(sWeapon, "weapon_crossbow");
 }
 
-public Action:Hook_FireBullets(const String:te_name[], const Players[], numClients, Float:delay)
+public Action Hook_FireBullets(const char[] te_name, const int[] Players, int numClients, float delay)
 {
-    new client = TE_ReadNum("m_iPlayer");
+    int client = TE_ReadNum("m_iPlayer");
 
     if (IS_CLIENT(client))
     {
@@ -102,15 +103,15 @@ public Action:Hook_FireBullets(const String:te_name[], const Players[], numClien
     return Plugin_Continue;
 }
 
-public Action:Event_PlayerTeam(Handle:event, const String:name[], bool:dontBroadcast)
+public Action Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 {
     // Slay players that execute a team change while using an active gravity gun.
-    new client = GetClientOfUserId(GetEventInt(event, "userid"));
+    int client = GetClientOfUserId(GetEventInt(event, "userid"));
 
     if (IS_CLIENT(client) && IsClientInGame(client) && IsPlayerAlive(client))
     {
-        decl String:sWeapon[32];
-        new weapon = GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon");
+        char sWeapon[32];
+        int weapon = GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon");
 
         if (IsValidEdict(weapon) && 
             GetEdictClassname(weapon, sWeapon, sizeof(sWeapon)) && 
@@ -126,12 +127,12 @@ public Action:Event_PlayerTeam(Handle:event, const String:name[], bool:dontBroad
     return Plugin_Continue;
 }
 
-public Action:OnPlayerRunCmd(client, &buttons, &impulse, Float:vel[3], Float:angles[3], &weapon)
+public Action OnPlayerRunCmd(int client, int& buttons, int& impulse, float vel[3], float angles[3], int& weapon, int& subtype, int& cmdnum, int& tickcount, int& seed, int mouse[2])
 {
     // Detecting a crossbow shot.
     if ((buttons & IN_ATTACK) && g_bHasCrossbow[client])
     {
-        new iWeapon = GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon");
+        int iWeapon = GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon");
 
         if (IsValidEdict(iWeapon) && GetEntPropFloat(iWeapon, Prop_Send, "m_flNextPrimaryAttack") < GetGameTime())
         {
@@ -158,7 +159,7 @@ public Action:OnPlayerRunCmd(client, &buttons, &impulse, Float:vel[3], Float:ang
     }
     if (weapon && IsValidEdict(weapon) && g_fBlockTime[client] > GetGameTime())
     {
-        decl String:sWeapon[32];
+        char sWeapon[32];
         GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
 
         if (StrEqual(sWeapon, "weapon_physcannon"))

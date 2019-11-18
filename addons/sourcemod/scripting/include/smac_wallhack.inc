@@ -30,7 +30,7 @@
  * @noreturn
  * @error				If the client is not InGame or the index is invalid.
  */
-native SMAC_WH_SetClientIgnore(client, bool:bIgnore);
+native void SMAC_WH_SetClientIgnore(int client, bool bIgnore);
 
 /**
  * Returns whether a client is ignored from visibility tests.
@@ -39,7 +39,7 @@ native SMAC_WH_SetClientIgnore(client, bool:bIgnore);
  * @return				True if client is ignored from visibility tests, false otherwise.
  * @error				If the client is not connected or the index is invalid.
  */
-native bool:SMAC_WH_GetClientIgnore(client);
+native bool SMAC_WH_GetClientIgnore(int client);
 
 
 public SharedPlugin:__pl_smac_wallhack = 
