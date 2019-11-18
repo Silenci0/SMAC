@@ -100,7 +100,7 @@ public Action Command_AddIP(int client,int args)
         ReplyToCommand(client, "This feature requires the SM RCon extension to be loaded.");
         return Plugin_Handled;
     }
-    
+
     if (args != 1)
     {
         ReplyToCommand(client, "Usage: smac_rcon_addip <ip>");
@@ -113,7 +113,9 @@ public Action Command_AddIP(int client,int args)
     if (SetTrieValue(g_hWhitelist, sIP, 1, false))
     {
         if (GetTrieSize(g_hWhitelist) == 1)
+        {
             ReplyToCommand(client, "Rcon whitelist enabled.");
+        }
         
         ReplyToCommand(client, "You have successfully added %s to the rcon whitelist.", sIP);
     }
@@ -132,7 +134,7 @@ public Action Command_RemoveIP(int client,int args)
         ReplyToCommand(client, "This feature requires the SM RCon extension to be loaded.");
         return Plugin_Handled;
     }
-    
+
     if (args != 1)
     {
         ReplyToCommand(client, "Usage: smac_rcon_removeip <ip>");
@@ -147,13 +149,15 @@ public Action Command_RemoveIP(int client,int args)
         ReplyToCommand(client, "You have successfully removed %s from the rcon whitelist.", sIP);
         
         if (!GetTrieSize(g_hWhitelist))
+        {
             ReplyToCommand(client, "Rcon whitelist disabled.");
+        }
     }
     else
     {
         ReplyToCommand(client, "%s is not in the rcon whitelist.", sIP);
     }
-    
+
     return Plugin_Handled;
 }
 
@@ -161,10 +165,12 @@ public Action SMRCon_OnAuth(int rconId, const char[] address, const char[] passw
 {
     // Check against whitelist before continuing.
     int dummy;
-    
+
     if (!GetTrieSize(g_hWhitelist) || GetTrieValue(g_hWhitelist, address, dummy))
+    {
         return Plugin_Continue;
-    
+    }
+
     SMAC_Log("Unauthorized RCON Login Detected! Failed auth from address: \"%s\", attempted password: \"%s\"", address, password);
     allow = false;
     return Plugin_Changed;
@@ -176,8 +182,10 @@ public Action SMRCon_OnCommand(int rconId, const char[] address, const char[] co
     int dummy;
     
     if (!GetTrieSize(g_hWhitelist) || GetTrieValue(g_hWhitelist, address, dummy))
+    {
         return Plugin_Continue;
-    
+    }
+
     SMAC_Log("Unauthorized RCON command use detected! Failed auth from address: \"%s\", attempted command: \"%s\"", address, command);
     allow = false;
     return Plugin_Changed;

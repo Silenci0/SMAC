@@ -25,10 +25,10 @@
 #include <smac_stocks>
 
 /* Globals */
-#define SMAC_VERSION	"0.8.6.7"
-#define SMAC_URL		"https://github.com/Silenci0/SMAC"
-#define SMAC_AUTHOR		"SMAC Development Team (original), Mr. Silence (updated)"
-#define SMAC_MOD_ERROR	"This module will not work for this mod and should be removed."
+#define SMAC_VERSION    "0.8.7.0"
+#define SMAC_URL        "https://github.com/Silenci0/SMAC"
+#define SMAC_AUTHOR     "SMAC Development Team"
+#define SMAC_MOD_ERROR  "This module will not work for this mod and should be removed."
 
 enum GameType {
     Game_Unknown = 0,

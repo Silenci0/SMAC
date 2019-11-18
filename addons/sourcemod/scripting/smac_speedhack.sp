@@ -50,12 +50,12 @@ public void OnPluginStart()
 
     // The server's tickrate * 2.0 as a buffer zone.
     g_iMaxTicks = RoundToCeil(1.0 / GetTickInterval() * 2.0);
-    
+
     for (int i = 0; i < sizeof(g_iTicksLeft); i++)
     {
         g_iTicksLeft[i] = g_iMaxTicks;
     }
-    
+
     CreateTimer(0.1, Timer_AddTicks, _, TIMER_REPEAT);
 }
 
@@ -71,7 +71,7 @@ public Action Timer_AddTicks(Handle timer)
 {
     static float fLastProcessed;
     int iNewTicks = RoundToCeil((GetEngineTime() - fLastProcessed) / GetTickInterval());
-    
+
     for (int i = 1; i <= MaxClients; i++)
     {
         if (IsClientInGame(i) && !IsFakeClient(i))
@@ -79,7 +79,7 @@ public Action Timer_AddTicks(Handle timer)
             // Make sure latency didn't spike more than 5ms.
             // We want to avoid writing a lagging client to logs.
             float fLatency = GetClientLatency(i, NetFlow_Outgoing);
-            
+
             if (!g_iTicksLeft[i] && FloatAbs(g_fPrevLatency[i] - fLatency) <= 0.005)
             {
                 if (++g_iDetections[i] >= MAX_DETECTIONS && GetGameTime() > g_fDetectedTime[i])
@@ -87,14 +87,14 @@ public Action Timer_AddTicks(Handle timer)
                     if (SMAC_CheatDetected(i, Detection_Speedhack, INVALID_HANDLE) == Plugin_Continue)
                     {
                         SMAC_PrintAdminNotice("%t", "SMAC_SpeedhackDetected", i);
-                        
+
                         // Only log once per connection.
                         if (g_fDetectedTime[i] == 0.0)
                         {
                             SMAC_LogAction(i, "is suspected of using speedhack.");
                         }
                     }
-                    
+
                     g_fDetectedTime[i] = GetGameTime() + 30.0;
                 }
             }
@@ -102,16 +102,16 @@ public Action Timer_AddTicks(Handle timer)
             {
                 g_iDetections[i]--;
             }
-            
+
             g_fPrevLatency[i] = fLatency;
         }
-        
+
         if ((g_iTicksLeft[i] += iNewTicks) > g_iMaxTicks)
         {
             g_iTicksLeft[i] = g_iMaxTicks;
         }
     }
-    
+
     fLastProcessed = GetEngineTime();
     return Plugin_Continue;
 }
@@ -119,13 +119,19 @@ public Action Timer_AddTicks(Handle timer)
 public Action OnPlayerRunCmd(int client, int& buttons, int& impulse, float vel[3], float angles[3], int& weapon, int& subtype, int& cmdnum, int& tickcount, int& seed, int mouse[2])
 {   
     if (!IsClientInGame(client))
+    {
         return Plugin_Handled;
-    
+    }
+
     if (!g_iTicksLeft[client])
+    {
         return Plugin_Handled;
-    
+    }
+
     if (IsPlayerAlive(client))
+    {
         g_iTicksLeft[client]--;
-    
+    }
+
     return Plugin_Continue;
 }

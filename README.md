@@ -10,6 +10,22 @@ Also, if you want to help contribute to the plugin, please feel free to issue pu
 For information about the plugin and its modules, please use the wiki here: https://github.com/Silenci0/SMAC/wiki
 
 # Changelog
+0.8.7.0 Update (11-18-2019)
+-----------------
+- Code update for all plugins to use the new syntax. A big thank you to caxanga334 for the countribution: https://github.com/Silenci0/SMAC/pull/23
+    * The colors include has been replaced with the morecolors include (which has been added to repo).
+    * A few function updates for the smac and smac_aimbot modules.
+    * Added connect include file.
+    * Updated socket include file to new syntax.
+- Added code created by the original devs to allow users with the appropriate admin flags to bypass SMAC detection (fixes issue: https://github.com/Silenci0/SMAC/issues/21). 
+    * Code uses the "o" flag by default for admin immunity and has been updated to use the new syntax.
+    * Please note that the code is added in its own file and available for use/compilation. It is NOT an official module. Server owners will need to compile this code themselves and make changes where necessary in case they wish to add more functionality/features to it or change the flags.
+    * Thread relating to admin immunity found here: https://forums.alliedmods.net/showthread.php?t=179365
+    * Thanks again to caxanga334 for finding the code/thread for this!
+- Updated code to be more consistent (minor stuff, no major functionality change to plugins).
+- Plugins have been compiled for SM 1.10
+- Not really an update, but please be aware that some games might be having trouble with the SM Rcon extension, which the smac_rcon module uses for optional features. If your server is crashing after adding SM Rcon and the smac_rcon module, please remove the SM Rcon library first to see if it fixes the crashing issue. If the smac_rcon module is found to still crash the server after this, please remove the module and open a ticket for the issue. Thank you!
+
 0.8.6.7 Update (10-12-2019)
 -----------------
 - Merged changes by Frisasky to the main SMAC module for Fistful of Frags (https://github.com/Silenci0/SMAC/pull/16)
@@ -27,7 +43,6 @@ For information about the plugin and its modules, please use the wiki here: http
 - Known Issue: The ESEA module currently does not work very well due to the ESEA website/Cloudflare denying the request. This is still being worked on: https://github.com/Silenci0/SMAC/issues/11
 - Known Issue: Bhop detection from the autotrigger module is not catching some people using scripts. Issue is being worked on and was discussed here: https://forums.alliedmods.net/showthread.php?t=318420
  
-
 0.8.6.5 Update (07-26-2019)
 -----------------
 - Updated the smac_commands.smx module:

@@ -106,37 +106,39 @@ public Action Hook_OnTakeDamage(int victim, int& attacker, int& inflictor, float
 {
     // Prevent infected players from killing survivor bots by changing teams in trigger_hurt areas
     if (IS_CLIENT(victim) && g_didRecentlyChangeTeam[victim])
+    {
         return Plugin_Handled;
+    }
 
     return Plugin_Continue;
 }
 
 public Action Event_PlayerUse(Event event, const char[] name, bool dontBroadcast)
 {
-	int entity = event.GetInt("targetid");
+    int entity = event.GetInt("targetid");
 
-	if (entity <= MaxClients || entity >= MAX_EDICTS || !IsValidEntity(entity))
-	{
-		return;
-	}
+    if (entity <= MaxClients || entity >= MAX_EDICTS || !IsValidEntity(entity))
+    {
+        return;
+    }
 
-	char netclass[16];
-	GetEntityNetClass(entity, netclass, 16);
+    char netclass[16];
+    GetEntityNetClass(entity, netclass, 16);
 
-	if (!StrEqual(netclass, "CPistol"))
-	{
-		return;
-	}
+    if (!StrEqual(netclass, "CPistol"))
+    {
+        return;
+    }
 
-	int client = GetClientOfUserId(event.GetInt("userid"));
+    int client = GetClientOfUserId(event.GetInt("userid"));
 
-	if (!IS_CLIENT(client) || !IsClientInGame(client) || IsFakeClient(client) || g_bProhibitUse[client])
-	{
-		return;
-	}
+    if (!IS_CLIENT(client) || !IsClientInGame(client) || IsFakeClient(client) || g_bProhibitUse[client])
+    {
+        return;
+    }
 
-	g_bProhibitUse[client] = true;
-	CreateTimer(RESET_USE_TIME, Timer_ResetUse, client);
+    g_bProhibitUse[client] = true;
+    CreateTimer(RESET_USE_TIME, Timer_ResetUse, client);
 }
 
 public Action Timer_ResetUse(Handle timer, any client)

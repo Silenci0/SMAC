@@ -227,7 +227,9 @@ public void OnClientDisconnect(int client)
 public Action Command_JoinClass(int client, const char[] command, int argc)
 {
     if (!IS_CLIENT(client) || !IsClientInGame(client) || IsFakeClient(client))
+    {
         return Plugin_Continue;
+    }
 
     // Allow users to join empty teams unhindered.
     int iTeam = GetClientTeam(client);

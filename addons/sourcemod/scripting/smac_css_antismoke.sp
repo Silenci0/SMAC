@@ -176,15 +176,19 @@ public Action Hook_SetTransmit(int entity, int client)
 {
     /* Don't send client data to players that are immersed in smoke. */
     if (entity != client && g_bIsInSmoke[client])
+    {
         return Plugin_Handled;
-	
+    }
+
     return Plugin_Continue;
 }
 
 void AntiSmoke_HookAll()
 {
     if (g_hSmokeLoop != INVALID_HANDLE)
+    {
         return;
+    }
 
     g_hSmokeLoop = CreateTimer(0.1, Timer_SmokeCheck, _, TIMER_REPEAT);
 
@@ -200,8 +204,10 @@ void AntiSmoke_HookAll()
 void AntiSmoke_UnhookAll()
 {
     if (g_hSmokeLoop == INVALID_HANDLE)
+    {
         return;
-
+    }
+    
     KillTimer(g_hSmokeLoop);
     g_hSmokeLoop = INVALID_HANDLE;
 

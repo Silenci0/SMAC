@@ -57,37 +57,39 @@ public void OnPluginStart()
 
 public void OnClientAuthorized(int client, const char[] auth)
 {
-	if (IsFakeClient(client))
-		return;
+    if (IsFakeClient(client))
+    {
+        return;
+    }
 
-	// Workaround for universe digit change on L4D+ engines.
-	char sAuthID[MAX_AUTHID_LENGTH];
-	FormatEx(sAuthID, sizeof(sAuthID), "STEAM_0:%s", auth[8]);
+    // Workaround for universe digit change on L4D+ engines.
+    char sAuthID[MAX_AUTHID_LENGTH];
+    FormatEx(sAuthID, sizeof(sAuthID), "STEAM_0:%s", auth[8]);
 
-	bool bShouldLog;
+    bool bShouldLog;
 
-	if (GetTrieValue(g_hBanlist, sAuthID, bShouldLog) && SMAC_CheatDetected(client, Detection_GlobalBanned_ESEA, INVALID_HANDLE) == Plugin_Continue)
-	{
-		if (bShouldLog)
-		{
-			SMAC_PrintAdminNotice("%N | %s | ESEA Ban", client, sAuthID);
-			SetTrieValue(g_hBanlist, sAuthID, 0);
-		}
+    if (GetTrieValue(g_hBanlist, sAuthID, bShouldLog) && SMAC_CheatDetected(client, Detection_GlobalBanned_ESEA, INVALID_HANDLE) == Plugin_Continue)
+    {
+        if (bShouldLog)
+        {
+            SMAC_PrintAdminNotice("%N | %s | ESEA Ban", client, sAuthID);
+            SetTrieValue(g_hBanlist, sAuthID, 0);
+        }
 
-		if (GetConVarBool(g_hCvarKick))
-		{
-			if (bShouldLog)
-			{
-				SMAC_LogAction(client, "was kicked.");
-			}
+        if (GetConVarBool(g_hCvarKick))
+        {
+            if (bShouldLog)
+            {
+                SMAC_LogAction(client, "was kicked.");
+            }
 
-			KickClient(client, "%t", "SMAC_GlobalBanned", "ESEA", "www.ESEA.net");
-		}
-		else if (bShouldLog)
-		{
-			SMAC_LogAction(client, "is on the banlist.");
-		}
-	}
+            KickClient(client, "%t", "SMAC_GlobalBanned", "ESEA", "www.ESEA.net");
+        }
+        else if (bShouldLog)
+        {
+            SMAC_LogAction(client, "is on the banlist.");
+        }
+    }
 }
 
 void ESEA_DownloadBanlist()
@@ -101,8 +103,10 @@ void ESEA_DownloadBanlist()
 void ESEA_ParseBan(char[] baninfo)
 {
     if (baninfo[0] != '"')
+    {
         return;
-
+    }
+    
     // Parse one line of the CSV banlist.
     char sAuthID[MAX_AUTHID_LENGTH];
 
@@ -127,72 +131,78 @@ public void OnSocketConnected(Handle socket, any arg)
 
 public void OnSocketReceive(Handle socket, char[] data, const int size, any arg)
 {
-	// Parse raw data as it's received.
-	static bool bParsedHeader, bSplitData;
-	char sBuffer[256];
-	int idx, length;
+    // Parse raw data as it's received.
+    static bool bParsedHeader, bSplitData;
+    char sBuffer[256];
+    int idx, length;
 
-	if (!bParsedHeader)
-	{
-		// Parse and skip header data.
-		if ((idx = StrContains(data, "\r\n\r\n")) == -1)
-			return;
+    if (!bParsedHeader)
+    {
+        // Parse and skip header data.
+        if ((idx = StrContains(data, "\r\n\r\n")) == -1)
+        {
+            return;
+        }
+        
+        idx += 4;
 
-		idx += 4;
+        // Skip the first line as well (column names).
+        int offset = FindCharInString(data[idx], '\n');
 
-		// Skip the first line as well (column names).
-		int offset = FindCharInString(data[idx], '\n');
+        if (offset == -1)
+        {
+            return;
+        }
 
-		if (offset == -1)
-			return;
+        idx += offset + 1;
+        bParsedHeader = true;
+    }
 
-		idx += offset + 1;
-		bParsedHeader = true;
-	}
+    // Check if we had split data from the previous callback.
+    if (bSplitData)
+    {
+        length = FindCharInString(data[idx], '\n');
 
-	// Check if we had split data from the previous callback.
-	if (bSplitData)
-	{
-		length = FindCharInString(data[idx], '\n');
+        if (length == -1)
+        {
+            return;
+        }
 
-		if (length == -1)
-			return;
+        length += 1;
+        int maxsize = strlen(sBuffer) + length;
 
-		length += 1;
-		int maxsize = strlen(sBuffer) + length;
+        if (maxsize <= sizeof(sBuffer))
+        {
+            Format(sBuffer, maxsize, "%s%s", sBuffer, data[idx]);
+            ESEA_ParseBan(sBuffer);
+        }
 
-		if (maxsize <= sizeof(sBuffer))
-		{
-			Format(sBuffer, maxsize, "%s%s", sBuffer, data[idx]);
-			ESEA_ParseBan(sBuffer);
-		}
+        idx += length;
+        bSplitData = false;
+    }
 
-		idx += length;
-		bSplitData = false;
-	}
+    // Parse incoming data.
+    while (idx < size)
+    {
+        length = FindCharInString(data[idx], '\n');
 
-	// Parse incoming data.
-	while (idx < size)
-	{
-		length = FindCharInString(data[idx], '\n');
+        if (length == -1)
+        {
+            FormatEx(sBuffer, sizeof(sBuffer), "%s", data[idx]);
 
-		if (length == -1)
-		{
-			FormatEx(sBuffer, sizeof(sBuffer), "%s", data[idx]);
+            bSplitData = true;
+            return;
+        }
+        else if (length < sizeof(sBuffer))
+        {
+            length += 1;
 
-			bSplitData = true;
-			return;
-		}
-		else if (length < sizeof(sBuffer))
-		{
-			length += 1;
+            FormatEx(sBuffer, length, "%s", data[idx]);
+            ESEA_ParseBan(sBuffer);
 
-			FormatEx(sBuffer, length, "%s", data[idx]);
-			ESEA_ParseBan(sBuffer);
-
-			idx += length;
-		}
-	}
+            idx += length;
+        }
+    }
 }
 
 public void OnSocketDisconnected(Handle socket, any arg)

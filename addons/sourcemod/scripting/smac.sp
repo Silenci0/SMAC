@@ -36,10 +36,10 @@ public Plugin myinfo =
 };
 
 /* Globals */
-#define SOURCEBANS_AVAILABLE()		(GetFeatureStatus(FeatureType_Native, "SBBanPlayer") == FeatureStatus_Available) // Depreciated in SB++, leaving in for legacy/compatibility!
-#define SBPP_AVAILABLE()			(GetFeatureStatus(FeatureType_Native, "SBPP_BanPlayer") == FeatureStatus_Available)
-#define SOURCEIRC_AVAILABLE()		(GetFeatureStatus(FeatureType_Native, "IRC_MsgFlaggedChannels") == FeatureStatus_Available)
-#define IRCRELAY_AVAILABLE()		(GetFeatureStatus(FeatureType_Native, "IRC_Broadcast") == FeatureStatus_Available)
+#define SOURCEBANS_AVAILABLE()      (GetFeatureStatus(FeatureType_Native, "SBBanPlayer") == FeatureStatus_Available) // Depreciated in SB++, leaving in for legacy/compatibility!
+#define SBPP_AVAILABLE()            (GetFeatureStatus(FeatureType_Native, "SBPP_BanPlayer") == FeatureStatus_Available)
+#define SOURCEIRC_AVAILABLE()       (GetFeatureStatus(FeatureType_Native, "IRC_MsgFlaggedChannels") == FeatureStatus_Available)
+#define IRCRELAY_AVAILABLE()        (GetFeatureStatus(FeatureType_Native, "IRC_Broadcast") == FeatureStatus_Available)
 
 enum IrcChannel
 {
@@ -69,34 +69,66 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
     GetGameFolderName(sGame, sizeof(sGame));
 
     if (StrEqual(sGame, "cstrike") || StrEqual(sGame, "cstrike_beta"))
+    {
         g_Game = Game_CSS;
+    }
     else if (StrEqual(sGame, "tf") || StrEqual(sGame, "tf_beta"))
+    {
         g_Game = Game_TF2;
+    }
     else if (StrEqual(sGame, "dod"))
+    {
         g_Game = Game_DODS;
+    }
     else if (StrEqual(sGame, "insurgency"))
+    {
         g_Game = Game_INSMOD;
+    }
     else if (StrEqual(sGame, "left4dead"))
+    {
         g_Game = Game_L4D;
+    }
     else if (StrEqual(sGame, "left4dead2"))
+    {
         g_Game = Game_L4D2;
+    }
     else if (StrEqual(sGame, "hl2mp"))
+    {
         g_Game = Game_HL2DM;
+    }
     else if (StrEqual(sGame, "fof"))
+    {
         g_Game = Game_FOF;
+    }
     else if (StrEqual(sGame, "garrysmod"))
+    {
         g_Game = Game_GMOD;
+    }
     else if (StrEqual(sGame, "hl2ctf"))
+    {
         g_Game = Game_HL2CTF;
+    }
     else if (StrEqual(sGame, "hidden"))
+    {
         g_Game = Game_HIDDEN;
+    }
     else if (StrEqual(sGame, "nucleardawn"))
+    {
         g_Game = Game_ND;
+    }
     else if (StrEqual(sGame, "csgo"))
+    {
         g_Game = Game_CSGO;
+    }
     else if (StrEqual(sGame, "zps"))
+    {
         g_Game = Game_ZPS;
-
+    }
+    else
+    {
+        g_Game = Game_Unknown;
+    }
+    
     // Path used for logging.
     BuildPath(Path_SM, g_sLogPath, sizeof(g_sLogPath), "logs/SMAC.log");
 
@@ -114,42 +146,42 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnPluginStart()
 {
-	LoadTranslations("smac.phrases");
+    LoadTranslations("smac.phrases");
 
-	// Convars.
-	g_hCvarVersion = CreateConVar("smac_version", SMAC_VERSION, "SourceMod Anti-Cheat", FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	OnVersionChanged(g_hCvarVersion, "", "");
-	//HookConVarChange(g_hCvarVersion, OnVersionChanged);
-	g_hCvarVersion.AddChangeHook(OnVersionChanged);
+    // Convars.
+    g_hCvarVersion = CreateConVar("smac_version", SMAC_VERSION, "SourceMod Anti-Cheat", FCVAR_NOTIFY|FCVAR_DONTRECORD);
+    OnVersionChanged(g_hCvarVersion, "", "");
+    //HookConVarChange(g_hCvarVersion, OnVersionChanged);
+    g_hCvarVersion.AddChangeHook(OnVersionChanged);
 
-	g_hCvarWelcomeMsg = CreateConVar("smac_welcomemsg", "0", "Display a message saying that your server is protected.", 0, true, 0.0, true, 1.0);
-	g_hCvarBanDuration = CreateConVar("smac_ban_duration", "0", "The duration in minutes used for automatic bans. (0 = Permanent)", 0, true, 0.0);
-	g_hCvarLogVerbose = CreateConVar("smac_log_verbose", "0", "Include extra information about a client being logged.", 0, true, 0.0, true, 1.0);
-	g_hCvarIrcMode = CreateConVar("smac_irc_mode", "1", "Which messages should be sent to IRC plugins. (1 = Admin notices, 2 = Mimic log)", 0, true, 1.0, true, 2.0);
+    g_hCvarWelcomeMsg = CreateConVar("smac_welcomemsg", "0", "Display a message saying that your server is protected.", 0, true, 0.0, true, 1.0);
+    g_hCvarBanDuration = CreateConVar("smac_ban_duration", "0", "The duration in minutes used for automatic bans. (0 = Permanent)", 0, true, 0.0);
+    g_hCvarLogVerbose = CreateConVar("smac_log_verbose", "0", "Include extra information about a client being logged.", 0, true, 0.0, true, 1.0);
+    g_hCvarIrcMode = CreateConVar("smac_irc_mode", "1", "Which messages should be sent to IRC plugins. (1 = Admin notices, 2 = Mimic log)", 0, true, 1.0, true, 2.0);
 
-	// Commands.
-	RegAdminCmd("smac_status", Command_Status, ADMFLAG_GENERIC, "View the server's player status.");
+    // Commands.
+    RegAdminCmd("smac_status", Command_Status, ADMFLAG_GENERIC, "View the server's player status.");
 }
 
 public void OnAllPluginsLoaded()
 {
-	// Don't clutter the config if they aren't using IRC anyway.
-	if (!SOURCEIRC_AVAILABLE() && !IRCRELAY_AVAILABLE())
-	{
-		g_hCvarVersion.Flags |= FCVAR_DONTRECORD;
-	}
+    // Don't clutter the config if they aren't using IRC anyway.
+    if (!SOURCEIRC_AVAILABLE() && !IRCRELAY_AVAILABLE())
+    {
+        g_hCvarVersion.Flags |= FCVAR_DONTRECORD;
+    }
 
-	// Wait for other modules to create their convars.
-	AutoExecConfig(true, "smac");
+    // Wait for other modules to create their convars.
+    AutoExecConfig(true, "smac");
 
-	PrintToServer("SourceMod Anti-Cheat %s has been successfully loaded.", SMAC_VERSION);
+    PrintToServer("SourceMod Anti-Cheat %s has been successfully loaded.", SMAC_VERSION);
 }
 
 public void OnVersionChanged(ConVar convar, char[] oldValue, char[] newValue)
 {
     if (!StrEqual(newValue, SMAC_VERSION))
     {
-		convar.SetString(SMAC_VERSION, false, false);
+        convar.SetString(SMAC_VERSION, false, false);
     }
 }
 
@@ -182,8 +214,10 @@ public Action Command_Status(int client, int args)
     for (int i = 1; i <= MaxClients; i++)
     {
         if (!IsClientConnected(i))
+        {
             continue;
-
+        }
+        
         if (!GetClientAuthId(i, AuthId_Steam2, sAuthID, sizeof(sAuthID), true))
         {
             if (GetClientAuthId(i, AuthId_Steam2, sAuthID, sizeof(sAuthID), false))
@@ -293,31 +327,31 @@ public any Native_LogAction(Handle plugin,int numParams)
     // Verbose client logging.
     if (GetConVarBool(g_hCvarLogVerbose) && IsClientInGame(client))
     {
-		char sMap[MAX_MAPNAME_LENGTH], sWeapon[32];
-		float vOrigin[3], vAngles[3];
-		int iTeam, iLatency;
+        char sMap[MAX_MAPNAME_LENGTH], sWeapon[32];
+        float vOrigin[3], vAngles[3];
+        int iTeam, iLatency;
 
-		GetCurrentMap(sMap, sizeof(sMap));
-		GetClientAbsOrigin(client, vOrigin);
-		GetClientEyeAngles(client, vAngles);
-		GetClientWeapon(client, sWeapon, sizeof(sWeapon));
-		iTeam = GetClientTeam(client);
-		iLatency = RoundToNearest(GetClientAvgLatency(client, NetFlow_Outgoing) * 1000.0);
+        GetCurrentMap(sMap, sizeof(sMap));
+        GetClientAbsOrigin(client, vOrigin);
+        GetClientEyeAngles(client, vAngles);
+        GetClientWeapon(client, sWeapon, sizeof(sWeapon));
+        iTeam = GetClientTeam(client);
+        iLatency = RoundToNearest(GetClientAvgLatency(client, NetFlow_Outgoing) * 1000.0);
 
-		LogToFileEx(g_sLogPath,
-		"[%s | %s] %N (ID: %s | IP: %s) %s\n\tMap: %s | Origin: %.0f %.0f %.0f | Angles: %.0f %.0f %.0f | Weapon: %s | Team: %i | Latency: %ims",
-			sFilename,
-			sVersion,
-			client,
-			sAuthID,
-			sIP,
-			sBuffer,
-			sMap,
-			vOrigin[0], vOrigin[1], vOrigin[2],
-			vAngles[0], vAngles[1], vAngles[2],
-			sWeapon,
-			iTeam,
-			iLatency);
+        LogToFileEx(g_sLogPath,
+        "[%s | %s] %N (ID: %s | IP: %s) %s\n\tMap: %s | Origin: %.0f %.0f %.0f | Angles: %.0f %.0f %.0f | Weapon: %s | Team: %i | Latency: %ims",
+            sFilename,
+            sVersion,
+            client,
+            sAuthID,
+            sIP,
+            sBuffer,
+            sMap,
+            vOrigin[0], vOrigin[1], vOrigin[2],
+            vAngles[0], vAngles[1], vAngles[2],
+            sWeapon,
+            iTeam,
+            iLatency);
     }
     else
     {
@@ -334,36 +368,33 @@ public any Native_LogAction(Handle plugin,int numParams)
 // native SMAC_Ban(client, const String:reason[], any:...);
 public any Native_Ban(Handle plugin,int numParams)
 {
-	char sVersion[16], sReason[256];
-	int client = GetNativeCell(1);
-	int duration = g_hCvarBanDuration.IntValue;
+    char sVersion[16], sReason[256];
+    int client = GetNativeCell(1);
+    int duration = g_hCvarBanDuration.IntValue;
 
-	GetPluginInfo(plugin, PlInfo_Version, sVersion, sizeof(sVersion));
-	FormatNativeString(0, 2, 3, sizeof(sReason), _, sReason);
-	Format(sReason, sizeof(sReason), "SMAC %s: %s", sVersion, sReason);
+    GetPluginInfo(plugin, PlInfo_Version, sVersion, sizeof(sVersion));
+    FormatNativeString(0, 2, 3, sizeof(sReason), _, sReason);
+    Format(sReason, sizeof(sReason), "SMAC %s: %s", sVersion, sReason);
 
-	if (SBPP_AVAILABLE())
-	{
-		SBPP_BanPlayer(0, client, duration, sReason);
-	}
-	else if (SOURCEBANS_AVAILABLE())
-	{
-		SBBanPlayer(0, client, duration, sReason);
-	}
-	else
-	{
-		char sKickMsg[256];
-		FormatEx(sKickMsg, sizeof(sKickMsg), "%T", "SMAC_Banned", client);
-		BanClient(client, duration, BANFLAG_AUTO, sReason, sKickMsg, "SMAC");
-	}
+    if (SBPP_AVAILABLE())
+    {
+        SBPP_BanPlayer(0, client, duration, sReason);
+    }
+    else if (SOURCEBANS_AVAILABLE())
+    {
+        SBBanPlayer(0, client, duration, sReason);
+    }
+    else
+    {
+        char sKickMsg[256];
+        FormatEx(sKickMsg, sizeof(sKickMsg), "%T", "SMAC_Banned", client);
+        BanClient(client, duration, BANFLAG_AUTO, sReason, sKickMsg, "SMAC");
+    }
 
-	// NOTE: There is an error that is caused by kicking a client that doesn't exist
-	// All that is needed is a simple check to see if the client is in game.
-	// If they are, kick, if not, skip this and save our error logs!
-	if(IsClientConnected(client))
-	{
-		KickClient(client, sReason);
-	}
+    if(IsClientConnected(client))
+    {
+        KickClient(client, sReason);
+    }
 }
 
 // native SMAC_PrintAdminNotice(const String:format[], any:...);

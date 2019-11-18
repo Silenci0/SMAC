@@ -72,12 +72,16 @@ public Action Hook_WeaponCanSwitchTo(int client, int weapon)
     char sWeapon[32];
 
     if (!IsValidEdict(weapon) || !GetEdictClassname(weapon, sWeapon, sizeof(sWeapon)))
+    {
         return Plugin_Continue;
-	
+    }
+    
     // Block gravity gun toggle after a bullet has fired.
     if (g_fBlockTime[client] > GetGameTime() && StrEqual(sWeapon, "weapon_physcannon"))
+    {
         return Plugin_Handled;
-
+    }
+    
     return Plugin_Continue;
 }
 

@@ -35,13 +35,13 @@ public Plugin myinfo =
 };
 
 /* Globals */
-#define TRIGGER_DETECTIONS	20		// Amount of detections needed to perform action.
-#define MIN_JUMP_TIME		0.500	// Minimum amount of air-time for a jump to count.
+#define TRIGGER_DETECTIONS  20		// Amount of detections needed to perform action.
+#define MIN_JUMP_TIME       0.500	// Minimum amount of air-time for a jump to count.
 
 // Detection methods.
-#define METHOD_BUNNYHOP		0
-#define METHOD_AUTOFIRE		1
-#define METHOD_MAX			2
+#define METHOD_BUNNYHOP     0
+#define METHOD_AUTOFIRE     1
+#define METHOD_MAX          2
 
 ConVar g_hCvarBan;
 int g_iDetections[METHOD_MAX][MAXPLAYERS+1];
@@ -80,14 +80,14 @@ public Action Timer_DecreaseCount(Handle timer)
             }
         }
     }
-    
+
     return Plugin_Continue;
 }
 
 public Action OnPlayerRunCmd(int client, int& buttons, int& impulse, float vel[3], float angles[3], int& weapon, int& subtype, int& cmdnum, int& tickcount, int& seed, int mouse[2])
 {
     static int iPrevButtons[MAXPLAYERS+1];
-    
+
     /* BunnyHop */
     static float fCheckTime[MAXPLAYERS+1];
 
@@ -96,7 +96,7 @@ public Action OnPlayerRunCmd(int client, int& buttons, int& impulse, float vel[3
     {
         fCheckTime[client] = 0.0;
     }
-	
+
     // Ignore this jump if the player is in a tight space or stuck in the ground.
     if ((buttons & IN_JUMP) && !(iPrevButtons[client] & IN_JUMP))
     {
@@ -104,7 +104,7 @@ public Action OnPlayerRunCmd(int client, int& buttons, int& impulse, float vel[3
         if (GetEntityFlags(client) & FL_ONGROUND)
         {
             float fGameTime = GetGameTime();
-			
+
             // Player jumped on the exact frame that allowed it.
             if (fCheckTime[client] > 0.0 && fGameTime > fCheckTime[client])
             {
@@ -120,7 +120,7 @@ public Action OnPlayerRunCmd(int client, int& buttons, int& impulse, float vel[3
             fCheckTime[client] = 0.0;
         }
     }
-	
+
     /* Auto-Fire */
     static int iAttackAmt[MAXPLAYERS+1];
     static bool bResetNext[MAXPLAYERS+1];
@@ -133,7 +133,7 @@ public Action OnPlayerRunCmd(int client, int& buttons, int& impulse, float vel[3
             AutoTrigger_Detected(client, METHOD_AUTOFIRE);
             iAttackAmt[client] = 0;
         }
-        
+
         bResetNext[client] = false;
     }
     else if (bResetNext[client])
@@ -168,10 +168,10 @@ void AutoTrigger_Detected(int client,int method)
                 strcopy(sMethod, sizeof(sMethod), "Auto-Fire");
             }
         }
-		
+
         Handle info = CreateKeyValues("");
         KvSetString(info, "method", sMethod);
-		
+
         if (SMAC_CheatDetected(client, Detection_AutoTrigger, info) == Plugin_Continue)
         {
             SMAC_PrintAdminNotice("%t", "SMAC_AutoTriggerDetected", client, sMethod);

@@ -155,287 +155,325 @@ public void OnClientDisconnect_Post(int client)
     g_fDetectedTime[client] = 0.0;
 }
 
-public Action OnPlayerRunCmd(int client, int& buttons, int& impulse, float vel[3], float angles[3], int& weapon, int& subtype, int& cmdnum, int& tickcount, int& seed, int mouse[2])
+public Action OnPlayerRunCmd(int client, int& buttons, int& impulse, float vel[3], float angles[3], int& weapon, 
+                                int& subtype, int& cmdnum, int& tickcount, int& seed, int mouse[2])
 {
 	// Ignore bots
-	if (IsFakeClient(client))
-		return Plugin_Continue;
+    if (IsFakeClient(client))
+    {
+        return Plugin_Continue;
+    }
+    
+    // NULL commands
+    if (cmdnum <= 0)
+    {
+        return Plugin_Handled;
+    }
+    
+    // Block old cmds after a client resets their tickcount.
+    if (tickcount <= 0)
+    {
+        g_TickStatus[client] = State_Resetting;
+    }
+    
+    // Fixes issues caused by client timeouts.
+    bool bAlive = IsPlayerAlive(client);
+    if (!bAlive || !g_bPrevAlive[client] || GetGameTime() <= g_fDetectedTime[client])
+    {
+        g_bPrevAlive[client] = bAlive;
+        g_iPrevButtons[client] = buttons;
 
-	// NULL commands
-	if (cmdnum <= 0)
-		return Plugin_Handled;
+        if (g_iPrevCmdNum[client] >= cmdnum)
+        {
+            if (g_TickStatus[client] == State_Resetting)
+            {
+                g_TickStatus[client] = State_Reset;
+            }
+            
+            g_iCmdNumOffset[client]++;
+        }
+        else
+        {
+            if (g_TickStatus[client] == State_Reset)
+            {
+                g_TickStatus[client] = State_Okay;
+            }
 
-	// Block old cmds after a client resets their tickcount.
-	if (tickcount <= 0)
-		g_TickStatus[client] = State_Resetting;
+            g_iPrevCmdNum[client] = cmdnum;
+            g_iCmdNumOffset[client] = 1;
+        }
 
-	// Fixes issues caused by client timeouts.
-	bool bAlive = IsPlayerAlive(client);
-	if (!bAlive || !g_bPrevAlive[client] || GetGameTime() <= g_fDetectedTime[client])
-	{
-		g_bPrevAlive[client] = bAlive;
-		g_iPrevButtons[client] = buttons;
+        g_iPrevTickCount[client] = tickcount;
 
-		if (g_iPrevCmdNum[client] >= cmdnum)
-		{
-			if (g_TickStatus[client] == State_Resetting)
-				g_TickStatus[client] = State_Reset;
+        return Plugin_Continue;
+    }
 
-			g_iCmdNumOffset[client]++;
-		}
-		else
-		{
-			if (g_TickStatus[client] == State_Reset)
-				g_TickStatus[client] = State_Okay;
+    // Check for valid cmd values being sent. The command number cannot decrement.
+    if (g_iPrevCmdNum[client] > cmdnum)
+    {
+        if (g_TickStatus[client] != State_Okay)
+        {
+            g_TickStatus[client] = State_Reset;
+            return Plugin_Handled;
+        }
 
-			g_iPrevCmdNum[client] = cmdnum;
-			g_iCmdNumOffset[client] = 1;
-		}
+        g_fDetectedTime[client] = GetGameTime() + 30.0;
 
-		g_iPrevTickCount[client] = tickcount;
+        Handle info = CreateKeyValues("");
+        KvSetNum(info, "cmdnum", cmdnum);
+        KvSetNum(info, "prevcmdnum", g_iPrevCmdNum[client]);
+        KvSetNum(info, "tickcount", tickcount);
+        KvSetNum(info, "prevtickcount", g_iPrevTickCount[client]);
+        KvSetNum(info, "gametickcount", GetGameTickCount());
 
-		return Plugin_Continue;
-	}
+        if (SMAC_CheatDetected(client, Detection_UserCmdReuse, info) == Plugin_Continue)
+        {
+            SMAC_PrintAdminNotice("%t", "SMAC_EyetestDetected", client);
 
-	// Check for valid cmd values being sent. The command number cannot decrement.
-	if (g_iPrevCmdNum[client] > cmdnum)
-	{
-		if (g_TickStatus[client] != State_Okay)
-		{
-			g_TickStatus[client] = State_Reset;
-			return Plugin_Handled;
-		}
+            if (GetConVarBool(g_hCvarBan))
+            {
+                SMAC_LogAction(client, "was banned for reusing old movement commands. CmdNum: %d PrevCmdNum: %d | [%d:%d:%d]", 
+                                    cmdnum, g_iPrevCmdNum[client], g_iPrevTickCount[client], tickcount, GetGameTickCount());
+                SMAC_Ban(client, "Eye Test Violation");
+            }
+            else
+            {
+                SMAC_LogAction(client, "is suspected of reusing old movement commands. CmdNum: %d PrevCmdNum: %d | [%d:%d:%d]", 
+                                    cmdnum, g_iPrevCmdNum[client], g_iPrevTickCount[client], tickcount, GetGameTickCount());
+            }
+        }
 
-		g_fDetectedTime[client] = GetGameTime() + 30.0;
+        CloseHandle(info);
+        return Plugin_Handled;
+    }
 
-		Handle info = CreateKeyValues("");
-		KvSetNum(info, "cmdnum", cmdnum);
-		KvSetNum(info, "prevcmdnum", g_iPrevCmdNum[client]);
-		KvSetNum(info, "tickcount", tickcount);
-		KvSetNum(info, "prevtickcount", g_iPrevTickCount[client]);
-		KvSetNum(info, "gametickcount", GetGameTickCount());
-		
-		if (SMAC_CheatDetected(client, Detection_UserCmdReuse, info) == Plugin_Continue)
-		{
-			SMAC_PrintAdminNotice("%t", "SMAC_EyetestDetected", client);
+    // Other than the incremented tickcount, nothing should have changed.
+    if (g_iPrevCmdNum[client] == cmdnum)
+    {
+        if (g_TickStatus[client] != State_Okay)
+        {
+            g_TickStatus[client] = State_Reset;
+            return Plugin_Handled;
+        }
 
-			if (GetConVarBool(g_hCvarBan))
-			{
-				SMAC_LogAction(client, "was banned for reusing old movement commands. CmdNum: %d PrevCmdNum: %d | [%d:%d:%d]", cmdnum, g_iPrevCmdNum[client], g_iPrevTickCount[client], tickcount, GetGameTickCount());
-				SMAC_Ban(client, "Eye Test Violation");
-			}
-			else
-			{
-				SMAC_LogAction(client, "is suspected of reusing old movement commands. CmdNum: %d PrevCmdNum: %d | [%d:%d:%d]", cmdnum, g_iPrevCmdNum[client], g_iPrevTickCount[client], tickcount, GetGameTickCount());
-			}
-		}
+        // The tickcount should be incremented.
+        // No longer true in CS:GO (https://forums.alliedmods.net/showthread.php?t=267559)
+        if (g_iPrevTickCount[client] != tickcount && g_iPrevTickCount[client]+1 != tickcount && tickcount != GetGameTickCount())
+        {
+            g_fDetectedTime[client] = GetGameTime() + 30.0;
 
-		CloseHandle(info);
-		return Plugin_Handled;
-	}
+            Handle info = CreateKeyValues("");
+            KvSetNum(info, "cmdnum", cmdnum);
+            KvSetNum(info, "tickcount", tickcount);
+            KvSetNum(info, "prevtickcount", g_iPrevTickCount[client]);
+            KvSetNum(info, "gametickcount", GetGameTickCount());
 
-	// Other than the incremented tickcount, nothing should have changed.
-	if (g_iPrevCmdNum[client] == cmdnum)
-	{
-		if (g_TickStatus[client] != State_Okay)
-		{
-			g_TickStatus[client] = State_Reset;
-			return Plugin_Handled;
-		}
+            if (SMAC_CheatDetected(client, Detection_UserCmdTamperingTickcount, info) == Plugin_Continue)
+            {
+                SMAC_PrintAdminNotice("%t", "SMAC_EyetestDetected", client);
 
-		// The tickcount should be incremented.
-		// No longer true in CS:GO (https://forums.alliedmods.net/showthread.php?t=267559)
-		if (g_iPrevTickCount[client] != tickcount && g_iPrevTickCount[client]+1 != tickcount && tickcount != GetGameTickCount())
-		{
-			g_fDetectedTime[client] = GetGameTime() + 30.0;
+                if (GetConVarBool(g_hCvarBan))
+                {
+                    SMAC_LogAction(client, "was banned for tampering with an old movement command (tickcount). CmdNum: %d | [%d:%d:%d]", 
+                                        cmdnum, g_iPrevTickCount[client], tickcount, GetGameTickCount());
+                    SMAC_Ban(client, "Eye Test Violation");
+                }
+                else
+                {
+                    SMAC_LogAction(client, "is suspected of tampering with an old movement command (tickcount). CmdNum: %d | [%d:%d:%d]", 
+                                        cmdnum, g_iPrevTickCount[client], tickcount, GetGameTickCount());
+                }
+            }
 
-			Handle info = CreateKeyValues("");
-			KvSetNum(info, "cmdnum", cmdnum);
-			KvSetNum(info, "tickcount", tickcount);
-			KvSetNum(info, "prevtickcount", g_iPrevTickCount[client]);
-			KvSetNum(info, "gametickcount", GetGameTickCount());
+            CloseHandle(info);
+            return Plugin_Handled;
+        }
 
-			if (SMAC_CheatDetected(client, Detection_UserCmdTamperingTickcount, info) == Plugin_Continue)
-			{
-				SMAC_PrintAdminNotice("%t", "SMAC_EyetestDetected", client);
+        // Check for specific buttons in order to avoid compatibility issues with server-side plugins.
+        if (!GetConVarBool(g_hCvarCompat) && ((g_iPrevButtons[client] ^ buttons) & (IN_FORWARD|IN_BACK|IN_MOVELEFT|IN_MOVERIGHT|IN_SCORE)))
+        {
+            g_fDetectedTime[client] = GetGameTime() + 30.0;
 
-				if (GetConVarBool(g_hCvarBan))
-				{
-					SMAC_LogAction(client, "was banned for tampering with an old movement command (tickcount). CmdNum: %d | [%d:%d:%d]", cmdnum, g_iPrevTickCount[client], tickcount, GetGameTickCount());
-					SMAC_Ban(client, "Eye Test Violation");
-				}
-				else
-				{
-					SMAC_LogAction(client, "is suspected of tampering with an old movement command (tickcount). CmdNum: %d | [%d:%d:%d]", cmdnum, g_iPrevTickCount[client], tickcount, GetGameTickCount());
-				}
-			}
+            Handle info = CreateKeyValues("");
+            KvSetNum(info, "cmdnum", cmdnum);
+            KvSetNum(info, "prevbuttons", g_iPrevButtons[client]);
+            KvSetNum(info, "buttons", buttons);
 
-			CloseHandle(info);
-			return Plugin_Handled;
-		}
+            if (SMAC_CheatDetected(client, Detection_UserCmdTamperingButtons, info) == Plugin_Continue)
+            {
+                SMAC_PrintAdminNotice("%t", "SMAC_EyetestDetected", client);
 
-		// Check for specific buttons in order to avoid compatibility issues with server-side plugins.
-		if (!GetConVarBool(g_hCvarCompat) && ((g_iPrevButtons[client] ^ buttons) & (IN_FORWARD|IN_BACK|IN_MOVELEFT|IN_MOVERIGHT|IN_SCORE)))
-		{
-			g_fDetectedTime[client] = GetGameTime() + 30.0;
+                if (GetConVarBool(g_hCvarBan))
+                {
+                    SMAC_LogAction(client, "was banned for tampering with an old movement command (buttons). CmdNum: %d | [%d:%d]", cmdnum, g_iPrevButtons[client], buttons);
+                    SMAC_Ban(client, "Eye Test Violation");
+                }
+                else
+                {
+                    SMAC_LogAction(client, "is suspected of tampering with an old movement command (buttons). CmdNum: %d | [%d:%d]", cmdnum, g_iPrevButtons[client], buttons);
+                }
+            }
 
-			Handle info = CreateKeyValues("");
-			KvSetNum(info, "cmdnum", cmdnum);
-			KvSetNum(info, "prevbuttons", g_iPrevButtons[client]);
-			KvSetNum(info, "buttons", buttons);
+            CloseHandle(info);
+            return Plugin_Handled;
+        }
 
-			if (SMAC_CheatDetected(client, Detection_UserCmdTamperingButtons, info) == Plugin_Continue)
-			{
-				SMAC_PrintAdminNotice("%t", "SMAC_EyetestDetected", client);
+        // Track so we can predict the next cmdnum.
+        g_iCmdNumOffset[client]++;
+    }
+    else
+    {
+        // Passively block cheats from skipping to desired seeds.
+        if ((buttons & IN_ATTACK) && g_iPrevCmdNum[client] + g_iCmdNumOffset[client] != cmdnum && g_iPrevCmdNum[client] > 0)
+        {
+            seed = GetURandomInt();
+        }
 
-				if (GetConVarBool(g_hCvarBan))
-				{
-					SMAC_LogAction(client, "was banned for tampering with an old movement command (buttons). CmdNum: %d | [%d:%d]", cmdnum, g_iPrevButtons[client], buttons);
-					SMAC_Ban(client, "Eye Test Violation");
-				}
-				else
-				{
-					SMAC_LogAction(client, "is suspected of tampering with an old movement command (buttons). CmdNum: %d | [%d:%d]", cmdnum, g_iPrevButtons[client], buttons);
-				}
-			}
+        g_iCmdNumOffset[client] = 1;
+    }
 
-			CloseHandle(info);
-			return Plugin_Handled;
-		}
+    g_iPrevButtons[client] = buttons;
+    g_iPrevCmdNum[client] = cmdnum;
+    g_iPrevTickCount[client] = tickcount;
 
-		// Track so we can predict the next cmdnum.
-		g_iCmdNumOffset[client]++;
-	}
-	else
-	{
-		// Passively block cheats from skipping to desired seeds.
-		if ((buttons & IN_ATTACK) && g_iPrevCmdNum[client] + g_iCmdNumOffset[client] != cmdnum && g_iPrevCmdNum[client] > 0)
-		{
-			seed = GetURandomInt();
-		}
+    if (g_TickStatus[client] == State_Reset)
+    {
+        g_TickStatus[client] = State_Okay;
+    }
 
-		g_iCmdNumOffset[client] = 1;
-	}
+    // Check for valid eye angles.
+    switch (g_EngineGroup)
+    {
+        case Group_L4D2:
+        {
+            // In L4D+ engines the client can alternate between ±180 and 0-360.
+            if (angles[0] > -135.0 && angles[0] < 135.0 && angles[1] > -270.0 && angles[1] < 420.0)
+            {
+                g_bInMinigun[client] = false;
+                return Plugin_Continue;
+            }
 
-	g_iPrevButtons[client] = buttons;
-	g_iPrevCmdNum[client] = cmdnum;
-	g_iPrevTickCount[client] = tickcount;
+            if (g_bInMinigun[client])
+            {
+                return Plugin_Continue;
+            }
+        }
+        case Group_EP2V:
+        {
+            // ± normal limit * 1.5 as a buffer zone.
+            // TF2 taunts conflict with yaw checks.
+            if (angles[0] > -135.0 && angles[0] < 135.0 && (g_EngineVersion == Engine_TF2 || (angles[1] > -270.0 && angles[1] < 270.0)))
+            {
+                return Plugin_Continue;
+            }
+        }
+        case Group_EP1:
+        {
+            // Older engine support.
+            float vTemp[3];
+            vTemp = angles;
 
-	if (g_TickStatus[client] == State_Reset)
-	{
-		g_TickStatus[client] = State_Okay;
-	}
+            if (vTemp[0] > 180.0)
+            {
+                vTemp[0] -= 360.0;
+            }
 
-	// Check for valid eye angles.
-	switch (g_EngineGroup)
-	{
-		case Group_L4D2:
-		{
-			// In L4D+ engines the client can alternate between ±180 and 0-360.
-			if (angles[0] > -135.0 && angles[0] < 135.0 && angles[1] > -270.0 && angles[1] < 420.0)
-			{
-				g_bInMinigun[client] = false;
-				return Plugin_Continue;
-			}
+            if (vTemp[2] > 180.0)
+            {
+                vTemp[2] -= 360.0;
+            }
 
-			if (g_bInMinigun[client])
-				return Plugin_Continue;
-		}
-		case Group_EP2V:
-		{
-			// ± normal limit * 1.5 as a buffer zone.
-			// TF2 taunts conflict with yaw checks.
-			if (angles[0] > -135.0 && angles[0] < 135.0 && (g_EngineVersion == Engine_TF2 || (angles[1] > -270.0 && angles[1] < 270.0)))
-				return Plugin_Continue;
-		}
-		case Group_EP1:
-		{
-			// Older engine support.
-			float vTemp[3];
-			vTemp = angles;
+            if (vTemp[0] >= -90.0 && vTemp[0] <= 90.0 && vTemp[2] >= -90.0 && vTemp[2] <= 90.0)
+            {
+                return Plugin_Continue;
+            }
+        }
+        default:
+        {
+            // Ignore angles for this engine.
+            return Plugin_Continue;
+        }
+    }
 
-			if (vTemp[0] > 180.0)
-				vTemp[0] -= 360.0;
+    // Game specific checks.
+    switch (g_Game)
+    {
+        case Game_DODS:
+        {
+            // Ignore prone players.
+            if (DODS_IsPlayerProne(client))
+            {
+                return Plugin_Continue;
+            }
+        }
+        case Game_L4D:
+        {
+            // Only check survivors in first-person view.
+            if (GetClientTeam(client) != 2 || L4D_IsSurvivorBusy(client))
+            {
+                return Plugin_Continue;
+            }
+        }
+        case Game_L4D2:
+        {
+            // Only check survivors in first-person view.
+            if (GetClientTeam(client) != 2 || L4D2_IsSurvivorBusy(client))
+            {
+                return Plugin_Continue;
+            }
+        }
+        case Game_ND:
+        {
+            if (ND_IsPlayerCommander(client))
+            {
+                return Plugin_Continue;
+            }
+        }
+    }
 
-			if (vTemp[2] > 180.0)
-				vTemp[2] -= 360.0;
+    // Ignore clients that are interacting with the map.
+    int flags = GetEntityFlags(client);
 
-			if (vTemp[0] >= -90.0 && vTemp[0] <= 90.0 && vTemp[2] >= -90.0 && vTemp[2] <= 90.0)
-				return Plugin_Continue;
-		}
-		default:
-		{
-			// Ignore angles for this engine.
-			return Plugin_Continue;
-		}
-	}
+    if (flags & FL_FROZEN || flags & FL_ATCONTROLS)
+    {
+        return Plugin_Continue;
+    }
 
-	// Game specific checks.
-	switch (g_Game)
-	{
-		case Game_DODS:
-		{
-			// Ignore prone players.
-			if (DODS_IsPlayerProne(client))
-				return Plugin_Continue;
-		}
-		case Game_L4D:
-		{
-			// Only check survivors in first-person view.
-			if (GetClientTeam(client) != 2 || L4D_IsSurvivorBusy(client))
-				return Plugin_Continue;
-		}
-		case Game_L4D2:
-		{
-			// Only check survivors in first-person view.
-			if (GetClientTeam(client) != 2 || L4D2_IsSurvivorBusy(client))
-				return Plugin_Continue;
-		}
-		case Game_ND:
-		{
-			if (ND_IsPlayerCommander(client))
-				return Plugin_Continue;
-		}
-	}
+    // The client failed all checks.
+    g_fDetectedTime[client] = GetGameTime() + 30.0;
 
-	// Ignore clients that are interacting with the map.
-	int flags = GetEntityFlags(client);
+    // Strict bot checking - https://bugs.alliedmods.net/show_bug.cgi?id=5294
+    char sAuthID[MAX_AUTHID_LENGTH];
 
-	if (flags & FL_FROZEN || flags & FL_ATCONTROLS)
-		return Plugin_Continue;
+    Handle info = CreateKeyValues("");
+    KvSetVector(info, "angles", angles);
 
-	// The client failed all checks.
-	g_fDetectedTime[client] = GetGameTime() + 30.0;
+    if (GetClientAuthId(client, AuthId_Steam2, sAuthID, sizeof(sAuthID), false) && !StrEqual(sAuthID, "BOT") 
+            && SMAC_CheatDetected(client, Detection_Eyeangles, info) == Plugin_Continue)
+    {
+        SMAC_PrintAdminNotice("%t", "SMAC_EyetestDetected", client);
 
-	// Strict bot checking - https://bugs.alliedmods.net/show_bug.cgi?id=5294
-	char sAuthID[MAX_AUTHID_LENGTH];
+        if (GetConVarBool(g_hCvarBan))
+        {
+            SMAC_LogAction(client, "was banned for cheating with their eye angles. Eye Angles: %.0f %.0f %.0f", angles[0], angles[1], angles[2]);
+            SMAC_Ban(client, "Eye Test Violation");
+        }
+        else
+        {
+            SMAC_LogAction(client, "is suspected of cheating with their eye angles. Eye Angles: %.0f %.0f %.0f", angles[0], angles[1], angles[2]);
+        }
+    }
 
-	Handle info = CreateKeyValues("");
-	KvSetVector(info, "angles", angles);
-
-	if (GetClientAuthId(client, AuthId_Steam2, sAuthID, sizeof(sAuthID), false) && !StrEqual(sAuthID, "BOT") && SMAC_CheatDetected(client, Detection_Eyeangles, info) == Plugin_Continue)
-	{
-		SMAC_PrintAdminNotice("%t", "SMAC_EyetestDetected", client);
-
-		if (GetConVarBool(g_hCvarBan))
-		{
-			SMAC_LogAction(client, "was banned for cheating with their eye angles. Eye Angles: %.0f %.0f %.0f", angles[0], angles[1], angles[2]);
-			SMAC_Ban(client, "Eye Test Violation");
-		}
-		else
-		{
-			SMAC_LogAction(client, "is suspected of cheating with their eye angles. Eye Angles: %.0f %.0f %.0f", angles[0], angles[1], angles[2]);
-		}
-	}
-
-	CloseHandle(info);
-	return Plugin_Continue;
+    CloseHandle(info);
+    return Plugin_Continue;
 }
 
 public void OnEntityCreated(int entity, const char[] classname)
 {
     if (g_Game != Game_L4D && g_Game != Game_L4D2)
+    {
         return;
+    }
 
     if (StrEqual(classname, "prop_minigun") || 
         StrEqual(classname, "prop_minigun_l4d1") || 

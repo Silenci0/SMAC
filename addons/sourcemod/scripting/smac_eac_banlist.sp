@@ -58,34 +58,36 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnPluginStart()
 {
-	LoadTranslations("smac.phrases");
+    LoadTranslations("smac.phrases");
 
-	// Convars.
-	g_hCvarKick = SMAC_CreateConVar("smac_eac_kick", "1", "Automatically kick players on the EAC banlist.", 0, true, 0.0, true, 1.0);
-	g_hCvarVAC = SMAC_CreateConVar("smac_eac_vac", "0", "Check players for previous VAC bans.", 0, true, 0.0, true, 1.0);
+    // Convars.
+    g_hCvarKick = SMAC_CreateConVar("smac_eac_kick", "1", "Automatically kick players on the EAC banlist.", 0, true, 0.0, true, 1.0);
+    g_hCvarVAC = SMAC_CreateConVar("smac_eac_vac", "0", "Check players for previous VAC bans.", 0, true, 0.0, true, 1.0);
 
-	// Initialize.
-	g_hBanlist = CreateTrie();
+    // Initialize.
+    g_hBanlist = CreateTrie();
 
-	if (g_bLateLoad)
-	{
-		char sAuthID[MAX_AUTHID_LENGTH];
+    if (g_bLateLoad)
+    {
+        char sAuthID[MAX_AUTHID_LENGTH];
 
-		for (int i = 1; i <= MaxClients; i++)
-		{
-			if (IsClientAuthorized(i) && GetClientAuthId(i, AuthId_Steam2, sAuthID, sizeof(sAuthID), false))
-			{
-				OnClientAuthorized(i, sAuthID);
-			}
-		}
-	}
+        for (int i = 1; i <= MaxClients; i++)
+        {
+            if (IsClientAuthorized(i) && GetClientAuthId(i, AuthId_Steam2, sAuthID, sizeof(sAuthID), false))
+            {
+                OnClientAuthorized(i, sAuthID);
+            }
+        }
+    }
 }
 
 public void OnClientAuthorized(int client, const char[] auth)
 {
     if (IsFakeClient(client))
+    {
         return;
-
+    }
+    
     // Workaround for universe digit change on L4D+ engines.
     char sAuthID[MAX_AUTHID_LENGTH];
     FormatEx(sAuthID, sizeof(sAuthID), "STEAM_0:%s", auth[8]);
@@ -108,8 +110,10 @@ public void OnClientAuthorized(int client, const char[] auth)
 	
     // Clear a large cache to prevent slowdowns. Shouldn't reach this size anyway.
     if (GetTrieSize(g_hBanlist) > 50000)
+    {
         ClearTrie(g_hBanlist);
-
+    }
+    
     // Check the banlist.
     Handle hPack = CreateDataPack();
     WritePackCell(hPack, GetClientUserId(client));
@@ -133,78 +137,88 @@ public void OnSocketConnected(Handle socket, any hPack)
 
 public void OnSocketReceive(Handle socket, char[] data, const int size, any hPack)
 {
-	char sAuthID[MAX_AUTHID_LENGTH];
-	int idx;
-	ResetPack(hPack);
-	ReadPackCell(hPack);
-	ReadPackString(hPack, sAuthID, sizeof(sAuthID));
+    char sAuthID[MAX_AUTHID_LENGTH];
+    int idx;
+    ResetPack(hPack);
+    ReadPackCell(hPack);
+    ReadPackString(hPack, sAuthID, sizeof(sAuthID));
 
-	// Check if we already have the result we needed.
-	if (GetTrieValue(g_hBanlist, sAuthID, idx))
-		return;
+    // Check if we already have the result we needed.
+    if (GetTrieValue(g_hBanlist, sAuthID, idx))
+    {
+        return;
+    }
 
-	// Make sure we're reading the actual banlist.
-	if ((idx = StrContains(data, "[BEGIN LIST]")) == -1)
-		return;
+    // Make sure we're reading the actual banlist.
+    if ((idx = StrContains(data, "[BEGIN LIST]")) == -1)
+    {
+        return;
+    }
 
-	// Look for the SteamID.
-	int offset = StrContains(data[idx], sAuthID);
+    // Look for the SteamID.
+    int offset = StrContains(data[idx], sAuthID);
 
-	if (offset == -1)
-	{
-		// Not on the banlist.
-		SetTrieValue(g_hBanlist, sAuthID, Ban_None);
-		return;
-	}
+    if (offset == -1)
+    {
+        // Not on the banlist.
+        SetTrieValue(g_hBanlist, sAuthID, Ban_None);
+        return;
+    }
 
-	idx += offset;
+    idx += offset;
 
-	// Get ban info string.
-	int length = FindCharInString(data[idx], '\n') + 1;
+    // Get ban info string.
+    int length = FindCharInString(data[idx], '\n') + 1;
 
-	char[] sBanInfo = new char[view_as<int>(length)];
-	strcopy(sBanInfo, length, data[idx]);
+    char[] sBanInfo = new char[view_as<int>(length)];
+    strcopy(sBanInfo, length, data[idx]);
 
-	// 0 - SteamID
-	// 1 - Ban reason
-	// 2 - Ban date
-	// 3 - Expiration date
-	char sBanChunks[4][64];
-	if (ExplodeString(sBanInfo, "|", sBanChunks, sizeof(sBanChunks), sizeof(sBanChunks[])) != 4)
-		return;
+    // 0 - SteamID
+    // 1 - Ban reason
+    // 2 - Ban date
+    // 3 - Expiration date
+    char sBanChunks[4][64];
+    if (ExplodeString(sBanInfo, "|", sBanChunks, sizeof(sBanChunks), sizeof(sBanChunks[])) != 4)
+    {
+        return;
+    }
 
-	// Check if it's a VAC ban.
-	if (StrEqual(sBanChunks[1], "VAC Banned"))
-	{
-		SetTrieValue(g_hBanlist, sAuthID, Ban_VAC);
+    // Check if it's a VAC ban.
+    if (StrEqual(sBanChunks[1], "VAC Banned"))
+    {
+        SetTrieValue(g_hBanlist, sAuthID, Ban_VAC);
 
-		if (!GetConVarBool(g_hCvarVAC))
-			return;
-	}
-	else
-	{
-		SetTrieValue(g_hBanlist, sAuthID, Ban_EAC);
-	}
+        if (!GetConVarBool(g_hCvarVAC))
+        {
+            return;
+        }
+    }
+    else
+    {
+        SetTrieValue(g_hBanlist, sAuthID, Ban_EAC);
+    }
 
-	// Notify and log.
-	ResetPack(hPack);
+    // Notify and log.
+    ResetPack(hPack);
 
-	int client = GetClientOfUserId(ReadPackCell(hPack));
+    int client = GetClientOfUserId(ReadPackCell(hPack));
 
-	if (!IS_CLIENT(client) || SMAC_CheatDetected(client, Detection_GlobalBanned_EAC, INVALID_HANDLE) != Plugin_Continue)
-		return;
+    if (!IS_CLIENT(client) || SMAC_CheatDetected(client, Detection_GlobalBanned_EAC, INVALID_HANDLE) != Plugin_Continue)
+    {
+        return;
+    }
 
-	SMAC_PrintAdminNotice("%N | %s | EAC: %s", client, sBanChunks[0], sBanChunks[1]);
+    SMAC_PrintAdminNotice("%N | %s | EAC: %s", client, sBanChunks[0], sBanChunks[1]);
 
-	if (GetConVarBool(g_hCvarKick))
-	{
-		SMAC_LogAction(client, "was kicked. (Reason: %s | Expires: %s)", sBanChunks[1], sBanChunks[3]);
-		KickClient(client, "%t", "SMAC_GlobalBanned", "EAC", "www.EasyAntiCheat.net");
-	}
-	else
-	{
-		SMAC_LogAction(client, "is on the banlist. (Reason: %s | Expires: %s)", sBanChunks[1], sBanChunks[3]);
-	}
+    if (GetConVarBool(g_hCvarKick))
+    {
+        SMAC_LogAction(client, "was kicked. (Reason: %s | Expires: %s)", sBanChunks[1], sBanChunks[3]);
+        KickClient(client, "%t", "SMAC_GlobalBanned", "EAC", "www.EasyAntiCheat.net");
+    }
+    else
+    {
+        SMAC_LogAction(client, "is on the banlist. (Reason: %s | Expires: %s)", sBanChunks[1], sBanChunks[3]);
+    }
 }
 
 public void OnSocketDisconnected(Handle socket, any hPack)

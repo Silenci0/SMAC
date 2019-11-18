@@ -36,7 +36,7 @@
 enum CvarOrder {
     Order_First = 0,
     Order_Last,
-	Order_MAX
+    Order_MAX
 }
 
 enum CvarComp {
@@ -62,7 +62,9 @@ enum CvarAction {
 stock bool IsValidConVarName(const char[] name)
 {
     if (name[0] == '\0')
+    {
         return false;
+    }
 
     int length = strlen(name);
 
@@ -130,28 +132,37 @@ stock void GetQueryResultString(ConVarQueryResult CResult, char[] sResult, int i
 stock CvarComp GetCompTypeInt(const char[] sCompType)
 {
     if (StrEqual(sCompType, "equal"))
+    {
         return Comp_Equal;
-
+    }
     if (StrEqual(sCompType, "strequal"))
+    {
         return Comp_StrEqual;
-
+    }
     if (StrEqual(sCompType, "replicated"))
+    {
         return Comp_Replicated;
-
+    }
     if (StrEqual(sCompType, "greater"))
+    {
         return Comp_Greater;
-
+    }
     if (StrEqual(sCompType, "less"))
+    {
         return Comp_Less;
-
+    }
     if (StrEqual(sCompType, "between"))
+    {
         return Comp_Between;
-
+    }
     if (StrEqual(sCompType, "outside"))
+    {
         return Comp_Outside;
-
+    }
     if (StrEqual(sCompType, "nonexist"))
+    {
         return Comp_NonExist;
+    }
 
     return Comp_Invalid;
 }
@@ -202,17 +213,21 @@ stock void GetCompTypeString(CvarComp CCompType, char[] sCompType,int iSize)
 stock CvarAction GetCActionInt(const char[] sAction)
 {
     if (StrEqual(sAction, "warn"))
+    {
         return Action_Warn;
-
+    }
     if (StrEqual(sAction, "mute"))
+    {
         return Action_Mute;
-
+    }
     if (StrEqual(sAction, "kick"))
+    {
         return Action_Kick;
-
+    }
     if (StrEqual(sAction, "ban"))
+    {
         return Action_Ban;
-
+    }
     return Action_Invalid;
 }
 

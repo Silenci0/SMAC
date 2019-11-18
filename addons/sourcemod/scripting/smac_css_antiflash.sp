@@ -72,7 +72,7 @@ public void OnClientDisconnect(int client)
 public Action Event_PlayerBlind(Event event, const char[] name, bool dontBroadcast)
 {
     int client = GetClientOfUserId(GetEventInt(event, "userid"));
-	
+
     if (IS_CLIENT(client) && !IsFakeClient(client))
     {
         float alpha = GetEntPropFloat(client, Prop_Send, "m_flFlashMaxAlpha");
@@ -94,7 +94,7 @@ public Action Event_PlayerBlind(Event event, const char[] name, bool dontBroadca
         {
             g_fFlashedUntil[client] = GetGameTime() + duration * 0.1;
         }
-		
+
         // Fade in the flash.
         SendMsgFadeUser(client, RoundToNearest(duration * 1000.0));
 
@@ -122,7 +122,7 @@ public Action Timer_FlashEnded(Handle timer)
     {
         AntiFlash_UnhookAll();
     }
-	
+
     return Plugin_Stop;
 }
 
@@ -132,13 +132,15 @@ public Action Hook_SetTransmit(int entity, int client)
     if (g_fFlashedUntil[client])
     {
         if (g_fFlashedUntil[client] > GetGameTime())
+        {
             return (entity == client) ? Plugin_Continue : Plugin_Handled;
-		
+        }
+
         // Fade out the flash.
         SendMsgFadeUser(client, 0);
         g_fFlashedUntil[client] = 0.0;
     }
-	
+
     return Plugin_Continue;
 }
 
@@ -173,7 +175,9 @@ void SendMsgFadeUser(int client,int duration)
     static UserMsg msgFadeUser = INVALID_MESSAGE_ID;
 
     if (msgFadeUser == INVALID_MESSAGE_ID)
+    {
         msgFadeUser = GetUserMessageId("Fade");
+    }
 
     int players[1];
     players[0] = client;
