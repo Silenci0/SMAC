@@ -10,6 +10,13 @@ Also, if you want to help contribute to the plugin, please feel free to issue pu
 For information about the plugin and its modules, please use the wiki here: https://github.com/Silenci0/SMAC/wiki
 
 # Changelog
+0.8.7.1 Hotfix Update (11-19-2019)
+-----------------
+- Fixed a crash with the smac module due to chat message features: https://github.com/Silenci0/SMAC/issues/24
+    * Reverted to colors include (updated with new syntax)
+    * Changed Welcome message and admin messages to PrintToChat rather than CPrintToChat functions.
+- Recompiled plugins.
+
 0.8.7.0 Update (11-18-2019)
 -----------------
 - Code update for all plugins to use the new syntax. A big thank you to caxanga334 for the countribution: https://github.com/Silenci0/SMAC/pull/23
@@ -17,7 +24,7 @@ For information about the plugin and its modules, please use the wiki here: http
     * A few function updates for the smac and smac_aimbot modules.
     * Added connect include file.
     * Updated socket include file to new syntax.
-- Added code created by the original devs to allow users with the appropriate admin flags to bypass SMAC detection (fixes issue: https://github.com/Silenci0/SMAC/issues/21). 
+- Added code created by the original devs to allow users with the appropriate admin flags to bypass SMAC detection (fixes issue: https://github.com/Silenci0/SMAC/issues/21 )
     * Code uses the "o" flag by default for admin immunity and has been updated to use the new syntax.
     * Please note that the code is added in its own file and available for use/compilation. It is NOT an official module. Server owners will need to compile this code themselves and make changes where necessary in case they wish to add more functionality/features to it or change the flags.
     * Thread relating to admin immunity found here: https://forums.alliedmods.net/showthread.php?t=179365
@@ -28,8 +35,8 @@ For information about the plugin and its modules, please use the wiki here: http
 
 0.8.6.7 Update (10-12-2019)
 -----------------
-- Merged changes by Frisasky to the main SMAC module for Fistful of Frags (https://github.com/Silenci0/SMAC/pull/16)
-- Merged changes by Loyisa for the Chinese translations (https://github.com/Silenci0/SMAC/pull/17)
+- Merged changes by Frisasky to the main SMAC module for Fistful of Frags (https://github.com/Silenci0/SMAC/pull/16 )
+- Merged changes by Loyisa for the Chinese translations (https://github.com/Silenci0/SMAC/pull/17 )
 - Fixed "SMAC_ShouldBeBetwechi" in Chinese translations which should be "SMAC_ShouldBeBetween"
 - Recompiled plugins to implement changes.
 
@@ -57,9 +64,9 @@ For information about the plugin and its modules, please use the wiki here: http
     * Alt-tabbing no longer causes users to trigger the tickcount cheat detection each time it occurs. This was reported in the SMAC thread: https://forums.alliedmods.net/showthread.php?t=307188
     * A rare issue (caused by the same tickcount detections) in TF2 when a player would be running a taunt (such as conga) and attempting to open the contracts menu. More info here: https://github.com/Silenci0/SMAC/issues/1
     * Please be sure to leave compatibility mode on and set bans to off. While this issue is possibly resolved, that does not mean it might not break in the future.
-- Fixed a minor issue with the smac_speedhack module not checking for the player being in-game (https://github.com/Silenci0/SMAC/issues/7)
+- Fixed a minor issue with the smac_speedhack module not checking for the player being in-game (https://github.com/Silenci0/SMAC/issues/7 )
 
-Be sure to test these and if you have any feedback or comments, feel free to post in the SMAC forums (https://forums.alliedmods.net/forumdisplay.php?f=133) or create an issue on github. Thanks!
+Be sure to test these and if you have any feedback or comments, feel free to post in the SMAC forums (https://forums.alliedmods.net/forumdisplay.php?f=133 ) or create an issue on github. Thanks!
 
 0.8.6.3 Update (01-23-2019)
 -----------------
@@ -92,7 +99,7 @@ Be sure to test these and if you have any feedback or comments, feel free to pos
 -----------------
 - Compiled/Updated codebase for SM 1.8
 - Updated SMAC stocks and wallhack code to use FindDataMapInfo and FindSendPropInfo instead of FindDataMapOffs and FindSendPropOffs.
-- Updated smac_rcon module to have logging for attempts to use rcon_password on the server from a non-whitelisted IP. This functionality REQUIRES the SM Rcon extension found here: https://forums.alliedmods.net/showthread.php?t=168403. Please note that some games might not work with this extension!
+- Updated smac_rcon module to have logging for attempts to use rcon_password on the server from a non-whitelisted IP. This functionality REQUIRES the SM Rcon extension found here: https://forums.alliedmods.net/showthread.php?t=168403 . Please note that some games might not work with this extension!
 
 0.8.6.1 Initial Commit (9-1-2016)
 -----------------
