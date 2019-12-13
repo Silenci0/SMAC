@@ -29,11 +29,11 @@
 /* Plugin Info */
 public Plugin myinfo =
 {
-    name = "SMAC ConVar Checker",
-    author = SMAC_AUTHOR,
-    description = "Checks for players using exploitative cvars",
-    version = SMAC_VERSION,
-    url = SMAC_URL
+    name =          "SMAC ConVar Checker",
+    author =        SMAC_AUTHOR,
+    description =   "Checks for players using exploitative cvars",
+    version =       SMAC_VERSION,
+    url =           SMAC_URL
 };
 
 /* Globals */
@@ -45,8 +45,8 @@ public Plugin myinfo =
 #define MAX_REQUERY_ATTEMPTS 4
 
 // cvar data
-Handle g_hCvarTrie;
-Handle g_hCvarADT;
+Handle g_hCvarTrie = INVALID_HANDLE;
+Handle g_hCvarADT = INVALID_HANDLE;
 int g_iADTSize;
 
 // client data

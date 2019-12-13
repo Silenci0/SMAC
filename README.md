@@ -10,6 +10,18 @@ Also, if you want to help contribute to the plugin, please feel free to issue pu
 For information about the plugin and its modules, please use the wiki here: https://github.com/Silenci0/SMAC/wiki
 
 # Changelog
+0.8.7.2 Update (12-12-2019)
+-----------------
+- Depreciated support for the ESEA module. As of 12/08/2019, it has been confirmed that it is not possible to download the .csv file from the ESEA website, making it impossible for the plugin to function. The code will still be available for legacy purposes, but will no longer be supported. Info regarding this is found here: https://github.com/Silenci0/SMAC/issues/11
+- Added the "unsupported" directory under "scripting" to the repo for code files that we are keeping, but do not support. This was added for legacy purposes, but is entirely unnecessary for most users.
+    * The following code files reside in this directory: smac_eac_banlist, smac_esea_banlist, and smac_immunity
+- Removed the socket extension from the repository. Since EAC and ESEA plugins are no longer supported/usable, this extension is no longer necessary.
+- Added the color text functionality from the colors.inc include back into the plugin. 
+    * This include and its functions (as well as basic colors codes) work with most games, including CS:GO (tested and verified).
+    * The text generated from the plugin is still the default colors. This can be changed by putting one of the supported color codes (such as {green}) into the translated phrase/text of the smac.phrases.txt translation file.
+- General update to some parts of the code, specifically, added the "null" keyword to most ConVar variables.
+- Recompiled all plugins. 
+
 0.8.7.1 Hotfix Update (11-19-2019)
 -----------------
 - Fixed a crash with the smac module due to chat message features: https://github.com/Silenci0/SMAC/issues/24

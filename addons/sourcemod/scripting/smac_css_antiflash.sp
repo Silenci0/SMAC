@@ -27,11 +27,11 @@
 /* Plugin Info */
 public Plugin myinfo =
 {
-    name = "SMAC CS:S Anti-Flash",
-    author = SMAC_AUTHOR,
-    description = "Prevents anti-flashbang cheats from working",
-    version = SMAC_VERSION,
-    url = SMAC_URL
+    name =          "SMAC CS:S Anti-Flash",
+    author =        SMAC_AUTHOR,
+    description =   "Prevents anti-flashbang cheats from working",
+    version =       SMAC_VERSION,
+    url =           SMAC_URL
 };
 
 /* Globals */

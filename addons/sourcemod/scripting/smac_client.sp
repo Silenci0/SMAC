@@ -30,16 +30,16 @@
 /* Plugin Info */
 public Plugin myinfo =
 {
-    name = "SMAC Client Protection",
-    author = SMAC_AUTHOR,
-    description = "Blocks general client exploits",
-    version = SMAC_VERSION,
-    url = SMAC_URL
+    name =          "SMAC Client Protection",
+    author =        SMAC_AUTHOR,
+    description =   "Blocks general client exploits",
+    version =       SMAC_VERSION,
+    url =           SMAC_URL
 };
 
 /* Globals */
-ConVar g_hCvarConnectSpam;
-ConVar g_hCvarValidateAuth;
+ConVar g_hCvarConnectSpam = null;
+ConVar g_hCvarValidateAuth = null;
 Handle g_hClientConnections = INVALID_HANDLE;
 float g_fTeamJoinTime[MAXPLAYERS+1][6];
 int g_iNameChanges[MAXPLAYERS+1];

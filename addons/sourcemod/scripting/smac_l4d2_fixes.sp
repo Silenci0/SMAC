@@ -28,11 +28,11 @@
 /* Plugin Info */
 public Plugin myinfo =
 {
-    name = "SMAC L4D2 Exploit Fixes",
-    author = SMAC_AUTHOR,
-    description = "Blocks general Left 4 Dead 2 cheats & exploits",
-    version = SMAC_VERSION,
-    url = SMAC_URL
+    name =          "SMAC L4D2 Exploit Fixes",
+    author =        SMAC_AUTHOR,
+    description =   "Blocks general Left 4 Dead 2 cheats & exploits",
+    version =       SMAC_VERSION,
+    url =           SMAC_URL
 };
 
 /* Globals */

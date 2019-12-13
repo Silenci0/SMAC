@@ -26,11 +26,11 @@
 /* Plugin Info */
 public Plugin myinfo =
 {
-    name = "SMAC Command Monitor",
-    author = SMAC_AUTHOR,
-    description = "Blocks general command exploits",
-    version = SMAC_VERSION,
-    url = SMAC_URL
+    name =          "SMAC Command Monitor",
+    author =        SMAC_AUTHOR,
+    description =   "Blocks general command exploits",
+    version =       SMAC_VERSION,
+    url =           SMAC_URL
 };
 
 /* Globals */
@@ -46,8 +46,8 @@ Handle g_hBlockedCmds = INVALID_HANDLE;
 Handle g_hIgnoredCmds = INVALID_HANDLE;
 int g_iCmdSpamLimit = 30;
 int g_iCmdCount[MAXPLAYERS+1] = {0, ...};
-ConVar g_hCvarCmdSpam;
-ConVar g_hCvarCmdSpmKick;
+ConVar g_hCvarCmdSpam = null;
+ConVar g_hCvarCmdSpmKick = null;
 
 /* Plugin Functions */
 public void OnPluginStart()

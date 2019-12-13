@@ -27,11 +27,11 @@
 /* Plugin Info */
 public Plugin myinfo =
 {
-    name = "SMAC Anti-Speedhack",
-    author = SMAC_AUTHOR,
-    description = "Prevents speedhack cheats from working",
-    version = SMAC_VERSION,
-    url = SMAC_URL
+    name =          "SMAC Anti-Speedhack",
+    author =        SMAC_AUTHOR,
+    description =   "Prevents speedhack cheats from working",
+    version =       SMAC_VERSION,
+    url =           SMAC_URL
 };
 
 /* Globals */

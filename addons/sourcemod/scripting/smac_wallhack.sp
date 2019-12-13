@@ -36,11 +36,11 @@
 /* Plugin Info */
 public Plugin myinfo =
 {
-    name = "SMAC Anti-Wallhack",
-    author = SMAC_AUTHOR,
-    description = "Prevents wallhack cheats from working",
-    version = SMAC_VERSION,
-    url = SMAC_URL
+    name =          "SMAC Anti-Wallhack",
+    author =        SMAC_AUTHOR,
+    description =   "Prevents wallhack cheats from working",
+    version =       SMAC_VERSION,
+    url =           SMAC_URL
 };
 
 /* Globals */
@@ -96,7 +96,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 public void OnPluginStart()
 {
     // Convars.
-    ConVar hCvar;
+    ConVar hCvar = null;
 
     hCvar = SMAC_CreateConVar("smac_wallhack", "1", "Enable Anti-Wallhack. This will increase your server's CPU usage.", 0, true, 0.0, true, 1.0);
     OnSettingsChanged(hCvar, "", "");

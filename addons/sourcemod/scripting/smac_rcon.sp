@@ -28,15 +28,15 @@
 /* Plugin Info */
 public Plugin myinfo =
 {
-    name = "SMAC Rcon Locker",
-    author = SMAC_AUTHOR,
-    description = "Protects against rcon crashes and exploits",
-    version = SMAC_VERSION,
-    url = SMAC_URL
+    name =          "SMAC Rcon Locker",
+    author =        SMAC_AUTHOR,
+    description =   "Protects against rcon crashes and exploits",
+    version =       SMAC_VERSION,
+    url =           SMAC_URL
 };
 
 /* Globals */
-ConVar g_hCvarRconPass;
+ConVar g_hCvarRconPass = null;
 char g_sRconRealPass[128];
 bool g_bRconLocked = false;
 

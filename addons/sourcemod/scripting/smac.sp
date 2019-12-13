@@ -28,11 +28,11 @@
 /* Plugin Info */
 public Plugin myinfo =
 {
-    name = "SourceMod Anti-Cheat",
-    author = SMAC_AUTHOR,
-    description = "Open source anti-cheat plugin for SourceMod",
-    version = SMAC_VERSION,
-    url = SMAC_URL
+    name =          "SourceMod Anti-Cheat",
+    author =        SMAC_AUTHOR,
+    description =   "Open source anti-cheat plugin for SourceMod",
+    version =       SMAC_VERSION,
+    url =           SMAC_URL
 };
 
 /* Globals */
@@ -54,11 +54,11 @@ native any IRC_MsgFlaggedChannels(const char[] flag, const char[] format, any ..
 native any IRC_Broadcast(IrcChannel type, const char[] format, any ...);
 
 GameType g_Game = Game_Unknown;
-ConVar g_hCvarVersion;
-ConVar g_hCvarWelcomeMsg;
-ConVar g_hCvarBanDuration;
-ConVar g_hCvarLogVerbose;
-ConVar g_hCvarIrcMode;
+ConVar g_hCvarVersion = null;
+ConVar g_hCvarWelcomeMsg = null;
+ConVar g_hCvarBanDuration = null;
+ConVar g_hCvarLogVerbose = null;
+ConVar g_hCvarIrcMode = null;
 char g_sLogPath[PLATFORM_MAX_PATH];
 
 /* Plugin Functions */
@@ -199,7 +199,7 @@ public Action Timer_WelcomeMsg(Handle timer, any serial)
 
     if (IS_CLIENT(client) && IsClientInGame(client))
     {
-        PrintToChat(client, "%t%t", "SMAC_Tag", "SMAC_WelcomeMsg");
+        CPrintToChat(client, "%t%t", "SMAC_Tag", "SMAC_WelcomeMsg");
     }
 
     return Plugin_Stop;
@@ -258,25 +258,25 @@ Handle g_OnCheatDetected = INVALID_HANDLE;
 
 void API_Init()
 {
-    CreateNative("SMAC_GetGameType", Native_GetGameType);
-    CreateNative("SMAC_Log", Native_Log);
-    CreateNative("SMAC_LogAction", Native_LogAction);
-    CreateNative("SMAC_Ban", Native_Ban);
-    CreateNative("SMAC_PrintAdminNotice", Native_PrintAdminNotice);
-    CreateNative("SMAC_CreateConVar", Native_CreateConVar);
-    CreateNative("SMAC_CheatDetected", Native_CheatDetected);
+    CreateNative("SMAC_GetGameType",        Native_GetGameType);
+    CreateNative("SMAC_Log",                Native_Log);
+    CreateNative("SMAC_LogAction",          Native_LogAction);
+    CreateNative("SMAC_Ban",                Native_Ban);
+    CreateNative("SMAC_PrintAdminNotice",   Native_PrintAdminNotice);
+    CreateNative("SMAC_CreateConVar",       Native_CreateConVar);
+    CreateNative("SMAC_CheatDetected",      Native_CheatDetected);
 
     g_OnCheatDetected = CreateGlobalForward("SMAC_OnCheatDetected", ET_Event, Param_Cell, Param_String, Param_Cell, Param_Cell);
 }
 
 // native GameType:SMAC_GetGameType();
-public any Native_GetGameType(Handle plugin,int numParams)
+public any Native_GetGameType(Handle plugin, int numParams)
 {
     return view_as<GameType>(g_Game);
 }
 
 // native SMAC_Log(const String:format[], any:...);
-public any Native_Log(Handle plugin,int numParams)
+public any Native_Log(Handle plugin, int numParams)
 {
     char sFilename[64], sBuffer[256];
     GetPluginBasename(plugin, sFilename, sizeof(sFilename));
@@ -291,7 +291,7 @@ public any Native_Log(Handle plugin,int numParams)
 }
 
 // native SMAC_LogAction(client, const String:format[], any:...);
-public any Native_LogAction(Handle plugin,int numParams)
+public any Native_LogAction(Handle plugin, int numParams)
 {
     int client = GetNativeCell(1);
 
@@ -366,7 +366,7 @@ public any Native_LogAction(Handle plugin,int numParams)
 }
 
 // native SMAC_Ban(client, const String:reason[], any:...);
-public any Native_Ban(Handle plugin,int numParams)
+public any Native_Ban(Handle plugin, int numParams)
 {
     char sVersion[16], sReason[256];
     int client = GetNativeCell(1);
@@ -408,7 +408,7 @@ public any Native_PrintAdminNotice(Handle plugin, int numParams)
         {
             SetGlobalTransTarget(i);
             FormatNativeString(0, 1, 2, sizeof(sBuffer), _, sBuffer);
-            PrintToChat(i, "%t%s", "SMAC_Tag", sBuffer);
+            CPrintToChat(i, "%t%s", "SMAC_Tag", sBuffer);
         }
     }
 
@@ -424,7 +424,7 @@ public any Native_PrintAdminNotice(Handle plugin, int numParams)
 }
 
 // native Handle:SMAC_CreateConVar(const String:name[], const String:defaultValue[], const String:description[]="", flags=0, bool:hasMin=false, Float:min=0.0, bool:hasMax=false, Float:max=0.0);
-public any Native_CreateConVar(Handle plugin,int numParams)
+public any Native_CreateConVar(Handle plugin, int numParams)
 {
     char name[64], defaultValue[16], description[192];
     GetNativeString(1, name, sizeof(name));
@@ -445,7 +445,7 @@ public any Native_CreateConVar(Handle plugin,int numParams)
 }
 
 // native Action:SMAC_CheatDetected(client, DetectionType:type = Detection_Unknown, Handle:info = INVALID_HANDLE);
-public int Native_CheatDetected(Handle plugin,int numParams)
+public int Native_CheatDetected(Handle plugin, int numParams)
 {
     int client = GetNativeCell(1);
 

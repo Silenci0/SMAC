@@ -27,11 +27,11 @@
 /* Plugin Info */
 public Plugin myinfo =
 {
-    name = "SMAC CS:S Anti-Smoke",
-    author = SMAC_AUTHOR,
-    description = "Prevents anti-smoke cheats from working",
-    version = SMAC_VERSION,
-    url = SMAC_URL
+    name =          "SMAC CS:S Anti-Smoke",
+    author =        SMAC_AUTHOR,
+    description =   "Prevents anti-smoke cheats from working",
+    version =       SMAC_VERSION,
+    url =           SMAC_URL
 };
 
 /* Globals */

@@ -27,11 +27,11 @@
 /* Plugin Info */
 public Plugin myinfo =
 {
-    name = "SMAC Spinhack Detector",
-    author = SMAC_AUTHOR,
-    description = "Monitors players to detect the use of spinhacks",
-    version = SMAC_VERSION,
-    url = SMAC_URL
+    name =          "SMAC Spinhack Detector",
+    author =        SMAC_AUTHOR,
+    description =   "Monitors players to detect the use of spinhacks",
+    version =       SMAC_VERSION,
+    url =           SMAC_URL
 };
 
 /* Globals */

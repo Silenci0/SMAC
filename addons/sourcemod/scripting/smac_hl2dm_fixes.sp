@@ -28,11 +28,11 @@
 /* Plugin Info */
 public Plugin myinfo =
 {
-    name = "SMAC HL2:DM Exploit Fixes",
-    author = SMAC_AUTHOR,
-    description = "Blocks general Half-Life 2: Deathmatch exploits",
-    version = SMAC_VERSION,
-    url = SMAC_URL
+    name =          "SMAC HL2:DM Exploit Fixes",
+    author =        SMAC_AUTHOR,
+    description =   "Blocks general Half-Life 2: Deathmatch exploits",
+    version =       SMAC_VERSION,
+    url =           SMAC_URL
 };
 
 /* Globals */

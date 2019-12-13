@@ -28,11 +28,11 @@
 /* Plugin Info */
 public Plugin myinfo =
 {
-    name = "SMAC Eye Angle Test",
-    author = SMAC_AUTHOR,
-    description = "Detects eye angle violations used in cheats",
-    version = SMAC_VERSION,
-    url = SMAC_URL
+    name =          "SMAC Eye Angle Test",
+    author =        SMAC_AUTHOR,
+    description =   "Detects eye angle violations used in cheats",
+    version =       SMAC_VERSION,
+    url =           SMAC_URL
 };
 
 /* Globals */
@@ -44,8 +44,8 @@ enum ResetStatus {
 
 GameType g_Game = Game_Unknown;
 
-ConVar g_hCvarBan;
-ConVar g_hCvarCompat;
+ConVar g_hCvarBan = null;
+ConVar g_hCvarCompat = null;
 float g_fDetectedTime[MAXPLAYERS+1];
 
 bool g_bInMinigun[MAXPLAYERS+1];

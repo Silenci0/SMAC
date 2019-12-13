@@ -27,11 +27,11 @@
 /* Plugin Info */
 public Plugin myinfo =
 {
-    name = "SMAC Aimbot Detector",
-    author = SMAC_AUTHOR,
-    description = "Analyzes clients to detect aimbots",
-    version = SMAC_VERSION,
-    url = SMAC_URL
+    name =          "SMAC Aimbot Detector",
+    author =        SMAC_AUTHOR,
+    description =   "Analyzes clients to detect aimbots",
+    version =       SMAC_VERSION,
+    url =           SMAC_URL
 };
 
 /* Globals */
@@ -39,7 +39,7 @@ public Plugin myinfo =
 #define AIM_BAN_MIN			4		// Minimum number of detections before an auto-ban is allowed
 #define AIM_MIN_DISTANCE	200.0	// Minimum distance acceptable for a detection.
 
-ConVar g_hCvarAimbotBan;
+ConVar g_hCvarAimbotBan = null;
 Handle g_IgnoreWeapons = INVALID_HANDLE;
 
 float g_fEyeAngles[MAXPLAYERS+1][64][3];

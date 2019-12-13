@@ -27,11 +27,11 @@
 /* Plugin Info */
 public Plugin myinfo =
 {
-    name = "SMAC CS:S Exploit Fixes",
-    author = SMAC_AUTHOR,
-    description = "Blocks general Counter-Strike: Source exploits",
-    version = SMAC_VERSION,
-    url = SMAC_URL
+    name =          "SMAC CS:S Exploit Fixes",
+    author =        SMAC_AUTHOR,
+    description =   "Blocks general Counter-Strike: Source exploits",
+    version =       SMAC_VERSION,
+    url =           SMAC_URL
 };
 
 /* Plugin Functions */
@@ -50,7 +50,7 @@ public void OnPluginStart()
 {
     LoadTranslations("smac.phrases");
 
-    ConVar hCvar;
+    ConVar hCvar = null;
 
     hCvar = SMAC_CreateConVar("smac_css_defusefix", "1", "Block illegal defuses.", 0, true, 0.0, true, 1.0);
     OnDefuseFixChanged(hCvar, "", "");

@@ -27,11 +27,11 @@
 /* Plugin Info */
 public Plugin myinfo =
 {
-    name = "SMAC AutoTrigger Detector",
-    author = SMAC_AUTHOR,
-    description = "Detects cheats that automatically press buttons for players",
-    version = SMAC_VERSION,
-    url = SMAC_URL
+    name =          "SMAC AutoTrigger Detector",
+    author =        SMAC_AUTHOR,
+    description =   "Detects cheats that automatically press buttons for players",
+    version =       SMAC_VERSION,
+    url =           SMAC_URL
 };
 
 /* Globals */
@@ -43,7 +43,7 @@ public Plugin myinfo =
 #define METHOD_AUTOFIRE     1
 #define METHOD_MAX          2
 
-ConVar g_hCvarBan;
+ConVar g_hCvarBan = null;
 int g_iDetections[METHOD_MAX][MAXPLAYERS+1];
 int g_iAttackMax = 66;
 
