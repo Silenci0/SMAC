@@ -67,67 +67,32 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
     // Detect game.
     char sGame[64];
     GetGameFolderName(sGame, sizeof(sGame));
+    EngineVersion iEngine = GetEngineVersion();
 
-    if (StrEqual(sGame, "cstrike") || StrEqual(sGame, "cstrike_beta"))
-    {
-        g_Game = Game_CSS;
-    }
-    else if (StrEqual(sGame, "tf") || StrEqual(sGame, "tf_beta"))
-    {
-        g_Game = Game_TF2;
-    }
-    else if (StrEqual(sGame, "dod"))
-    {
-        g_Game = Game_DODS;
-    }
-    else if (StrEqual(sGame, "insurgency"))
-    {
-        g_Game = Game_INSMOD;
-    }
-    else if (StrEqual(sGame, "left4dead"))
-    {
-        g_Game = Game_L4D;
-    }
-    else if (StrEqual(sGame, "left4dead2"))
-    {
-        g_Game = Game_L4D2;
-    }
-    else if (StrEqual(sGame, "hl2mp"))
-    {
-        g_Game = Game_HL2DM;
-    }
-    else if (StrEqual(sGame, "fof"))
-    {
-        g_Game = Game_FOF;
-    }
-    else if (StrEqual(sGame, "garrysmod"))
-    {
-        g_Game = Game_GMOD;
-    }
-    else if (StrEqual(sGame, "hl2ctf"))
-    {
-        g_Game = Game_HL2CTF;
-    }
-    else if (StrEqual(sGame, "hidden"))
-    {
-        g_Game = Game_HIDDEN;
-    }
-    else if (StrEqual(sGame, "nucleardawn"))
-    {
-        g_Game = Game_ND;
-    }
-    else if (StrEqual(sGame, "csgo"))
-    {
-        g_Game = Game_CSGO;
-    }
-    else if (StrEqual(sGame, "zps"))
-    {
-        g_Game = Game_ZPS;
-    }
-    else
-    {
-        g_Game = Game_Unknown;
-    }
+    /*
+        Notes: Removed GMOD support as SourceMod doesn't support Gmod anymore.
+
+        Todo: Figure out which EngineVersion INSMod, FoF, HL2CTF, HIDDEN and ZPS use
+        from https://sm.alliedmods.net/new-api/halflife/EngineVersion
+
+        Those could be switched over too. Also, is cstrike_beta even still a thing?
+    */
+    if (StrEqual(sGame, "cstrike_beta")) g_Game = Game_CSS;
+    else if (StrEqual(sGame, "insurgency")) g_Game = Game_INSMOD;
+    else if (StrEqual(sGame, "fof")) g_Game = Game_FOF;
+    else if (StrEqual(sGame, "hl2ctf")) g_Game = Game_HL2CTF;
+    else if (StrEqual(sGame, "hidden")) g_Game = Game_HIDDEN;
+    else if (StrEqual(sGame, "zps")) g_Game = Game_ZPS;
+    else if (iEngine == Engine_TF2) g_Game = Game_TF2;
+    else if (iEngine == Engine_CSS) g_Game = Game_CSS;
+    else if (iEngine == Engine_CSGO) g_Game = Game_CSGO;
+    else if (iEngine == Engine_DODS) g_Game = Game_DODS;
+    else if (iEngine == Engine_Left4Dead) g_Game = Game_L4D;
+    else if (iEngine == Engine_Left4Dead2) g_Game = Game_L4D2;
+    else if (iEngine == Engine_HL2DM) g_Game = Game_HL2DM;
+    else if (iEngine == Engine_NuclearDawn) g_Game = Game_ND;
+    else if (iEngine == Engine_Unknown) g_Game = Game_Unknown;
+    else g_Game = Game_Unknown;
     
     // Path used for logging.
     BuildPath(Path_SM, g_sLogPath, sizeof(g_sLogPath), "logs/SMAC.log");

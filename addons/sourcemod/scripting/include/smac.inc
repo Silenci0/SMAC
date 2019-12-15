@@ -2,7 +2,7 @@
     SourceMod Anti-Cheat
     Copyright (C) 2011-2016 SMAC Development Team
     Copyright (C) 2007-2011 CodingDirect LLC
-	
+    
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -40,7 +40,6 @@ enum GameType {
     Game_L4D2,
     Game_HL2DM,
     Game_FOF,
-    Game_GMOD,
     Game_HL2CTF,
     Game_HIDDEN,
     Game_ND,
