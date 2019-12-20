@@ -66,7 +66,7 @@ public void OnPluginStart()
     
     switch (SMAC_GetGameType())
     {
-        case Game_INSMOD:
+        case Game_INS:
         {
             AddCommandListener(Command_Say, "say2");
         }

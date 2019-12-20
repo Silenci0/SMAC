@@ -105,7 +105,7 @@ public void OnPluginStart()
     AddCvar(Order_Last, "cl_showevents",                Comp_Equal, Action_Ban, "0.0");
 
     // Insurgency does not mark this as a cheat.
-    if (SMAC_GetGameType() == Game_INSMOD)
+    if (SMAC_GetGameType() == Game_INS)
     {
         AddCvar(Order_Last, "fog_enable",               Comp_Equal, Action_Kick, "1.0");
     }

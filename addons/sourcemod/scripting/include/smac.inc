@@ -25,7 +25,7 @@
 #include <smac_stocks>
 
 /* Globals */
-#define SMAC_VERSION    "0.8.7.2"
+#define SMAC_VERSION    "0.8.7.3"
 #define SMAC_URL        "https://github.com/Silenci0/SMAC"
 #define SMAC_AUTHOR     "SMAC Development Team"
 #define SMAC_MOD_ERROR  "This module will not work for this mod and should be removed."
@@ -35,7 +35,7 @@ enum GameType {
     Game_CSS,
     Game_TF2,
     Game_DODS,
-    Game_INSMOD,
+    Game_INS,
     Game_L4D,
     Game_L4D2,
     Game_HL2DM,
@@ -45,6 +45,8 @@ enum GameType {
     Game_ND,
     Game_CSGO,
     Game_ZPS,
+    Game_ZMR,
+    Game_BM
 };
 
 enum DetectionType {

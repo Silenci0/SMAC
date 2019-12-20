@@ -77,22 +77,89 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
         Those could be switched over too. Also, is cstrike_beta even still a thing?
     */
-    if (StrEqual(sGame, "cstrike_beta")) g_Game = Game_CSS;
-    else if (StrEqual(sGame, "insurgency")) g_Game = Game_INSMOD;
-    else if (StrEqual(sGame, "fof")) g_Game = Game_FOF;
-    else if (StrEqual(sGame, "hl2ctf")) g_Game = Game_HL2CTF;
-    else if (StrEqual(sGame, "hidden")) g_Game = Game_HIDDEN;
-    else if (StrEqual(sGame, "zps")) g_Game = Game_ZPS;
-    else if (iEngine == Engine_TF2) g_Game = Game_TF2;
-    else if (iEngine == Engine_CSS) g_Game = Game_CSS;
-    else if (iEngine == Engine_CSGO) g_Game = Game_CSGO;
-    else if (iEngine == Engine_DODS) g_Game = Game_DODS;
-    else if (iEngine == Engine_Left4Dead) g_Game = Game_L4D;
-    else if (iEngine == Engine_Left4Dead2) g_Game = Game_L4D2;
-    else if (iEngine == Engine_HL2DM) g_Game = Game_HL2DM;
-    else if (iEngine == Engine_NuclearDawn) g_Game = Game_ND;
-    else if (iEngine == Engine_Unknown) g_Game = Game_Unknown;
-    else g_Game = Game_Unknown;
+ 
+    if (iEngine == Engine_TF2) 
+    {
+        g_Game = Game_TF2;
+    }
+    else if (iEngine == Engine_CSS) 
+    {
+        g_Game = Game_CSS;
+    }
+    else if (iEngine == Engine_CSGO)
+    {
+        g_Game = Game_CSGO;
+    }
+    else if (iEngine == Engine_DODS) 
+    {
+        g_Game = Game_DODS;
+    }
+    else if (iEngine == Engine_Left4Dead)
+    {
+        g_Game = Game_L4D;
+    }
+    else if (iEngine == Engine_Left4Dead2)
+    {
+        g_Game = Game_L4D2;
+    }
+    else if (iEngine == Engine_HL2DM)
+    {
+        g_Game = Game_HL2DM;
+    }
+    else if (iEngine == Engine_NuclearDawn)
+    {
+        g_Game = Game_ND;
+    }
+    else if (iEngine == Engine_Insurgency)
+    {    
+        g_Game = Game_INS;
+    }
+    else if (iEngine ==  Engine_BlackMesa)
+    {
+        g_Game = Game_BM;
+    }
+    else if (iEngine == Engine_SDK2013)
+    {
+        if (StrEqual(sGame, "fof"))
+        {        
+            g_Game = Game_FOF;
+        }
+        else if (StrEqual(sGame, "zps")) 
+        {
+            g_Game = Game_ZPS;
+        }
+        else if (StrEqual(sGame, "zps")) 
+        {
+            g_Game = Game_ZMR;
+        }
+        else
+        {
+            g_Game = Game_Unknown;
+        }
+    }
+    else if (iEngine == Engine_SourceSDK2006)
+    {
+        if (StrEqual(sGame, "hl2ctf"))
+        {        
+            g_Game = Game_HL2CTF;
+        }
+        else if (StrEqual(sGame, "hidden")) 
+        {
+            g_Game = Game_HIDDEN;
+        }
+        else
+        {
+            g_Game = Game_Unknown;
+        }
+    }
+    else if (iEngine == Engine_Unknown) 
+    {
+        g_Game = Game_Unknown;
+    }
+    else
+    {
+        g_Game = Game_Unknown;
+    }
     
     // Path used for logging.
     BuildPath(Path_SM, g_sLogPath, sizeof(g_sLogPath), "logs/SMAC.log");
@@ -116,7 +183,6 @@ public void OnPluginStart()
     // Convars.
     g_hCvarVersion = CreateConVar("smac_version", SMAC_VERSION, "SourceMod Anti-Cheat", FCVAR_NOTIFY|FCVAR_DONTRECORD);
     OnVersionChanged(g_hCvarVersion, "", "");
-    //HookConVarChange(g_hCvarVersion, OnVersionChanged);
     g_hCvarVersion.AddChangeHook(OnVersionChanged);
 
     g_hCvarWelcomeMsg = CreateConVar("smac_welcomemsg", "0", "Display a message saying that your server is protected.", 0, true, 0.0, true, 1.0);

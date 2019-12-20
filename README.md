@@ -10,6 +10,13 @@ Also, if you want to help contribute to the plugin, please feel free to issue pu
 For information about the plugin and its modules, please use the wiki here: https://github.com/Silenci0/SMAC/wiki
 
 # Changelog
+0.8.7.3 Update (12-20-2019)
+-----------------
+- Merged changes by 404UNFca adding EngineVersion check and removing support for GMod and TF2 Beta. (https://github.com/Silenci0/SMAC/pull/27 )
+- Removed CSS Beta (cstrike_beta) and replaced Insurgency Mod support with Insurgency (2014 Steam version) support.
+- Added support for Black Mesa multiplayer and Zombie Master Reborn (the latest version of ZMR: https://steamcommunity.com/groups/zmreborn ). While support is present, SMAC has not be tested for these games, just an fyi.
+- Recompiled all plugins.
+
 0.8.7.2 Update (12-12-2019)
 -----------------
 - Depreciated support for the ESEA module. As of 12/08/2019, it has been confirmed that it is not possible to download the .csv file from the ESEA website, making it impossible for the plugin to function. The code will still be available for legacy purposes, but will no longer be supported. Info regarding this is found here: https://github.com/Silenci0/SMAC/issues/11
