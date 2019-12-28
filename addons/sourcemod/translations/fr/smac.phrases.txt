@@ -1,113 +1,131 @@
 "Phrases"
 {
+	"SMAC_Tag"
+	{
+		"fr"		"[SMAC] "
+	}
+	
 	"SMAC_Banned"
 	{
-		"fr"		"Vous avez été banni pour avoir triché."
+		"fr"		"Vous avez été banni pour avoir triché"
 	}
 	
 	"SMAC_GlobalBanned"
 	{
-		"fr"		"Vous êtes listé sur la {1} Global Ban List. Allez sur {2} pour plus d'informations"
+		"#format"	"{1:s},{2:s}"
+		"fr"		"Vous êtes listé sur la {1} Global Ban List. Regardez {2} pour plus d'informations"
 	}
 	
 	"SMAC_CommandSpamKick"
 	{
-		"fr"		"Vous avez été expulsé pour spam de commandes."
+		"fr"		"Vous avez été expulsé pour spam de commandes"
 	}
 	
 	"SMAC_IllegalDefuse"
 	{
-		"fr"		"Vous ne pouvez pas désamorcer la bombe à travers murs."
+		"fr"		"Vous ne pouvez pas désamorcer à travers les murs."
 	}
 	
 	"SMAC_PleaseWait"
 	{
-		"fr"		"S'il vous plaît attendez une minute avant de tenter de se reconnecter"
+		"fr"		"Veuillez attendre une minute avant d'essayer de vous reconnecter"
 	}
 	
 	"SMAC_FailedToReply"
 	{
-		"fr"		"Votre client n'a pas répondu à la requête à temps. Merci de vous reconnecter ou de relancer le jeu."
+		"fr"		"Votre client n'a pas répondu à temps à une requête. Veuillez vous reconnecter ou relancer votre jeu"
 	}
 	
 	"SMAC_FailedAuth"
 	{
-		"fr"		"Votre client n'a pas été autorisé à temps. Merci de vous reconnecter ou de relancer le jeu."
+		"fr"		"Votre client n'a pas été autorisé à temps. Veuillez vous reconnecter ou relancer votre jeu"
 	}
 	
 	"SMAC_Muted"
 	{
-		"fr"		"{1} a été rendu silencieux par SourceMod Anti-Cheat."
+		"#format"	"{1:N}"
+		"fr"		"{1} a été rendu muet par SourceMod Anti-Cheat."
 	}
 	
 	"SMAC_CvarViolation"
 	{
-		"fr"		"{1} a retourné une mauvaise valeur de {2}."
+		"#format"	"{1:N},{2:s}"
+		"fr"		"{1} a retourné une mauvaise valeur sur {2}."
 	}
 	
 	"SMAC_ShouldEqual"
 	{
-		"fr"		"Votre convar {1} devrait être égale à {2} mais elle est réglée sur {3}. Merci de corriger ça avant de vous reconnecter"
+		"#format"	"{1:s},{2:s},{3:s}"
+		"fr"		"Votre convar {1} devrait être égale à {2} mais elle est définie sur {3}. Veuillez la corriger avant de revenir"
 	}
 	
 	"SMAC_ShouldBeGreater"
 	{
-		"fr"		"Votre convar {1} devrait être supérieure ou égale à {2} mais elle est réglée {3}. Merci de corriger ça avant de vous reconnecter"
+		"#format"	"{1:s},{2:s},{3:s}"
+		"fr"		"Votre convar {1} devrait être supérieure ou égale à {2} mais elle est définie sur {3}. Veuillez la corriger avant de revenir"
 	}
 	
 	"SMAC_ShouldBeLess"
 	{
-		"fr"		"Votre convar {1} devrait être inférieure ou égale à {2} mais elle est réglée sur {3}. Merci de corriger ça avant de vous reconnecter"
+		"#format"	"{1:s},{2:s},{3:s}"
+		"fr"		"Votre convar {1} devrait être inférieure ou égale à {2} mais elle est définie sur {3}. Veuillez la corriger avant de revenir"
 	}
 	
 	"SMAC_ShouldBeBetween"
 	{
-		"fr"		"Votre convar {1} devrait être comprise entre {2} et {3} mais était réglée sur {4}. Merci de corriger ça avant de vous reconnecter"
+		"#format"	"{1:s},{2:s},{3:s},{4:s}"
+		"fr"		"Votre convar {1} devrait être comprise entre {2} et {3} mais elle est définie sur {4}. Veuillez la corriger avant de revenir"
 	}
 	
 	"SMAC_ShouldBeOutside"
 	{
-		"fr"		"Votre convar {1} ne doit pas être comprise entre {2} et {3} mais était réglée sur {4}. Merci de corriger ça avant de vous reconnecter"
+		"#format"	"{1:s},{2:s},{3:s},{4:s}"
+		"fr"		"Votre convar {1} ne doit pas être comprise entre {2} et {3} mais elle est définie sur {4}. Veuillez la corriger avant de revenir"
 	}
 	
 	"SMAC_ChangeName"
 	{
-		"fr"		"Merci de changer votre pseudo"
+		"fr"		"Veuillez changer votre nom"
 	}
 	
 	"SMAC_CmdBanned"
 	{
-		"fr"		"Vous avez été banni pour avoir utilisé une commande interdite"
+		"fr"		"Vous avez été banni pour une violation d'utilisation de commande"
 	}
 	
 	"SMAC_SayBlock"
 	{
-		"fr"		"Ce que vous vouliez dire a été bloqué à cause de caractères non valides."
+		"fr"		"Votre message a été bloqué à cause d'un caractère invalide."
 	}
 	
 	"SMAC_AimbotDetected"
 	{
-		"fr"		"{1} est suspectée d'utiliser un aimbot. (Détection #{2} | Déviation: {3}° | Arme: {4})"
+		"#format"	"{1:N},{2:i},{3:.0f},{4:s}"
+		"fr"		"{1} est soupçonné d'utiliser un aimbot. (Detection #{2} | Deviation: {3}° | Arme: {4})"
 	}
 	
 	"SMAC_AutoTriggerDetected"
 	{
-		"fr"		"{1} est suspectée d'utiliser un auto-trigger cheat: {2}"
+		"#format"	"{1:N},{2:s}"
+		"fr"		"{1} est soupçonné d'utiliser un auto-trigger: {2}"
 	}
 	
 	"SMAC_SpinhackDetected"
 	{
-		"fr"		"{1} est suspectée d'utiliser un spinhack."
+		"#format"	"{1:N}"
+		"fr"		"{1} est soupçonné d'utiliser un spinhack."
 	}
 	
 	"SMAC_SpeedhackDetected"
 	{
-		"fr"		"{1} est suspectée d'utiliser un speedhack."
+		"#format"	"{1:N}"
+		"fr"		"{1} est soupçonné d'utiliser un speedhack."
 	}
 	
 	"SMAC_EyetestDetected"
 	{
-		"fr"		"{1} est suspectée de tricher avec son champ de vision."
+		"#format"	"{1:N}"
+		"fr"		"{1} est soupçonné de tricher avec son champ de vision."
 	}
 	
 	"SMAC_WelcomeMsg"
