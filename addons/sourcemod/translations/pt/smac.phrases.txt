@@ -13,7 +13,7 @@
 	"SMAC_GlobalBanned"
 	{
 		"#format"	"{1:s},{2:s}"
-		"pt"		"Você está listado(a) na Lista Global de Banimento do(a) {1}. Veja {2} para mais informações"
+		"pt"		"Você está listado(a) na Lista Global de Banimentos do(a) {1}. Veja {2} para mais informações"
 	}
 	
 	"SMAC_CommandSpamKick"
@@ -125,11 +125,11 @@
 	"SMAC_EyetestDetected"
 	{
 		"#format"	"{1:N}"
-		"pt"		"{1} é suspeito(a) de estar trapaceando com os ângulos dos seus olhos."
+		"pt"		"{1} é suspeito(a) de estar trapaceando com os ângulos de seus olhos."
 	}
 	
 	"SMAC_WelcomeMsg"
 	{
-		"pt"		"Esse servidor é protegido pelo SourceMod Anti-Cheat."
+		"pt"		"Este servidor é protegido pelo SourceMod Anti-Cheat."
 	}
 }
