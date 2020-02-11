@@ -107,7 +107,7 @@
 	"SMAC_AutoTriggerDetected"
 	{
 		"#format"	"{1:N},{2:s}"
-		"chi"		"{1} 涉嫌自动触发式作弊: {2}"
+		"chi"		"{1} 涉嫌自动扳机作弊: {2}"
 	}
 	
 	"SMAC_SpinhackDetected"
