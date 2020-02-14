@@ -90,7 +90,7 @@ public Action OnPlayerRunCmd(int client, int& buttons, int& impulse, float vel[3
 
     /* BunnyHop */
     
-    if (GetEntityMoveType(iClient) != MOVETYPE_LADDER)
+    if (GetEntityMoveType(client) != MOVETYPE_LADDER)
 {
 	static float fCheckTime[MAXPLAYERS + 1];
 	
