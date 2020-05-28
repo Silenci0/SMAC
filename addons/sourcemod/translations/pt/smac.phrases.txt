@@ -18,7 +18,7 @@
 	
 	"SMAC_CommandSpamKick"
 	{
-		"pt"		"Você foi expulso(a) por spammar comandos!"
+		"pt"		"Você foi expulso(a) por fazer spam de comandos!"
 	}
 	
 	"SMAC_IllegalDefuse"
@@ -85,7 +85,7 @@
 	
 	"SMAC_ChangeName"
 	{
-		"pt"		"Por favor, mude seu nome!"
+		"pt"		"Por favor, mude seu nome."
 	}
 	
 	"SMAC_CmdBanned"
@@ -101,31 +101,31 @@
 	"SMAC_AimbotDetected"
 	{
 		"#format"	"{1:N},{2:i},{3:.0f},{4:s}"
-		"pt"		"{1} é suspeito(a) de estar usando um aimbot! (Detecção #{2} | Desvio: {3}º | Arma: {4})"
+		"pt"		"{1} está possivelmente usando Aimbot! (Detecção #{2} | Desvio: {3}º | Arma: {4})"
 	}
 	
 	"SMAC_AutoTriggerDetected"
 	{
 		"#format"	"{1:N},{2:s}"
-		"pt"		"{1} é suspeito(a) de estar usando um auto-trigger cheat: {2}."
+		"pt"		"{1} está possivelmente usando Auto-Trigger: {2}."
 	}
 	
 	"SMAC_SpinhackDetected"
 	{
 		"#format"	"{1:N}"
-		"pt"		"{1} é suspeito(a) de estar usando um spinhack."
+		"pt"		"{1} está possivelmente usando Spinhack."
 	}
 	
 	"SMAC_SpeedhackDetected"
 	{
 		"#format"	"{1:N}"
-		"pt"		"{1} é suspeito(a) de estar usando um speedhack."
+		"pt"		"{1} está possivelmente usando Speedhack."
 	}
 	
 	"SMAC_EyetestDetected"
 	{
 		"#format"	"{1:N}"
-		"pt"		"{1} é suspeito(a) de estar trapaceando com os ângulos de seus olhos."
+		"pt"		"{1} está possivelmente usando Fake Angles."
 	}
 	
 	"SMAC_WelcomeMsg"
