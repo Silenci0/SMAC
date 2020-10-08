@@ -101,31 +101,31 @@
 	"SMAC_AimbotDetected"
 	{
 		"#format"	"{1:N},{2:i},{3:.0f},{4:s}"
-		"pt"		"{1} possivelmente está usando Aimbot! (Detecção #{2} | Desvio: {3}º | Arma: {4})"
+		"pt"		"{1} está possivelmente usando Aimbot! (Detecção nº{2} | Divergência: {3}º | Arma: {4})"
 	}
 	
 	"SMAC_AutoTriggerDetected"
 	{
 		"#format"	"{1:N},{2:s}"
-		"pt"		"{1} possivelmente está usando Auto-Trigger: {2}."
+		"pt"		"{1} está possivelmente usando Auto-Trigger: {2}."
 	}
 	
 	"SMAC_SpinhackDetected"
 	{
 		"#format"	"{1:N}"
-		"pt"		"{1} possivelmente está usando Spinhack."
+		"pt"		"{1} está possivelmente usando Spinhack."
 	}
 	
 	"SMAC_SpeedhackDetected"
 	{
 		"#format"	"{1:N}"
-		"pt"		"{1} possivelmente está usando Speedhack."
+		"pt"		"{1} está possivelmente usando Speedhack."
 	}
 	
 	"SMAC_EyetestDetected"
 	{
 		"#format"	"{1:N}"
-		"pt"		"{1} possivelmente está usando Fake Angles."
+		"pt"		"{1} está possivelmente usando Fake Angles."
 	}
 	
 	"SMAC_WelcomeMsg"
