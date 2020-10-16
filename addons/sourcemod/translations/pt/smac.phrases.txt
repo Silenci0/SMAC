@@ -33,12 +33,12 @@
 	
 	"SMAC_FailedToReply"
 	{
-		"pt"		"Seu cliente falhou em responder o pedido a tempo! Por favor, reconecte-se ou reinicie o seu jogo."
+		"pt"		"Seu cliente não conseguiu responder a solicitação a tempo! Por favor, reconecte-se ou reinicie o seu jogo."
 	}
 	
 	"SMAC_FailedAuth"
 	{
-		"pt"		"Seu cliente falhou em se autenticar a tempo! Por favor, reconecte-se ou reinicie o seu jogo."
+		"pt"		"Seu cliente não conseguiu se autenticar a tempo! Por favor, reconecte-se ou reinicie o seu jogo."
 	}
 	
 	"SMAC_Muted"
@@ -85,7 +85,7 @@
 	
 	"SMAC_ChangeName"
 	{
-		"pt"		"Por favor, mude seu nome."
+		"pt"		"Por favor, mude seu nome!"
 	}
 	
 	"SMAC_CmdBanned"
@@ -101,31 +101,31 @@
 	"SMAC_AimbotDetected"
 	{
 		"#format"	"{1:N},{2:i},{3:.0f},{4:s}"
-		"pt"		"{1} está possivelmente usando Aimbot! (Detecção nº{2} | Divergência: {3}º | Arma: {4})"
+		"pt"		"{1} possivelmente está usando Aimbot! ({2}ª Detecção | {3}ª Divergência | Arma: {4})"
 	}
 	
 	"SMAC_AutoTriggerDetected"
 	{
 		"#format"	"{1:N},{2:s}"
-		"pt"		"{1} está possivelmente usando Auto-Trigger: {2}."
+		"pt"		"{1} possivelmente está usando Auto-Trigger: {2}."
 	}
 	
 	"SMAC_SpinhackDetected"
 	{
 		"#format"	"{1:N}"
-		"pt"		"{1} está possivelmente usando Spinhack."
+		"pt"		"{1} possivelmente está usando Spinhack."
 	}
 	
 	"SMAC_SpeedhackDetected"
 	{
 		"#format"	"{1:N}"
-		"pt"		"{1} está possivelmente usando Speedhack."
+		"pt"		"{1} possivelmente está usando Speedhack."
 	}
 	
 	"SMAC_EyetestDetected"
 	{
 		"#format"	"{1:N}"
-		"pt"		"{1} está possivelmente usando Fake Angles."
+		"pt"		"{1} possivelmente está usando Fake Angles."
 	}
 	
 	"SMAC_WelcomeMsg"
