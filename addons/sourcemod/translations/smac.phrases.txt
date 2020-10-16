@@ -56,7 +56,7 @@
 	"SMAC_ShouldEqual"
 	{
 		"#format"	"{1:s},{2:s},{3:s}"
-		"en"		"Your convar {1} should equal {2}, but it was set to {3}! Please correct this before rejoining."
+		"en"		"Your convar {1} should be equal to {2}, but it was set to {3}! Please correct this before rejoining."
 	}
 	
 	"SMAC_ShouldBeGreater"
@@ -101,31 +101,31 @@
 	"SMAC_AimbotDetected"
 	{
 		"#format"	"{1:N},{2:i},{3:.0f},{4:s}"
-		"en"		"{1} is suspected of using an aimbot! (Detection #{2} | Deviation: {3}° | Weapon: {4})"
+		"en"		"{1} is suspected of using an Aimbot! (Detection #{2} | Deviation: {3}° | Weapon: {4})"
 	}
 	
 	"SMAC_AutoTriggerDetected"
 	{
 		"#format"	"{1:N},{2:s}"
-		"en"		"{1} is suspected of using auto-trigger cheat: {2}."
+		"en"		"{1} is suspected of using an Auto-Trigger cheat: {2}."
 	}
 	
 	"SMAC_SpinhackDetected"
 	{
 		"#format"	"{1:N}"
-		"en"		"{1} is suspected of using a spinhack."
+		"en"		"{1} is suspected of using a Spinhack."
 	}
 	
 	"SMAC_SpeedhackDetected"
 	{
 		"#format"	"{1:N}"
-		"en"		"{1} is suspected of using a speedhack."
+		"en"		"{1} is suspected of using a Speedhack."
 	}
 	
 	"SMAC_EyetestDetected"
 	{
 		"#format"	"{1:N}"
-		"en"		"{1} is suspected of cheating with their eye angles."
+		"en"		"{1} is suspected of using a Fake Angles cheat."
 	}
 	
 	"SMAC_WelcomeMsg"
