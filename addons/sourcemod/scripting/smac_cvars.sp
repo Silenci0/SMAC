@@ -629,7 +629,7 @@ void ScrambleCvars()
 {
     Handle[][] hCvarADTs = new Handle[view_as<int>(Order_MAX)][g_iADTSize];
     Handle hDataTrie;
-    int iOrder, iADTIndex[view_as<int>(CvarOrder)];
+    int iOrder, iADTIndex[view_as<int>(Order_MAX)];
 
     for (int i = 0; i < g_iADTSize; i++)
     {
@@ -641,7 +641,7 @@ void ScrambleCvars()
 
     ClearArray(g_hCvarADT);
 
-    for (int i = 0; i < view_as<int>(CvarOrder); i++)
+    for (int i = 0; i < view_as<int>(Order_MAX); i++)
     {
         if (iADTIndex[i] > 0)
         {
