@@ -107,6 +107,7 @@ public void OnMapEnd()
     ClearTrie(g_hClientConnections);
 }
 
+#if defined _connect_included
 public bool OnClientPreConnectEx(const char[] name, char password[255], const char[] ip, const char[] steamID, char rejectReason[255])
 {
     g_bConnectExt = true;
@@ -125,6 +126,28 @@ public bool OnClientPreConnectEx(const char[] name, char password[255], const ch
 
     return true;
 }
+#endif
+
+#if defined _Connect_Included
+public EConnect OnClientPreConnectEx(const char[] name, char password[255], const char[] ip, const char[] steamID, char rejectReason[255])
+{
+    g_bConnectExt = true;
+
+    if (IsConnectSpamming(ip))
+    {
+        if (ShouldLogIP(ip))
+        {
+            SMAC_Log("%s (ID: %s | IP: %s) was temporarily banned for connection spam.", name, steamID, ip);
+        }
+
+        BanIdentity(ip, 1, BANFLAG_IP, "Spam Connecting", "SMAC");
+        FormatEx(rejectReason, sizeof(rejectReason), "%T.", "SMAC_PleaseWait", LANG_SERVER);
+        return k_OnClientPreConnectEx_Reject;
+    }
+
+    return k_OnClientPreConnectEx_Accept;
+}
+#endif
 
 public bool OnClientConnect(int client, char[] rejectmsg,int size)
 {
