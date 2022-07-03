@@ -81,7 +81,7 @@ public Action Event_PlayerBlind(Event event, const char[] name, bool dontBroadca
         {
             // New flashes override previous ones.
             g_fFlashedUntil[client] = 0.0;
-            return;
+            return Plugin_Continue;
         }
 
         float duration = GetEntPropFloat(client, Prop_Send, "m_flFlashDuration");
@@ -105,6 +105,7 @@ public Action Event_PlayerBlind(Event event, const char[] name, bool dontBroadca
 
         CreateTimer(duration, Timer_FlashEnded);
     }
+    return Plugin_Continue;
 }
 
 public Action Timer_FlashEnded(Handle timer)

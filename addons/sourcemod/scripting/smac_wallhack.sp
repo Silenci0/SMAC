@@ -156,7 +156,7 @@ public void OnPluginStart()
 }
 
 // native SMAC_WH_SetClientIgnore(client, bool:bIgnore);
-public any Native_SetClientIgnore(Handle plugin,int numParams)
+public int Native_SetClientIgnore(Handle plugin,int numParams)
 {
     int client = GetNativeCell(1);
 
@@ -167,10 +167,11 @@ public any Native_SetClientIgnore(Handle plugin,int numParams)
 
     g_bForceIgnore[client] = view_as<bool>(GetNativeCell(2));
     Wallhack_UpdateClientCache(client);
+    return 0;
 }
 
 // native bool:SMAC_WH_GetClientIgnore(client);
-public any Native_GetClientIgnore(Handle plugin,int numParams)
+public int Native_GetClientIgnore(Handle plugin,int numParams)
 {
     int client = GetNativeCell(1);
 
@@ -237,6 +238,7 @@ public Action Event_PlayerStateChanged(Event event, const char[] name, bool dont
 {
     // Not all data has been updated at this time. Wait until the next tick to update cache.
     CreateTimer(0.001, Timer_PlayerStateChanged, event.GetInt("userid"), TIMER_FLAG_NO_MAPCHANGE);
+    return Plugin_Continue;
 }
 
 public Action Timer_PlayerStateChanged(Handle timer, any userid)
@@ -562,12 +564,14 @@ public Action TF2_Event_Inventory(Event event, const char[] name, bool dontBroad
             }
         }
     }
+    return Plugin_Continue;
 }
 
 public Action L4D_Event_GhostSpawnTime(Event event, const char[] name, bool dontBroadcast)
 {
     // There is no event for observer -> ghost mode, so we must count it down ourselves.
     CreateTimer(GetEventInt(event, "spawntime") + 0.5, Timer_PlayerStateChanged, GetEventInt(event, "userid"), TIMER_FLAG_NO_MAPCHANGE);
+    return Plugin_Continue;
 }
 
 /**

@@ -82,18 +82,19 @@ public Action Event_PlayerTeam(Event event, const char[] name, bool dontBroadcas
 {
     if (event.GetBool("disconnect"))
     {
-        return;
+        return Plugin_Continue;
     }
 
     int client = GetClientOfUserId(event.GetInt("userid"));
 
     if (!IS_CLIENT(client) || !IsClientInGame(client) || IsFakeClient(client))
     {
-        return;
+        return Plugin_Continue;
     }
 
     g_didRecentlyChangeTeam[client] = true;
     CreateTimer(RECENT_TEAM_CHANGE_TIME, Timer_ResetRecentTeamChange, client);
+    return Plugin_Continue;
 }
 
 public Action Timer_ResetRecentTeamChange(Handle timer, any client)
@@ -119,7 +120,7 @@ public Action Event_PlayerUse(Event event, const char[] name, bool dontBroadcast
 
     if (entity <= MaxClients || entity >= MAX_EDICTS || !IsValidEntity(entity))
     {
-        return;
+        return Plugin_Continue;
     }
 
     char netclass[16];
@@ -127,18 +128,19 @@ public Action Event_PlayerUse(Event event, const char[] name, bool dontBroadcast
 
     if (!StrEqual(netclass, "CPistol"))
     {
-        return;
+        return Plugin_Continue;
     }
 
     int client = GetClientOfUserId(event.GetInt("userid"));
 
     if (!IS_CLIENT(client) || !IsClientInGame(client) || IsFakeClient(client) || g_bProhibitUse[client])
     {
-        return;
+        return Plugin_Continue;
     }
 
     g_bProhibitUse[client] = true;
     CreateTimer(RESET_USE_TIME, Timer_ResetUse, client);
+    return Plugin_Continue;
 }
 
 public Action Timer_ResetUse(Handle timer, any client)

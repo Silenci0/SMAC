@@ -281,6 +281,7 @@ public Action Event_PlayerChangeName(Event event, const char[] name, bool dontBr
 
         g_iNameChanges[client] = 0;
     }
+    return Plugin_Continue;
 }
 
 public Action Event_AchievementEarned(Event event, const char[] name, bool dontBroadcast)

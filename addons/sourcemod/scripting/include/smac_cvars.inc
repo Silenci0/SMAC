@@ -233,7 +233,7 @@ stock CvarAction GetCActionInt(const char[] sAction)
 
 stock void GetCActionString(CvarAction CAction, char[] sAction,int iSize)
 {
-    switch (CCompType)
+    switch (CAction)
     {
         case Action_Warn:
         {

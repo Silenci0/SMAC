@@ -307,7 +307,7 @@ public any Native_GetGameType(Handle plugin, int numParams)
 }
 
 // native SMAC_Log(const String:format[], any:...);
-public any Native_Log(Handle plugin, int numParams)
+public int Native_Log(Handle plugin, int numParams)
 {
     char sFilename[64], sBuffer[256];
     GetPluginBasename(plugin, sFilename, sizeof(sFilename));
@@ -319,10 +319,11 @@ public any Native_Log(Handle plugin, int numParams)
     {
         SMAC_RelayToIRC("[%s] %s", sFilename, sBuffer);
     }
+    return 0;
 }
 
 // native SMAC_LogAction(client, const String:format[], any:...);
-public any Native_LogAction(Handle plugin, int numParams)
+public int Native_LogAction(Handle plugin, int numParams)
 {
     int client = GetNativeCell(1);
 
@@ -394,10 +395,11 @@ public any Native_LogAction(Handle plugin, int numParams)
     {
         SMAC_RelayToIRC("[%s | %s] %N (ID: %s | IP: %s) %s", sFilename, sVersion, client, sAuthID, sIP, sBuffer);
     }
+    return 0;
 }
 
 // native SMAC_Ban(client, const String:reason[], any:...);
-public any Native_Ban(Handle plugin, int numParams)
+public int Native_Ban(Handle plugin, int numParams)
 {
     char sVersion[16], sReason[256];
     int client = GetNativeCell(1);
@@ -426,10 +428,11 @@ public any Native_Ban(Handle plugin, int numParams)
     {
         KickClient(client, sReason);
     }
+    return 0;
 }
 
 // native SMAC_PrintAdminNotice(const String:format[], any:...);
-public any Native_PrintAdminNotice(Handle plugin, int numParams)
+public int Native_PrintAdminNotice(Handle plugin, int numParams)
 {
     char sBuffer[192];
 
@@ -452,6 +455,7 @@ public any Native_PrintAdminNotice(Handle plugin, int numParams)
         CRemoveTags(sBuffer, sizeof(sBuffer));
         SMAC_RelayToIRC(sBuffer);
     }
+    return 0;
 }
 
 // native Handle:SMAC_CreateConVar(const String:name[], const String:defaultValue[], const String:description[]="", flags=0, bool:hasMin=false, Float:min=0.0, bool:hasMax=false, Float:max=0.0);
