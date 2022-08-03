@@ -1,30 +1,14 @@
-# NOTICE: SMAC is Unsupported!!
-Hello everyone,
-
-TL;DR: While it might already be obvious, I am no longer supporting SMAC now or in the future. I will not be responding to issues or pull requests. If you are someone who wants to continue work on SMAC, please fork it and do so with my full blessing/permission/whatever (not that you needed it anyway, it is open source after all). If you plan on sustained development post about it on the SMAC board of the AlliedModders SMAC forums (https://forums.alliedmods.net/forumdisplay.php?f=133 ). If you are a user who wants a viable and free alternative to SMAC with active development/support, I suggest using Lilac: https://forums.alliedmods.net/showthread.php?t=321480
-
-
-During February 2020, I had made a post in the issues section as a PSA regarding an indefinite hiatus (see post here: https://github.com/Silenci0/SMAC/issues/37 ) due to a number of personal reasons among other world events that made things more difficult to continue doing modding for things such as SMAC, at least for me. A lot of things have changed since then, but I am still not working on SMAC. What little I did do for modding between now and then has only been for ZPS, but only just barely. However, when it came to bigger projects such as this, I simply did not have the time, patience, or ability/drive to continue even during the free time that I had. 
-
-With that in mind, I want to make it clear: I will no longer support SMAC now or in the future. Someone else will need to do so, if they wish to continue working on SMAC that is.
-
-This DOES NOT mean that I will be deleting the repository, but I will not responding to issues/pull requests made for this project will be ignored by me. I will leave all issues/requests open just in case someone comes along and wants to continue the project, but this update of the README file is being done to simply inform people (those who have posted or want to issues/pull requests here) that these will not be answered or responded to. It will just end up in the proverbial "shadow realm", lost and forgotten, if posted here. If you are thinking about posting issues, please post them on the AlliedModders SMAC subforum (https://forums.alliedmods.net/forumdisplay.php?f=133 ). If you wish to take up active development of the project, feel free to fork it and go ham (you do not need to contact me for permission or credit me, just make sure to keep the headers in the code and the included licenses!)
-
-With all that said, its not all doom and gloom. Someone out there decided to make a new anti-cheat mod for servers that is also free, open source, and has active development. Its name is Little Anti-Cheat (Lilac):
-
-https://forums.alliedmods.net/showthread.php?t=321480
-
-The author, J_Tanzanite, has done an impressive job with this and it seems to be gaining new features and support for multiple games. I would recommend using this and supporting the author however you can in order to help this mod grow. It is compatible with SMAC, so you can have both Lilac and SMAC installed (be sure to read that pages compatibility notes regarding the two on Lilac's page) but to be completely honest, I think this will eventually take over SMAC if it gains enough support and features (which I hope it might one day achieve). Please consider using and supporting Lilac and its author over the current version of SMAC. 
-
-Thanks for the support and messages over the years! 
-
-
 # SMAC
 Sourcemod Anti-Cheat
 
 For a lot of people, SMAC has been one of those more elusive plugins due to some of the issues surrounding it involving copyrights and headers. In 0.8.6.0, the original authors added the headers to it and left it at that. During that time, I was working on my own fork of it specifically for ZPS which evolved from there into the current fork that is seen today. So not only does the code have all the appropriate headers, but included is a license with those headers as well, so it should be okay to distribute, post, branch, and fork once again as needed provided everyone adheres to the license.
 
 For information about the plugin and its modules, please use the wiki here: https://github.com/Silenci0/SMAC/wiki
+
+# Changelog
+0.8.7.4 Update (21-04-2021)
+-----------------
+- smac_l4d2_fixes - removal of unnecessary functions, some bugs were fixed after the update 'THE LAST STAND'
 
 # Changelog
 0.8.7.3 Update (12-20-2019)
