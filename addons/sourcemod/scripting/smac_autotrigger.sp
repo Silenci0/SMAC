@@ -89,37 +89,41 @@ public Action OnPlayerRunCmd(int client, int& buttons, int& impulse, float vel[3
     static int iPrevButtons[MAXPLAYERS+1];
 
     /* BunnyHop */
-    static float fCheckTime[MAXPLAYERS+1];
 
-    // Player didn't jump immediately after the last jump.
-    if (!(buttons & IN_JUMP) && (GetEntityFlags(client) & FL_ONGROUND) && fCheckTime[client] > 0.0)
+    if (GetEntityMoveType(client) != MOVETYPE_LADDER)
     {
-        fCheckTime[client] = 0.0;
-    }
+        static float fCheckTime[MAXPLAYERS + 1];
 
-    // Ignore this jump if the player is in a tight space or stuck in the ground.
-    if ((buttons & IN_JUMP) && !(iPrevButtons[client] & IN_JUMP))
-    {
-        // Player is on the ground and about to trigger a jump.
-        if (GetEntityFlags(client) & FL_ONGROUND)
-        {
-            float fGameTime = GetGameTime();
-
-            // Player jumped on the exact frame that allowed it.
-            if (fCheckTime[client] > 0.0 && fGameTime > fCheckTime[client])
-            {
-                AutoTrigger_Detected(client, METHOD_BUNNYHOP);
-            }
-            else
-            {
-                fCheckTime[client] = fGameTime + MIN_JUMP_TIME;
-            }
-        }
-        else
+        // Player didn't jump immediately after the last jump.
+        if (!(buttons & IN_JUMP) && (GetEntityFlags(client) & FL_ONGROUND) && fCheckTime[client] > 0.0)
         {
             fCheckTime[client] = 0.0;
         }
-    }
+
+        // Ignore this jump if the player is in a tight space or stuck in the ground.
+        if ((buttons & IN_JUMP) && !(iPrevButtons[client] & IN_JUMP))
+        {
+            // Player is on the ground and about to trigger a jump.
+            if (GetEntityFlags(client) & FL_ONGROUND)
+            {
+                float fGameTime = GetGameTime();
+                
+                // Player jumped on the exact frame that allowed it.
+                if (fCheckTime[client] > 0.0 && fGameTime > fCheckTime[client])
+                {
+                    AutoTrigger_Detected(client, METHOD_BUNNYHOP);
+                }
+                else
+                {
+                    fCheckTime[client] = fGameTime + MIN_JUMP_TIME;
+                }
+            }
+            else
+            {
+                fCheckTime[client] = 0.0;
+            }
+        }
+    } 
 
     /* Auto-Fire */
     static int iAttackAmt[MAXPLAYERS+1];
