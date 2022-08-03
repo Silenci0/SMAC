@@ -23,7 +23,7 @@
 #include <sourcemod>
 #include <sdktools>
 #include <smac>
-#include <colors>
+#include <multicolors>
 
 /* Plugin Info */
 public Plugin myinfo =
