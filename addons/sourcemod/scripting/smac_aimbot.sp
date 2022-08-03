@@ -209,6 +209,7 @@ public Action Event_PlayerSpawn(Event event, const char[] name, bool dontBroadca
         Aimbot_ClearAngles(client);
         CreateTimer(0.1, Timer_ClearAngles, userid, TIMER_FLAG_NO_MAPCHANGE);
     }
+    return Plugin_Continue;
 }
 
 public Action Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
@@ -219,7 +220,7 @@ public Action Event_PlayerDeath(Event event, const char[] name, bool dontBroadca
 
     if (GetTrieValue(g_IgnoreWeapons, sWeapon, dummy))
     {
-        return;
+        return Plugin_Continue;
     }
         
     int victim = GetClientOfUserId(event.GetInt("userid"));
@@ -236,6 +237,7 @@ public Action Event_PlayerDeath(Event event, const char[] name, bool dontBroadca
             Aimbot_AnalyzeAngles(attacker);
         }
     }
+    return Plugin_Continue;
 }
 
 public Action Event_EntityKilled(Event event, const char[] name, bool dontBroadcast)
@@ -252,7 +254,7 @@ public Action Event_EntityKilled(Event event, const char[] name, bool dontBroadc
         
         if (GetTrieValue(g_IgnoreWeapons, sWeapon, dummy))
         {
-            return;
+            return Plugin_Continue;
         }
         
         float vVictim[3], vAttacker[3];
@@ -264,6 +266,7 @@ public Action Event_EntityKilled(Event event, const char[] name, bool dontBroadc
             Aimbot_AnalyzeAngles(attacker);
         }
     }
+    return Plugin_Continue;
 }
 
 public Action TF2_Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
@@ -280,7 +283,7 @@ public Action TF2_Event_PlayerDeath(Event event, const char[] name, bool dontBro
 
         if (GetTrieValue(g_IgnoreWeapons, sWeapon, dummy))
         {
-            return;
+            return Plugin_Continue;
         }
         
         float vVictim[3], vAttacker[3];
@@ -292,6 +295,7 @@ public Action TF2_Event_PlayerDeath(Event event, const char[] name, bool dontBro
             Aimbot_AnalyzeAngles(attacker);
         }
     }
+    return Plugin_Continue;
 }
 
 public Action Timer_ClearAngles(Handle timer, any userid)

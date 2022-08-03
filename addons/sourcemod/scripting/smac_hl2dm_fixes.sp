@@ -93,6 +93,7 @@ public Action Hook_WeaponSwitchPost(int client, int weapon)
     g_bHasCrossbow[client] = IsValidEdict(weapon) && 
             GetEdictClassname(weapon, sWeapon, sizeof(sWeapon)) && 
             StrEqual(sWeapon, "weapon_crossbow");
+    return Plugin_Continue;
 }
 
 public Action Hook_FireBullets(const char[] te_name, const int[] Players, int numClients, float delay)

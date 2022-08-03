@@ -22,6 +22,8 @@
 #endif
 #define _smac_stocks_included
 
+#include <sdktools>
+
 /**
  * Preprocessor directives
  */
@@ -312,9 +314,10 @@ stock void BfWriteSBitLong(Handle bf,int data,int numBits)
     }
 }
 
-stock void BfReadSBitLong(Handle bf,int numBits)
+stock int BfReadSBitLong(Handle bf, int numBits)
 {
-    int bits[numBits], ret, i;
+    int[] bits = new int[numBits];
+    int ret, i;
 
     for (i = 0; i < numBits; i++)
     {

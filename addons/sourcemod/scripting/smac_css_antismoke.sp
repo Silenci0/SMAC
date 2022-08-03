@@ -95,6 +95,7 @@ public Action Event_SmokeDetonate(Event event, const char[] name, bool dontBroad
     WritePackFloat(hPack, GetEventFloat(event, "z"));
 
     CreateTimer(SMOKE_FADETIME, Timer_SmokeEnded, g_iRoundCount, TIMER_FLAG_NO_MAPCHANGE);
+    return Plugin_Continue;
 }
 
 public Action Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
@@ -102,6 +103,7 @@ public Action Event_RoundStart(Event event, const char[] name, bool dontBroadcas
     /* Smokes disappear on round start. */
     AntiSmoke_UnhookAll();
     g_iRoundCount++;
+    return Plugin_Continue;
 }
 
 public Action Timer_SmokeDeployed(Handle timer, Handle hPack)

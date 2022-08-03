@@ -155,6 +155,7 @@ public bool Filter_WorldOnly(int entity, int contentsMask)
 public Action Event_BombPlanted(Event event, const char[] name, bool dontBroadcast)
 {
     BombPlanted();
+    return Plugin_Continue;
 }
 
 void BombPlanted()
@@ -170,11 +171,13 @@ void BombPlanted()
 public Action Event_BombBeginDefuse(Event event, const char[] name, bool dontBroadcast)
 {
     g_iDefuserEnt = GetClientOfUserId(GetEventInt(event, "userid"));
+    return Plugin_Continue;
 }
 
 public Action Event_ResetDefuser(Event event, const char[] name, bool dontBroadcast)
 {
     g_iDefuserEnt = -1;
+    return Plugin_Continue;
 }
 
 /**
@@ -269,6 +272,7 @@ public Action Event_PlayerSpawn(Event event, const char[] name, bool dontBroadca
         // Delay so it doesn't fire before Event_RoundStart
         CreateTimer(0.01, Timer_PlayerSpawned, userid, TIMER_FLAG_NO_MAPCHANGE);
     }
+    return Plugin_Continue;
 }
 
 public Action Timer_PlayerSpawned(Handle timer, any userid)
@@ -291,6 +295,7 @@ public Action Event_RoundStart(Event event, const char[] name, bool dontBroadcas
 {
     ClearSpawnData();
     g_hRespawnElapsed = CreateTimer(GetConVarFloat(g_hFreezeTime) + 21.0, Timer_RespawnElapsed);
+    return Plugin_Continue;
 }
 
 public Action Timer_RespawnElapsed(Handle timer)
